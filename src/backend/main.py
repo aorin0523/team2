@@ -30,6 +30,16 @@ root_router = APIRouter(prefix="/api/v1")
 # 新しくモジュールを作成したらここにインポートしたルーターを追加
 # 例: root_router.include_router(user.router)
 
+
+@root_router.post("/")
+async def root():
+    return {"message": "Hello World"}
+
+@root_router.get("/")
+async def read_root():
+    return {"Hello": "World"}
+
+
 # root_routerをappにinclude
 app.include_router(root_router)
 
