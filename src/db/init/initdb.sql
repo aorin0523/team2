@@ -1,0 +1,61 @@
+CREATE TABLE `Users` (
+	`id` CHAR(36) NOT NULL UNIQUE,
+	`name` VARCHAR(255) NOT NULL,
+	`rank` INTEGER NOT NULL,
+	`password` VARCHAR(255) NOT NULL,
+	PRIMARY KEY(`id`)
+);
+
+
+CREATE TABLE `Skills` (
+	`id` INTEGER NOT NULL AUTO_INCREMENT UNIQUE,
+	`name` VARCHAR(255) NOT NULL,
+	PRIMARY KEY(`id`)
+);
+
+
+CREATE TABLE `UserSkills` (
+	`user_id` CHAR(36) NOT NULL,
+	`skill_id` INTEGER NOT NULL,
+	PRIMARY KEY(`user_id`, `skill_id`)
+);
+
+
+CREATE TABLE `Enterprises` (
+	`id` CHAR(36) NOT NULL UNIQUE,
+	`name` VARCHAR(255) NOT NULL,
+	PRIMARY KEY(`id`)
+);
+
+
+CREATE TABLE `Offers` (
+	`id` INTEGER NOT NULL AUTO_INCREMENT UNIQUE,
+	`enterprise_id` CHAR(36) NOT NULL,
+	`title` VARCHAR(255) NOT NULL,
+	`content` TEXT(65535) NOT NULL,
+	PRIMARY KEY(`id`)
+);
+
+
+CREATE TABLE `UserOffers` (
+	`user_id` CHAR(36) NOT NULL UNIQUE,
+	`offer_id` INTEGER NOT NULL,
+	PRIMARY KEY(`user_id`, `offer_id`)
+);
+
+
+ALTER TABLE `UserSkills`
+ADD FOREIGN KEY(`user_id`) REFERENCES `Users`(`id`)
+ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE `UserSkills`
+ADD FOREIGN KEY(`skill_id`) REFERENCES `Skills`(`id`)
+ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE `Offers`
+ADD FOREIGN KEY(`enterprise_id`) REFERENCES `Enterprises`(`id`)
+ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE `UserOffers`
+ADD FOREIGN KEY(`user_id`) REFERENCES `Users`(`id`)
+ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE `UserOffers`
+ADD FOREIGN KEY(`offer_id`) REFERENCES `Offers`(`id`)
+ON UPDATE CASCADE ON DELETE CASCADE;
