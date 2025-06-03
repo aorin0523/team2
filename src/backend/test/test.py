@@ -14,30 +14,31 @@ def get(request: Request):
     """
     return {"message": "Test endpoint is working!"}
 
+from pydantic import BaseModel
+class TestData(BaseModel):
+    name: str
+    value: int
+
 @router.post("/")
-def post(request: Request):
+async def post(request: Request, data: TestData):
     """
     見本用POSTエンドポイント
     """
-    data = request.json()
-    return {"message": "Test endpoint received data!", "data": data}
+    return {"message": "Test endpoint updated data!", "data": data}
 
 @router.put("/")
-def put(request: Request):
+async def put(request: Request, data: TestData):
     """
     見本用PUTエンドポイント
     """
-    data = request.json()
     return {"message": "Test endpoint updated data!", "data": data}
 
 @router.delete("/")
-def delete(request: Request):
+async def delete(request: Request, data: TestData):
     """
     見本用DELETEエンドポイント
     """
-    data = request.json()
-    return {"message": "Test endpoint deleted data!", "data": data}
-
+    return {"message": "Test endpoint updated data!", "data": data}
 
 # MinIOにファイルをアップロードするときの見本
 from modules.minio import upload_file
