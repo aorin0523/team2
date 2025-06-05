@@ -1,8 +1,6 @@
 from fastapi import APIRouter, Request, FastAPI, File, UploadFile
-from minio import Minio
-from minio.error import S3Error
+from fastapi.responses import StreamingResponse
 import io
-import os
 import uuid
 
 router = APIRouter()
@@ -41,7 +39,7 @@ async def delete(request: Request, data: TestData):
     return {"message": "Test endpoint updated data!", "data": data}
 
 # MinIOにファイルをアップロードするときの見本
-from modules.minio import upload_file
+from modules.minio import upload_file, download_file
 
 @router.post("/upload")
 async def upload(request: Request, file: UploadFile = File(...)):
@@ -59,3 +57,20 @@ async def upload(request: Request, file: UploadFile = File(...)):
         file_content=content
     )
     return {"status": "ok", "file_name": file.filename, "file_uuid": file_uuid}
+
+@router.get("/download/{file_name}")
+async def download(file_name: str):
+    """
+    ファイルダウンロードの見本用エンドポイント
+    """
+
+    result = download_file(file_name, bucket_name="temp")
+    if result["status"] == "ok":
+        return StreamingResponse(
+            io.BytesIO(result["content"]),
+            media_type=result["content_type"],
+            headers={"Content-Disposition": f"attachment; filename={file_name}"}
+        )
+    else:
+        return None, 404, {"message": result["message"]}
+

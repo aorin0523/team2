@@ -9,6 +9,8 @@ minio_client = Minio(
     secure=False,
 )
 
+# 返り値をどうするか悩み中↓
+
 def upload_file(bucket_name: str, file_name: str, file_content_type: str, file_content: bytes):
     """
     # MinIOにファイルをアップロードする関数
@@ -38,5 +40,22 @@ def upload_file(bucket_name: str, file_name: str, file_content_type: str, file_c
             content_type=file_content_type,
         )
         return {"status": "ok"}
+    except S3Error as exc:
+        return {"status": "error", "message": str(exc)}
+    
+def download_file(file_name: str, bucket_name: str = "storage"):
+    """
+    # MinIOからファイルをダウンロードする関数
+
+    :param file_name: ダウンロードするファイルの名前
+    :param bucket_name: ダウンロード元のバケット名, 基本はtempかstorageを指定すること
+
+    :return: ファイルの内容(バイナリデータ)とコンテンツタイプ
+    """
+    try:
+        response = minio_client.get_object(bucket_name, file_name)
+        content = response.read()
+        content_type = minio_client.stat_object(bucket_name, file_name).content_type
+        return {"status": "ok", "content": content, "content_type": content_type}
     except S3Error as exc:
         return {"status": "error", "message": str(exc)}
