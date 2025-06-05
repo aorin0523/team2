@@ -34,15 +34,6 @@ import tests
 root_router.include_router(tests.router)
 
 
-@root_router.post("/")
-async def root():
-    return {"message": "Hello World"}
-
-@root_router.get("/")
-async def read_root():
-    return {"Hello": "World"}
-
-
 # root_routerをappにinclude
 app.include_router(root_router)
 
