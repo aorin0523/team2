@@ -1,3 +1,17 @@
+CREATE TABLE `Ranks` (
+	`id` INTEGER NOT NULL AUTO_INCREMENT UNIQUE,
+	`name` VARCHAR(255) NOT NULL,
+	PRIMARY KEY(`id`)
+);
+
+
+CREATE TABLE `Skills` (
+	`id` INTEGER NOT NULL AUTO_INCREMENT UNIQUE,
+	`name` VARCHAR(255) NOT NULL,
+	PRIMARY KEY(`id`)
+);
+
+
 CREATE TABLE `Users` (
 	`id` CHAR(36) NOT NULL UNIQUE,
 	`name` VARCHAR(255) NOT NULL,
@@ -11,9 +25,27 @@ CREATE TABLE `Users` (
 );
 
 
-CREATE TABLE `Skills` (
-	`id` INTEGER NOT NULL AUTO_INCREMENT UNIQUE,
+CREATE TABLE `Enterprises` (
+	`id` CHAR(36) NOT NULL UNIQUE,
 	`name` VARCHAR(255) NOT NULL,
+	`description` TEXT(65535),
+	`created_at` TIMESTAMP,
+	`updated_at` TIMESTAMP,
+	`deleted_at` TIMESTAMP,
+	PRIMARY KEY(`id`)
+);
+
+
+CREATE TABLE `Offers` (
+	`id` CHAR(36) NOT NULL UNIQUE,
+	`enterprise_id` CHAR(36) NOT NULL,
+	`title` VARCHAR(255) NOT NULL,
+	`content` TEXT(65535) NOT NULL,
+	`rank` INTEGER NOT NULL,
+	`deadline` TIMESTAMP,
+	`created_at` TIMESTAMP,
+	`updated_at` TIMESTAMP,
+	`deleted_at` TIMESTAMP,
 	PRIMARY KEY(`id`)
 );
 
@@ -30,7 +62,9 @@ CREATE TABLE `UserSkills` (
 
 CREATE TABLE `UserOffers` (
 	`user_id` CHAR(36) NOT NULL,
-	`offer_id` INTEGER NOT NULL,
+	`offer_id` CHAR(36) NOT NULL,
+	`favorite` BOOLEAN,
+	`wish` BOOLEAN,
 	`assign` BOOLEAN,
 	`created_at` TIMESTAMP,
 	`updated_at` TIMESTAMP,
@@ -39,45 +73,13 @@ CREATE TABLE `UserOffers` (
 );
 
 
-CREATE TABLE `Enterprises` (
-	`id` CHAR(36) NOT NULL UNIQUE,
-	`name` VARCHAR(255) NOT NULL,
-	`description` TEXT(65535),
-	`created_at` TIMESTAMP,
-	`updated_at` TIMESTAMP,
-	`deleted_at` TIMESTAMP,
-	PRIMARY KEY(`id`)
-);
-
-
-CREATE TABLE `Offers` (
-	`id` INTEGER NOT NULL AUTO_INCREMENT UNIQUE,
-	`enterprise_id` CHAR(36) NOT NULL,
-	`title` VARCHAR(255) NOT NULL,
-	`content` TEXT(65535) NOT NULL,
-	`rank` INTEGER NOT NULL,
-	`deadline` TIMESTAMP,
-	`created_at` TIMESTAMP,
-	`updated_at` TIMESTAMP,
-	`deleted_at` TIMESTAMP,
-	PRIMARY KEY(`id`)
-);
-
-
 CREATE TABLE `OfferSkills` (
-	`offer_id` INTEGER NOT NULL,
+	`offer_id` CHAR(36) NOT NULL,
 	`skill_id` INTEGER NOT NULL,
 	`created_at` TIMESTAMP,
 	`updated_at` TIMESTAMP,
 	`deleted_at` TIMESTAMP,
 	PRIMARY KEY(`offer_id`, `skill_id`)
-);
-
-
-CREATE TABLE `Ranks` (
-	`id` INTEGER NOT NULL AUTO_INCREMENT UNIQUE,
-	`name` VARCHAR(255) NOT NULL,
-	PRIMARY KEY(`id`)
 );
 
 
