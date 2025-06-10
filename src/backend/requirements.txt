@@ -3,7 +3,7 @@ anyio==4.9.0
 argon2-cffi==23.1.0
 argon2-cffi-bindings==21.2.0
 Authlib==1.5.2
-bcrypt==4.3.0
+bcrypt==4.0.1
 certifi==2025.4.26
 cffi==1.17.1
 click==8.2.1
