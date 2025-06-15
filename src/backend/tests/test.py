@@ -74,3 +74,13 @@ async def download(file_name: str):
     else:
         return None, 404, {"message": result["message"]}
 
+@router.get("/users")
+async def get_users():
+    """
+    ユーザ情報を全件取得するエンドポイント
+    """
+
+    from modules.db.users import Users
+    
+    users = Users()    
+    return users.get_all_users()
