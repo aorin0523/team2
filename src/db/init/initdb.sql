@@ -18,7 +18,7 @@ CREATE TABLE `Users` (
 	`rank` INTEGER NOT NULL,
 	`email` VARCHAR(255) NOT NULL,
 	`password` VARCHAR(255) NOT NULL,
-	`created_at` TIMESTAMP,
+	`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	`updated_at` TIMESTAMP,
 	`deleted_at` TIMESTAMP,
 	PRIMARY KEY(`id`)
@@ -29,7 +29,7 @@ CREATE TABLE `Enterprises` (
 	`id` CHAR(36) NOT NULL UNIQUE,
 	`name` VARCHAR(255) NOT NULL,
 	`description` TEXT(65535),
-	`created_at` TIMESTAMP,
+	`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	`updated_at` TIMESTAMP,
 	`deleted_at` TIMESTAMP,
 	PRIMARY KEY(`id`)
@@ -43,7 +43,7 @@ CREATE TABLE `Offers` (
 	`content` TEXT(65535) NOT NULL,
 	`rank` INTEGER NOT NULL,
 	`deadline` TIMESTAMP,
-	`created_at` TIMESTAMP,
+	`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	`updated_at` TIMESTAMP,
 	`deleted_at` TIMESTAMP,
 	PRIMARY KEY(`id`)
@@ -53,7 +53,7 @@ CREATE TABLE `Offers` (
 CREATE TABLE `UserSkills` (
 	`user_id` CHAR(36) NOT NULL,
 	`skill_id` INTEGER NOT NULL,
-	`created_at` TIMESTAMP,
+	`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	`updated_at` TIMESTAMP,
 	`deleted_at` TIMESTAMP,
 	PRIMARY KEY(`user_id`, `skill_id`)
@@ -66,7 +66,7 @@ CREATE TABLE `UserOffers` (
 	`favorite` BOOLEAN,
 	`wish` BOOLEAN,
 	`assign` BOOLEAN,
-	`created_at` TIMESTAMP,
+	`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	`updated_at` TIMESTAMP,
 	`deleted_at` TIMESTAMP,
 	PRIMARY KEY(`user_id`, `offer_id`)
@@ -76,7 +76,7 @@ CREATE TABLE `UserOffers` (
 CREATE TABLE `OfferSkills` (
 	`offer_id` CHAR(36) NOT NULL,
 	`skill_id` INTEGER NOT NULL,
-	`created_at` TIMESTAMP,
+	`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	`updated_at` TIMESTAMP,
 	`deleted_at` TIMESTAMP,
 	PRIMARY KEY(`offer_id`, `skill_id`)
