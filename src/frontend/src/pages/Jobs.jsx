@@ -22,6 +22,7 @@ function Jobs() {
   const [tech, setTech] = useState('');
 
   return (
+    <>
     <Box component="header" className="header">
       <div className="logo">
         <h2 className="appname">ぱいざ</h2>
@@ -38,22 +39,26 @@ function Jobs() {
           <IconButton sx={{ color: 'white' }}><AccountCircleSharpIcon /></IconButton>
         </nav>
       </div>
+    </Box>
 
       {/* ▼ 三列＋検索ボタン */}
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mt: 2, px: 3 }}>
         <FormControl sx={{ minWidth: 120 }}>
-          <InputLabel>エリア</InputLabel>
-          <Select value={area} label="エリア" onChange={(e) => setArea(e.target.value)}>
-            <MenuItem value=""><em>選択</em></MenuItem>
-            <MenuItem value="tokyo">東京</MenuItem>
-            <MenuItem value="osaka">大阪</MenuItem>
-            <MenuItem value="nagoya">名古屋</MenuItem>
+          <InputLabel>地域</InputLabel>
+          <Select value={area} label="地域" onChange={(e) => setArea(e.target.value)}>
+            <MenuItem value="hokkaido">北海道・東北</MenuItem>
+            <MenuItem value="kantou">関東</MenuItem>
+            <MenuItem value="hokuriku">北陸・甲信越</MenuItem>
+            <MenuItem value="toukai">東海</MenuItem>
+            <MenuItem value="kinki">近畿</MenuItem>
+            <MenuItem value="tyuugoku">中国・四国</MenuItem>
+            <MenuItem value="kyuusyuu">九州・沖縄</MenuItem>
           </Select>
         </FormControl>
 
         <FormControl sx={{ minWidth: 120 }}>
-          <InputLabel>職種</InputLabel>
-          <Select value={jobType} label="職種" onChange={(e) => setJobType(e.target.value)}>
+          <InputLabel>ランク</InputLabel>
+          <Select value={jobType} label="ランク" onChange={(e) => setJobType(e.target.value)}>
             <MenuItem value=""><em>選択</em></MenuItem>
             <MenuItem value="engineer">エンジニア</MenuItem>
             <MenuItem value="designer">デザイナー</MenuItem>
@@ -62,8 +67,8 @@ function Jobs() {
         </FormControl>
 
         <FormControl sx={{ minWidth: 120 }}>
-          <InputLabel>技術</InputLabel>
-          <Select value={tech} label="技術" onChange={(e) => setTech(e.target.value)}>
+          <InputLabel>職種</InputLabel>
+          <Select value={tech} label="職種" onChange={(e) => setTech(e.target.value)}>
             <MenuItem value=""><em>選択</em></MenuItem>
             <MenuItem value="react">React</MenuItem>
             <MenuItem value="java">Java</MenuItem>
@@ -75,7 +80,7 @@ function Jobs() {
           検索
         </Button>
       </Box>
-    </Box>
+    </>
   );
 }
 
