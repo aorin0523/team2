@@ -10,6 +10,7 @@ import React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import '../css/UserCaseDetails.css'
 
 function App() {
 
@@ -27,7 +28,7 @@ return (
         <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
           <div className='header-left'>
             <a href='/'>
-                <h6>ぱいざ</h6>
+                <h3>ぱいざ</h3>
             </a>
         </div>
         </Typography>
