@@ -6,6 +6,7 @@ import MailIcon from '@mui/icons-material/Mail';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import IconButton from '@mui/material/IconButton';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -16,15 +17,8 @@ function App() {
 
 return (
     <>
-    <AppBar position="fixed"> {/* ヘッダーをページ上部に固定する場合 */}
+    <AppBar position="fixed">
       <Toolbar>
-        {/*
-          Typographyコンポーネントは、ロゴやサイトタイトルとして使用できます。
-          variant="h6" は適切な見出しレベルのスタイルを適用します。
-          noWrap はテキストが長すぎても折り返さないようにします。
-          component="div" は、このTypographyがHTMLのdivとしてレンダリングされることを意味します。
-          もしReact RouterのLinkとして使いたい場合は、component={Link} to="/" のように変更します。
-        */}
         <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
           <div className='header-left'>
             <a href='/'>
@@ -67,7 +61,14 @@ return (
       </Toolbar>
     </AppBar>
       <body>
-
+            <div class='container'>
+                <div class='page-transition'>
+                    <a href='/'></a>
+                    <IconButton sx={{ color : "black"}} size="small" >
+                        <ArrowForwardIosIcon/>
+                    </IconButton>
+                </div>
+            </div>
       </body>
     </>
   )
