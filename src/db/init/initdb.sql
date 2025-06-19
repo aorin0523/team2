@@ -110,3 +110,18 @@ ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE `Offers`
 ADD FOREIGN KEY(`rank`) REFERENCES `Ranks`(`id`)
 ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+INSERT INTO Ranks (name) VALUES ('D'), ('C'), ('B'), ('A'), ('S');
+INSERT INTO Skills (name) VALUES
+('JavaScript'),
+('Python'),
+('Java'),
+('C#'),
+('Ruby'),
+('PHP'),
+('Swift'),
+('Kotlin'),
+('TypeScript'),
+('Go');
