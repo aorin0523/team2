@@ -1,0 +1,28 @@
+body {
+    background-color: white;
+}
+
+/* ヘッダーのcss */
+header {
+    display: flex;
+    padding: 0;
+}
+
+a {
+    margin-right: 12px;
+}
+
+.nav-link {
+    width: 500px;
+}
+
+.link {
+    margin-left: 650px;   
+}
+
+/* ポップアップのcss */
+
+/* 検索ボタンのcss */
+.search:hover {
+
+}

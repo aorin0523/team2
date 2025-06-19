@@ -23,7 +23,7 @@ function Jobs() {
 
   return (
     <>
-    <Box component="header" className="header">
+    <Box component="header" className="header" sx={{  backgroundColor: blue[700]}}>
       <div className="logo">
         <h2 className="appname">ぱいざ</h2>
       </div>
@@ -41,8 +41,8 @@ function Jobs() {
       </div>
     </Box>
 
-      {/* ▼ 三列＋検索ボタン */}
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mt: 2, px: 3 }}>
+    {/* ▼ 三列＋検索ボタン  */}
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mt: 2, px: 3}}>
         <FormControl sx={{ minWidth: 120 }}>
           <InputLabel>地域</InputLabel>
           <Select value={area} label="地域" onChange={(e) => setArea(e.target.value)}>
@@ -59,27 +59,36 @@ function Jobs() {
         <FormControl sx={{ minWidth: 120 }}>
           <InputLabel>ランク</InputLabel>
           <Select value={jobType} label="ランク" onChange={(e) => setJobType(e.target.value)}>
-            <MenuItem value=""><em>選択</em></MenuItem>
-            <MenuItem value="engineer">エンジニア</MenuItem>
-            <MenuItem value="designer">デザイナー</MenuItem>
-            <MenuItem value="pm">PM</MenuItem>
+            <MenuItem value="rankS">S</MenuItem>
+            <MenuItem value="rankA">A</MenuItem>
+            <MenuItem value="rankB">B</MenuItem>
+            <MenuItem value="rankC">C</MenuItem>
+            <MenuItem value="rankD">D</MenuItem>
+            <MenuItem value="rankE">E</MenuItem>
+
           </Select>
         </FormControl>
 
         <FormControl sx={{ minWidth: 120 }}>
           <InputLabel>職種</InputLabel>
           <Select value={tech} label="職種" onChange={(e) => setTech(e.target.value)}>
-            <MenuItem value=""><em>選択</em></MenuItem>
-            <MenuItem value="react">React</MenuItem>
-            <MenuItem value="java">Java</MenuItem>
-            <MenuItem value="aws">AWS</MenuItem>
+            <MenuItem value="system">システムエンジニア</MenuItem>
+            <MenuItem value="web">WEBエンジニア</MenuItem>
+            <MenuItem value="app">アプリケーションエンジニア</MenuItem>
+            <MenuItem value="network">ネットワークエンジニア</MenuItem>
+            <MenuItem value="db">データベースエンジニア</MenuItem>
+            <MenuItem value="security">セキュリティエンジニア</MenuItem>
+            <MenuItem value="cloud">クラウドエンジニア</MenuItem>
+            <MenuItem value="ProductManager">プロダクトマネージャー</MenuItem>
+            <MenuItem value="pm">プロジェクトマネージャー</MenuItem>
+            <MenuItem value="SystemConsultant">システムコンサルタント</MenuItem>
           </Select>
         </FormControl>
 
-        <Button variant="contained" sx={{ bgcolor: blue[500] }}>
+        <Button className="search" variant="contained" sx={{ bgcolor: blue[300] }}>
           検索
         </Button>
-      </Box>
+    </Box>
     </>
   );
 }
