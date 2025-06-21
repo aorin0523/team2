@@ -14,12 +14,12 @@ class Users(BaseDB):
             result = conn.execute(query)
             return [dict(row) for row in result.mappings()]
         
-    def get_users(self):
+    def get_users(self, id):
         """
-        ユーザ情報を全件取得する
+        ユーザ情報を取得する
         """
         with self.engine.connect() as conn:
-            query = self.users.select()
+            query = self.users.select().where(self.users.c.id==id)
             result = conn.execute(query)
             return [dict(row) for row in result.mappings()]
         
@@ -42,7 +42,7 @@ class Users(BaseDB):
         except Exception as e:
             return {"status": "ng", "error": e}
     
-    def update_user(self, id, name=None, email=None, password=None):
+    def update_user(self, id, name=None, email=None, password=None, rank=None):
         """
         ユーザー情報をアップデート
         """
@@ -55,6 +55,8 @@ class Users(BaseDB):
                     update_values["email"] = email
                 if password is not None:
                     update_values["password"] = password
+                if rank is not None:
+                    update_values["rank"] = rank
                 
                 query = self.users.update().where(
                     self.users.c.id==id
