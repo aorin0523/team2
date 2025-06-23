@@ -5,6 +5,7 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import Rating from '@mui/material/Rating';
 import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
 
 // アイコン
 import BookmarkIcon from '@mui/icons-material/Bookmark';
@@ -22,7 +23,7 @@ function App() {
     const ratingValue = 3;
 
 return (
-    <>
+    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
     <AppBar position="fixed">
       <Toolbar>
         <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
@@ -66,11 +67,13 @@ return (
         </div>}
       </Toolbar>
     </AppBar>
-      <body>
+
+    <Toolbar />
+      <Box component="main" className="container" sx={{ flexGrow: 1 }}>
             <div class='container'>
                 <div class='client'>
                     <img src={business_man}/>
-                    <p>クライアント名</p>
+                    <p>羽伊座太郎</p>
                     <Typography component="legend"></Typography>
                     <Rating name="read-only" value={ratingValue} readOnly />
                     <p>募集件数：23</p>
@@ -88,12 +91,23 @@ return (
                             }}>質問する</Button>
                 </div>
                 <div class='work-outline'>
-                    <h2>仕事概要</h2>
-                    <p>仕事内容</p>
+                    <h2>テストウェブサイトのコーディング</h2>
+                    <p>添付された資料を基にテストウェブを完成させてください。</p>
+                    <Button
+                        variant="contained"
+                        sx={{
+                            width: "80%",
+                            backgroundColor: '#4fc3f7',
+                            color : "white",
+                            borderRadius: "30px",
+                            '&:focus': {
+                                outline: 'none',
+                            }
+                            }}>応募する</Button>
                 </div>
             </div>
-      </body>
-    </>
+      </Box>
+    </Box>
   )
 }
 
