@@ -31,6 +31,8 @@ body {
 
 .container {
     width: 1140px;
+    margin-left: auto;
+    margin-right: auto;
     display: flex;
     align-items: center;
     background-color: #ffffff;
@@ -42,6 +44,9 @@ body {
     color: black;
 }
 .container .work-outline h2{
+    color: black;
+}
+.container .work-outline p{
     color: black;
 }
 
