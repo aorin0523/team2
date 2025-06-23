@@ -37,3 +37,16 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
     min-height: 100vh;
 }
+
+.container .client p{
+    color: black;
+}
+.container .work-outline h2{
+    color: black;
+}
+
+img{
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+}
