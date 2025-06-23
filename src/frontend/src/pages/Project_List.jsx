@@ -13,6 +13,13 @@ import card3 from "../images/card3.jpg";
 import card4 from "../images/card4.jpg";
 import card5 from "../images/card5.png";
 import card6 from "../images/card6.jpg";
+import card7 from "../images/card7.jpg";
+import card8 from "../images/card8.png";
+import card9 from "../images/card9.jpg";
+import card10 from "../images/card10.jpg";
+import card11 from "../images/card11.png";
+import card12 from "../images/card12.jpg";
+
 import '../css/Project_list.css';
 import { blue, lightBlue } from '@mui/material/colors';
 
@@ -66,47 +73,49 @@ function Project_List() {
 
     {
       id: 7,
-      title: '【未経験歓迎】人材マッチング×Webアプリ開発／Java・React',
-      company: 'パーソナルキャリア株式会社',
-      image: card1,
-      detail: '求人マッチングシステム開発\n使用技術：Java / Spring Boot / React / AWS / Kubernetes\n特徴：大規模求人データを活用した開発。DX推進プロジェクトあり'
+      title: '【Flutter活用】モバイルアプリ開発／toCサービスでスキルアップ',
+      company: '株式会社アンドパッド',
+      image: card7,
+      detail: '建設業向けモバイルアプリ開発\n使用技術：Flutter / Firebase / Dart / REST API\n特徴：ユーザー向けアプリ開発。UI/UX設計に携われる'
     },
     {
       id: 8,
-      title: '【充実研修あり】製造系ERPシステム開発／.NET×Oracle×PL/SQL',
-      company: '株式会社アウトソーシングテクノロジー',
-      image: card2,
-      detail: '製造業向けERPシステム開発\n使用技術：C# / .NET / Oracle / PL/SQL\n特徴：研修制度あり。未経験者も安心。勤務地は首都圏中心'
+      title: '【Python活用】AIチャットボット開発／自然言語処理に挑戦',
+      company: '株式会社エクサウィザーズ',
+      image: card8,
+      detail: 'AIチャットボットの設計・開発\n使用技術：Python / FastAPI / GCP / NLP\n特徴：AI開発に関われる。社会課題解決型プロジェクト'
     },
     {
       id: 9,
-      title: '【教育DX】スタディサプリ開発チームで自社開発に挑戦／React・Java',
-      company: '株式会社ベネッセホールディングス',
-      image: card3,
-      detail: '教育系Webアプリ開発\n使用技術：React / Java / AWS\n特徴：教育業界の大手。自社開発あり。リモート可'
+      title: '【Go言語】フィンテック領域でマイクロサービス開発／モダンな環境',
+      company: '株式会社FOLIO',
+      image: card9,
+      detail: '投資系Webサービスの開発\n使用技術：Go / GraphQL / Docker / Kubernetes\n特徴：マイクロサービスアーキテクチャ。少数精鋭チーム'
     },
     {
       id: 10,
-      title: '【リモート可】AWS専門企業でクラウド開発に挑戦／インフラも学べる',
-      company: '株式会社サーバーワークス',
-      image: card4,
-      detail: 'AWSクラウドインフラ支援・Webアプリ開発\n使用技術：AWS / Python / Node.js\n特徴：AWS専門。クラウド環境の設計・構築に携われる'
+      title: '【UX重視】大手旅行予約サイトのUI刷新プロジェクト／Next.js導入',
+      company: '株式会社エイチ・アイ・エス',
+      image: card10,
+      detail: 'Webサイトのフロントエンドリニューアル\n使用技術：Next.js / TypeScript / Figma\n特徴：デザインと連携したUI開発。パフォーマンス改善'
     },
     {
       id: 11,
-      title: '【PM候補】大手コンサル直請け案件／DX推進プロジェクトで成長できる',
-      company: 'きらぼしコンサルティング',
-      image: card5,
-      detail: 'DX推進支援プロジェクト\n使用技術：要件定義 / PM支援 / クラウド設計\n特徴：コンサル×エンジニアリング。PM志望者にもおすすめ'
+      title: '【ゲーム好き歓迎】Unityでスマホゲーム開発／ヒットタイトル多数',
+      company: '株式会社コロプラ',
+      image: card11,
+      detail: 'スマートフォン向けゲーム開発\n使用技術：Unity / C# / Git / Jenkins\n特徴：自社ゲーム開発。企画にも関われる環境'
     },
     {
       id: 12,
-      title: '【柔軟な働き方】リクルート系社内システム開発／実務経験者優遇',
-      company: '株式会社リクルートスタッフィング',
-      image: card6,
-      detail: '社内業務システムの開発支援\n使用技術：Java / SQL / JavaScript\n特徴：大手グループ案件。残業少なめ。働きやすい環境'
+      title: '【安定基盤×挑戦】官公庁向け業務システム刷新プロジェクト／Java中心',
+      company: '日本電気株式会社（NEC）',
+      image: card12,
+      detail: '官公庁向け業務アプリの再構築\n使用技術：Java / Oracle / Spring Framework\n特徴：社会インフラを支える安定案件。長期プロジェクト'
     }
   ];
+
+  
 
   
 
