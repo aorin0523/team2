@@ -26,7 +26,7 @@ body {
 
 .sidebar-logo {
     padding: 16px;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid #81D4FA;
 }
 
 .logo-container {
@@ -49,7 +49,7 @@ body {
 .sidebar-user {
     margin-top: auto;
     padding: 16px;
-    border-top: 1px solid #e0e0e0;
+    border-top: 1px solid #81D4FA;
 }
 
 .main-content {
@@ -66,7 +66,7 @@ body {
     text-align: center;
     background-color: white;
     padding: 15px 32px;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid #81D4FA;
     flex-shrink: 0;
     height: 60px;
 }
@@ -80,43 +80,68 @@ body {
 
 .offer-container {
     flex-grow: 1;
-    max-width: 1200px;
     margin: 0 auto;
-    padding: 20px 40px;
+    padding: 20px 16px;
     background-color: white;
     width: 100%;
     overflow-y: auto;
+    overflow-x: hidden;
     display: flex;
     flex-direction: column;
     height: calc(100vh - 60px);
+    box-sizing: border-box;
+}
+
+/* スクロールバーのカスタマイズ */
+.offer-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.offer-container::-webkit-scrollbar-track {
+    background: #ffffff;
+    border-radius: 4px;
+}
+
+.offer-container::-webkit-scrollbar-thumb {
+    background: #81D4FA;
+    border-radius: 4px;
+    border: 1px solid #81D4FA;
+}
+
+.offer-container::-webkit-scrollbar-thumb:hover {
+    background: #ffffff;
 }
 
 .offer-plans {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 20px;
     min-height: 100%;
     justify-content: flex-start;
     align-items: stretch;
     overflow: visible;
-    padding: 10px 0 20px 0;
+    padding: 15px 0 25px 0;
 }
 
 .offer-card {
     background: #f8f9fa;
     border: 2px solid #e9ecef;
-    border-radius: 8px;
-    padding: 12px 24px;
+    border-radius: 12px;
+    padding: 24px 28px;
     cursor: pointer;
     transition: all 0.2s ease;
     display: flex;
     flex-direction: row;
     align-items: center;
-    height: 80px;
-    min-height: 80px;
-    max-height: 80px;
+    height: 180px;
+    min-height: 180px;
+    max-height: 180px;
     width: 100%;
+    max-width: 100%;
     flex-shrink: 0;
+    box-sizing: border-box;
+    overflow: hidden;
+    outline: none;
 }
 
 .offer-card:hover {
@@ -124,7 +149,7 @@ body {
 }
 
 .offer-card.selected {
-    border-color: #2196f3;
+    border-color: #81D4FA;
     border-width: 3px;
     background: #f8f9fa;
 }
@@ -136,6 +161,8 @@ body {
     align-items: center;
     width: 100%;
     height: 100%;
+    max-width: 100%;
+    overflow: hidden;
 }
 
 .offer-info {
@@ -143,15 +170,27 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding-right: 24px;
+    padding-right: 20px;
+    min-width: 0;
+    max-width: calc(100% - 120px);
+    overflow: hidden;
 }
 
 .offer-title {
-    font-size: 16px;
-    font-weight: bold;
     color: #333;
-    line-height: 1.2;
-    margin: 0 0 8px 0;
+    font-size: 20px;
+    font-weight: 600;
+    background-color: transparent;
+    padding: 0;
+    margin: 0 0 16px 0;
+    font-family: sans-serif;
+    line-height: 1.4;
+    max-height: 84px;
+    overflow: hidden;
+    word-break: break-word;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
 }
 
 .offer-details {
@@ -162,19 +201,25 @@ body {
 }
 
 .detail-item {
-    font-size: 13px;
+    font-size: 15px;
     color: #666;
-    margin: 0;
+    margin: 0 0 4px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
 }
 
 .rank-section {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
+    max-width: 100%;
+    overflow: hidden;
 }
 
 .rank-label {
-    font-size: 15px;
+    font-size: 16px;
     font-weight: bold;
     color: #333;
 }
@@ -192,19 +237,24 @@ body {
     display: flex;
     align-items: center;
     flex-shrink: 0;
+    min-width: 100px;
+    max-width: 100px;
 }
 
 .detail-button {
-    min-width: 70px;
-    padding: 8px 18px;
+    width: 80px;
+    padding: 10px 12px;
     font-size: 14px;
     border: 1px solid #2196f3;
     color: #2196f3;
     background: white;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
     transition: all 0.2s ease;
     font-weight: normal;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .detail-button:hover {
@@ -266,7 +316,7 @@ body {
     display: flex;
     align-items: center;
     padding: 10px 0;
-    border-bottom: 1px solid #ecf0f1;
+    border-bottom: 1px solid #81D4FA;
 }
 
 .features-list li:last-child {
@@ -395,9 +445,11 @@ body {
     }
 
     .offer-container {
-        padding: 16px;
-        overflow: auto;
+        padding: 12px;
+        overflow-y: auto;
+        overflow-x: hidden;
         height: auto;
+        box-sizing: border-box;
     }
 
     .offer-header h1 {
@@ -412,13 +464,15 @@ body {
     }
 
     .offer-card {
-        padding: 16px;
+        padding: 12px;
         height: auto;
         min-height: auto;
         max-height: none;
         flex: none;
         flex-direction: column;
         align-items: stretch;
+        box-sizing: border-box;
+        overflow: hidden;
     }
 
     .offer-content {
@@ -440,6 +494,12 @@ body {
     .offer-title {
         font-size: 16px;
         margin-bottom: 12px;
+        white-space: normal;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        text-overflow: unset;
+        max-height: none;
+        -webkit-line-clamp: unset;
     }
 
     .offer-details {

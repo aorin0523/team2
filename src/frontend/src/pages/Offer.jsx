@@ -143,6 +143,8 @@ function Offer() {
         }
     };
 
+
+
     return (
         <div className="app-layout">
             {/* サイドバー */}
@@ -155,7 +157,7 @@ function Offer() {
                         width: 240,
                         boxSizing: 'border-box',
                         bgcolor: 'white',
-                        borderRight: '1px solid #e0e0e0'
+                        borderRight: '1px solid #81D4FA'
                     }
                 }}
             >
@@ -232,6 +234,7 @@ function Offer() {
                 {/* オファーカード一覧 */}
                 <div className="offer-container">
                     <div className="offer-plans">
+
                         {offers.map((offer) => (
                             <div
                                 key={offer.id}
@@ -241,7 +244,9 @@ function Offer() {
                                 <div className="offer-content">
                                     {/* 左側：タイトルと詳細情報 */}
                                     <div className="offer-info">
-                                        <h3 className="offer-title">{offer.title}</h3>
+                                        <div className="offer-title">
+                                            {offer.title}
+                                        </div>
 
                                         <div className="offer-details">
                                             <p className="detail-item">申込状況：{offer.applicants}</p>
