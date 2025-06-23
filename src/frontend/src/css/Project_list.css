@@ -1,9 +1,3 @@
-html, body {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 /* ヘッダーのcss */
 header {
   display: flex;
@@ -12,8 +6,8 @@ header {
   height: 100px;
   width: 100%;
   margin: 0;
-  padding: 0 40px; 
-   background-color: #1976d2;
+  /* padding: 0 40px;  */
+  background-color: #1976d2;
 }
 
 .logo {
@@ -25,7 +19,7 @@ header {
 }
 
 .link {
-    margin-left: 650px; 
+    margin-left: 763px; 
     flex-grow: 1;  
 }
 
@@ -35,7 +29,8 @@ header {
   grid-template-columns: repeat(3, 1fr); /* 3列 */
   gap: 20px; /* カード間の余白 */
   padding: 20px;
-   margin: 0 auto;
+  margin: 0 auto;
+  width: 1200px; 
 }
 
 .card1, .card2, .card3,
@@ -47,7 +42,8 @@ header {
   padding: 16px;
   text-align: center;
   transition: transform 0.3s ease;
-  height: 489px;
+  height: 450px;
+  width: 330px;
 }
 
 .card1:hover, .card2:hover, .card3:hover,
@@ -58,7 +54,6 @@ header {
 .card img {
   width: 100%;
   height: 210px;
-  width: 400px;
   border-radius: 8px;
   margin-bottom: 10px;
 }
@@ -108,5 +103,19 @@ ul li {
   background-color: white;
 } 
 
+button.active {
+  background-color: #1976d2;
+  color: white;
+  font-weight: bold;
+}
 
+button.active {
+  background-color: #1976d2;
+  color: white;
+  font-weight: bold;
+}
+
+.pagenation-ui {
+  margin-left: 500px;
+}
 
