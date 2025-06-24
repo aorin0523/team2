@@ -157,7 +157,7 @@ function Project_List() {
   return (
     <>
       <Box component="header" className="header" sx={{ backgroundColor: blue[700], width: '100%' }}>
-        <div className="logo"><h2 className="appname">ぱいざ</h2></div>
+        <div className="logo">ぱいざ</div>
         <div className="link">
           <nav className="nav-link">
             <a href="/" style={{ color: 'white' }}>仕事を探す</a>

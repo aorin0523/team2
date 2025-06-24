@@ -11,15 +11,21 @@ header {
 }
 
 .logo {
-  width: 110px;
+  margin-top: 70px;
+  margin-left: 8px;
 }
 
 .nav-link {
     width: 500px;
 }
 
+.nav-link a {
+  margin-right: 8px;
+}
+
+
 .link {
-    margin-left: 763px; 
+    margin-left: 800px; 
     flex-grow: 1;  
 }
 
@@ -34,7 +40,9 @@ header {
 }
 
 .card1, .card2, .card3,
-.card4, .card5, .card6 {
+.card4, .card5, .card6,
+.card7,.card8,.card9,
+.card10,.card11,.card12 {
   background-color: #fff;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
@@ -83,12 +91,12 @@ ul li {
 }
 
 .pagenation-ui button {
-  background-color: transparent; /* 背景を透明にする */
-  border: none;                  /* 枠線も消す */
+  background-color: transparent; 
+  border: none;                  
   color: black;                 
-  box-shadow: none;              /* MUIなどで勝手に入る影も消す */
-  outline: none;                 /* フォーカス時の枠線も消す */
-  padding: 8px 12px;             /* ボタンの中身の余白調整 */
+  box-shadow: none;              
+  outline: none;                
+  padding: 8px 12px;           
   border-radius: 8px;            
   cursor: pointer;
 }
