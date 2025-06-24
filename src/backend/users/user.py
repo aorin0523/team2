@@ -10,18 +10,18 @@ class UserCreate(BaseModel):
     email: str
     password: str
 
+# 初期値はNone(受け取った項目のみ更新する)
 class UserUpdate(BaseModel):
-    name: str
-    email: str
-    password: str
-    rank: str
+    name: str = None
+    email: str = None
+    password: str = None
+    rank: int = None
 
 @router.get("/all")
 async def get_users():
     """
     ユーザ情報を全件取得するエンドポイント
     """
-    print("aaa")
     return Users().get_all_users()
 
 @router.get("/{user_id}")
@@ -42,7 +42,7 @@ async def create_user(data: UserCreate):
             password=data.password
         )
 
-@router.put("/users/{user_id}")
+@router.put("/{user_id}")
 async def update_user(user_id: str, data: UserUpdate):
     """
     ユーザ情報を更新するエンドポイント
@@ -55,7 +55,7 @@ async def update_user(user_id: str, data: UserUpdate):
         rank=data.rank
     )
 
-@router.delete("/users/{user_id}")
+@router.delete("/{user_id}")
 async def delete_user(user_id: str):
     """
     ユーザ情報を削除するエンドポイント

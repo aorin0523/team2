@@ -70,7 +70,6 @@ class Users(BaseDB):
                 users_dict = {}
                 
                 for row in result:
-                    print(row)
                     user_id = row["user_id"]
                     if user_id not in users_dict:
                         users_dict[user_id] = {
@@ -101,7 +100,8 @@ class Users(BaseDB):
                     id=id,
                     name=name,
                     email=email,
-                    password=password
+                    password=password,
+                    rank = 1
                 )
                 conn.execute(query)
                 conn.commit()
@@ -109,7 +109,7 @@ class Users(BaseDB):
         except Exception as e:
             return {"status": "ng", "error": e}
     
-    def update_user(self, id, name=None, email=None, password=None, rank=None):
+    def update_user(self, id, name, email, password, rank):
         """
         ユーザー情報をアップデート
         """
