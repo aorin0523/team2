@@ -17,13 +17,7 @@ import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 
-
-
 import '../css/kigyohome.css'
-
-
-
-
 
 function App() {
   const [count, setCount] = useState(0)
@@ -93,24 +87,16 @@ function App() {
     </Box>
 
 
-
-    <a href="#" class="button">
+    <link href="#" class="button">
     <img src={flow3}/>
         <span>募集フォーム 新規作成</span>
-    </a>
+    </link>
 
-    <a href="#" class="button">
+    <link href="#" class="button">
         
         <img src={flow2}/>
         <span>オファーページ</span>
-    </a>
-
-
-
-
-
-
-
+    </link>
 
     </>
   )
