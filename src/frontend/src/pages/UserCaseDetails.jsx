@@ -65,12 +65,11 @@ return (
                 </li>
             </ul>
         </div>}
-      </Toolbar>
+    </Toolbar>
     </AppBar>
 
     <Toolbar />
-      <Box component="main" className="container" sx={{ flexGrow: 1 }}>
-            <div class='container'>
+    <Box component="main" className="container" sx={{ flexGrow: 1 }}>
                 <div class='client'>
                     <img src={business_man}/>
                     <p>羽伊座太郎</p>
@@ -92,7 +91,20 @@ return (
                 </div>
                 <div class='work-outline'>
                     <h2>テストウェブサイトのコーディング</h2>
-                    <p>添付された資料を基にテストウェブを完成させてください。</p>
+                    <p>添付された資料を基にテストウェブを完成させてください。<br/>【 応募時のお願い 】
+<br/>・自己紹介や実績
+<br/>・依頼してから納品までの流れ、所要時間
+<br/>こちらを記載していただけると助かります。
+<br/>
+<br/>【重視するポイント】
+<br/>スピード、柔軟な対応ができる方
+<br/>出来れば急ぎでほしいので、即納できますという方がいましたら大変ありがたいです。
+<br/>良くしていただいた際は今後何かあった時にまたご依頼したいと考えています。
+<br/>
+<br/>一定数の応募があった場合、締切前に打ち切る可能性がありますのでご了承ください。
+<br/>
+<br/>その他ご質問等ありましたら、気軽にお問い合わせください。
+<br/>よろしくお願いいたします。</p>
                     <Button
                         variant="contained"
                         sx={{
@@ -104,11 +116,10 @@ return (
                                 outline: 'none',
                             }
                             }}>応募する</Button>
-                </div>
-            </div>
-      </Box>
-    </Box>
-  )
+                    </div>
+            </Box>
+        </Box>
+    )
 }
 
 export default App
