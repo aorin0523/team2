@@ -130,9 +130,7 @@ function Offer() {
         { text: "設定", icon: "⚙️" }
     ];
 
-    const handleOfferClick = (offerId) => {
-        setSelectedOffer(offerId);
-    };
+
 
     const getRankColor = (rank) => {
         switch (rank) {
@@ -146,7 +144,7 @@ function Offer() {
 
 
     return (
-        <div className="app-layout">
+        <Box className="app-layout">
             {/* サイドバー */}
             <Drawer
                 variant="permanent"
@@ -236,24 +234,24 @@ function Offer() {
                     <div className="offer-plans">
 
                         {offers.map((offer) => (
-                            <div
+                            <Box
                                 key={offer.id}
                                 className={`offer-card ${selectedOffer === offer.id ? 'selected' : ''}`}
-                                onClick={() => handleOfferClick(offer.id)}
+                                onClick={() => setSelectedOffer(offer.id)}
                             >
-                                <div className="offer-content">
+                                <Box className="offer-content">
                                     {/* 左側：タイトルと詳細情報 */}
-                                    <div className="offer-info">
-                                        <div className="offer-title">
+                                    <Box className="offer-info">
+                                        <Box className="offer-title">
                                             {offer.title}
-                                        </div>
+                                        </Box>
 
-                                        <div className="offer-details">
+                                        <Box className="offer-details">
                                             <p className="detail-item">申込状況：{offer.applicants}</p>
                                             <p className="detail-item">締め切り：{offer.deadline}</p>
-                                        </div>
+                                        </Box>
 
-                                        <div className="rank-section">
+                                        <Box className="rank-section">
                                             <span className="rank-label">Rank:</span>
                                             <Chip
                                                 label={offer.rank}
@@ -261,22 +259,22 @@ function Offer() {
                                                 size="medium"
                                                 className="rank-chip"
                                             />
-                                        </div>
-                                    </div>
+                                        </Box>
+                                    </Box>
 
                                     {/* 右側：詳細ボタン */}
-                                    <div className="offer-actions">
-                                        <button className="detail-button">
+                                    <Box className="offer-actions">
+                                        <Button className="detail-button" variant="outlined">
                                             詳細
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
+                                        </Button>
+                                    </Box>
+                                </Box>
+                            </Box>
                         ))}
                     </div>
                 </div>
             </main>
-        </div>
+        </Box>
     );
 }
 
