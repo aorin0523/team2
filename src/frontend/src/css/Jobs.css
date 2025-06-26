@@ -1,0 +1,51 @@
+body {
+    background-color: white;
+}
+
+/* ヘッダーのcss */
+header {
+  display: flex;
+  padding: 0;
+  align-items: center;
+  height: 100px;
+  width: 100%;
+  margin: 0;
+}
+
+
+
+.logo {
+  margin-left: 8px;
+}
+
+.nav-link {
+    width: 500px;
+}
+
+.nav-link a {
+  margin-right: 8px;
+}
+
+
+.link {
+    margin-left: 800px; 
+    flex-grow: 1;  
+}
+
+/* ボタンのcss */
+.search {
+    border-radius: 20px;
+}
+
+.result {
+  width: 800px;
+  height: 500px;
+  text-align: center;
+  margin-left: 300px;
+  border: #4e7bcc 1px solid;
+  margin-top: 40px;
+}
+
+.result p {
+  align-items: center;
+}

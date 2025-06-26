@@ -12,7 +12,7 @@ import BookmarkSharpIcon from '@mui/icons-material/BookmarkSharp';
 import NotificationsSharpIcon from '@mui/icons-material/NotificationsSharp';
 import EmailSharpIcon from '@mui/icons-material/EmailSharp';
 import HelpSharpIcon from '@mui/icons-material/HelpSharp';
-import { blue } from '@mui/material/colors';
+import { blue , lightBlue } from '@mui/material/colors';
 import '../css/Jobs.css';
 import { useState } from 'react';
 
@@ -59,7 +59,7 @@ function Jobs() {
 
   return (
     <>
-      <Box component="header" className="header" sx={{ backgroundColor: blue[700] }}>
+      <Box component="header" className="header" sx={{ backgroundColor: blue[700] , '&:hover': {backgroundColor: blue[600]}}}>
         <div className="logo">
           <h2 className="appname">ぱいざ</h2>
         </div>
@@ -78,8 +78,8 @@ function Jobs() {
       </Box>
 
       {/* ▼ 三列＋検索ボタン */}
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mt: 2, px: 3 }}>
-        <FormControl sx={{ minWidth: 120 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mt: 2, px: 3,  justifyContent: 'center', ml: 18 }}>
+        <FormControl sx={{ minWidth: 120 , backgroundColor: blue[50]}}>
           <InputLabel>地域</InputLabel>
           <Select
             value={area}
@@ -100,7 +100,7 @@ function Jobs() {
         </FormControl>
 
         {area && (
-          <FormControl sx={{ minWidth: 200 }}>
+          <FormControl sx={{ minWidth: 120 , backgroundColor: blue[50] }}>
             <InputLabel>都道府県</InputLabel>
             <Select
               value={prefecture}
@@ -116,7 +116,7 @@ function Jobs() {
           </FormControl>
         )}
 
-        <FormControl sx={{ minWidth: 120 }}>
+        <FormControl sx={{ minWidth: 120 , backgroundColor: blue[50] }}>
           <InputLabel>ランク</InputLabel>
           <Select value={jobType} label="ランク" onChange={(e) => setJobType(e.target.value)}>
             <MenuItem value="rankS">S</MenuItem>
@@ -125,10 +125,11 @@ function Jobs() {
             <MenuItem value="rankC">C</MenuItem>
             <MenuItem value="rankD">D</MenuItem>
             <MenuItem value="rankE">E</MenuItem>
+            <MenuItem value="rankF">F</MenuItem>
           </Select>
         </FormControl>
 
-        <FormControl sx={{ minWidth: 120 }}>
+        <FormControl sx={{ minWidth: 120 , backgroundColor: blue[50] }}>
           <InputLabel>職種</InputLabel>
           <Select value={tech} label="職種" onChange={(e) => setTech(e.target.value)}>
             <MenuItem value="system">システムエンジニア</MenuItem>
@@ -144,7 +145,7 @@ function Jobs() {
           </Select>
         </FormControl>
 
-        <Button className="search" variant="contained"   onClick={handleSearch} sx={{ bgcolor: blue[300] }}>
+        <Button className="search" variant="contained"   onClick={handleSearch} sx={{ backgroundColor: blue[300] , '&:hover': {backgroundColor: blue[200]} }}>
           検索
         </Button>
 
@@ -168,8 +169,16 @@ function Jobs() {
         ))}
       </Box>
     </Box>
+
+    <Box sx={{ boxShadow: `0px 4px 12px ${lightBlue[100]}`, 
+        padding: 2,
+        borderRadius: 8,}}>
+      <div className='result'>
+        <p>検索結果</p>
+      </div>
+    </Box>
     </>
   );
 }
 
-export default Jobs;
+export default Jobs
