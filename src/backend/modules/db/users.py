@@ -100,8 +100,7 @@ class Users(BaseDB):
                     id=id,
                     name=name,
                     email=email,
-                    password=password,
-                    rank = 1
+                    password=password
                 )
                 conn.execute(query)
                 conn.commit()

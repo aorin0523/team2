@@ -18,14 +18,14 @@ class UserUpdate(BaseModel):
     rank: int = None
 
 @router.get("/all")
-async def get_users():
+async def read_all_users():
     """
     ユーザ情報を全件取得するエンドポイント
     """
     return Users().get_all_users()
 
 @router.get("/{user_id}")
-async def get_users(user_id: str):
+async def read_user(user_id: str):
     """
     ユーザ情報を取得するエンドポイント
     """
