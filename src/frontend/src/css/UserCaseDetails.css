@@ -31,13 +31,14 @@ body {
 
 .container {
     width: 1140px;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 0 auto;
     display: flex;
-    align-items: center;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 40px;
     background-color: #ffffff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-    min-height: 100vh;
+    padding: 40px 20px;
 }
 
 .container .client p{
@@ -48,10 +49,15 @@ body {
 }
 .container .work-outline p{
     color: black;
+    text-align: left;
+}
+.container .work-outline button{
+    margin-top: 50px;
 }
 
 img{
     border-radius: 50%;
     width: 150px;
     height: 150px;
+    object-fit: cover;
 }
