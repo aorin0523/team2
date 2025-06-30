@@ -9,6 +9,15 @@
     justify-content: flex-start;
 }
 
+.header-right ul li a{
+    padding: 5px;
+}
+.header-right ul li:hover{
+    background-color: #1e88e5;
+    border-radius: 50px;
+    transition: background-color 0.3s ease; /* 0.3秒かけて背景色が変化する */
+}
+
 ul{
     display: flex;
     margin: 0;
