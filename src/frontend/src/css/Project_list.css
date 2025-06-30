@@ -87,7 +87,7 @@ ul li {
 .pagenation-ui {
     display: flex;
     align-items: center;
-    margin-left: 400px;
+    margin-left: 100px;
 }
 
 .pagenation-ui button {
