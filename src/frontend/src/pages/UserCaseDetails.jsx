@@ -1,4 +1,6 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
@@ -24,23 +26,22 @@ function App() {
 
 return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-    <AppBar position="fixed">
+    <AppBar position="fixed" sx={{ backgroundColor: '#0057b2'}}>
       <Toolbar>
-        <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-          <div className='header-left'>
-            <a href='/'>
+        <Typography variant="h6" noWrap component="Box" sx={{ flexGrow: 1 }}>
+          <Box className='header-left'>
+            <Link href='/'>
                 <h3>ぱいざ</h3>
-            </a>
-        </div>
+            </Link>
+        </Box>
         </Typography>
-
-        {<div className='header-right'>
+        {<Box className='header-right'>
             <ul>
-                <li><a href='/'>仕事を探す</a></li>
-                <li><a href='/'>仕事の内容</a></li>
+                <li><Link href='/'>仕事を探す</Link></li>
+                <li><Link href='/'>仕事の内容</Link></li>
                 <li>
                     <IconButton sx={{ color : "white"}} size="small" >
-                        <BookmarkIcon />
+                        <BookmarkIcon/>
                     </IconButton>
                 </li>
                 <li>
@@ -64,13 +65,13 @@ return (
                     </IconButton>
                 </li>
             </ul>
-        </div>}
+        </Box>}
     </Toolbar>
     </AppBar>
 
     <Toolbar />
     <Box component="main" className="container" sx={{ flexGrow: 1 }}>
-                <div class='client'>
+                <Box className='client'>
                     <img src={business_man}/>
                     <p>羽伊座太郎</p>
                     <Typography component="legend"></Typography>
@@ -88,8 +89,8 @@ return (
                                 outline: 'none',
                             }
                             }}>質問する</Button>
-                </div>
-                <div class='work-outline'>
+                </Box>
+                <Box className='work-outline'>
                     <h2>テストウェブサイトのコーディング</h2>
                     <p>添付された資料を基にテストウェブを完成させてください。<br/>【 応募時のお願い 】
 <br/>・自己紹介や実績
@@ -116,7 +117,7 @@ return (
                                 outline: 'none',
                             }
                             }}>応募する</Button>
-                    </div>
+                    </Box>
             </Box>
         </Box>
     )
