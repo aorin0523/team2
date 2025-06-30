@@ -1,33 +1,21 @@
 /* ヘッダーのcss */
 header {
   display: flex;
-  padding: 0;
+  justify-content: center; /* 中央寄せ */
   align-items: center;
   height: 100px;
   width: 100%;
   margin: 0;
-  /* padding: 0 40px;  */
   background-color: #1976d2;
 }
 
-.logo {
-  margin-top: 70px;
-  margin-left: 8px;
-}
-
-.nav-link {
-    width: 500px;
-}
-
-.nav-link a {
-  margin-right: 8px;
-}
-
-
 .link {
-    margin-left: 800px; 
-    flex-grow: 1;  
+  display: flex;
+  align-items: center;
+  gap: 16px; 
+  margin-left: 800px;
 }
+
 
 /* cardのcss */
 .card {
