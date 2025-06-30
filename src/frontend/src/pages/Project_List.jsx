@@ -160,7 +160,7 @@ function Project_List() {
         </Box>
 
         {/* ナビリンク＆アイコン部分 */}
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+        <Box className="link" sx={{ display: 'flex', alignItems: 'center', gap: 2 , textShadow: '0 0 4px rgba(0, 0, 0, 0.5)', }}>
           <Link href="/" underline="none" sx={{ color: 'white' }}>
             仕事を探す
           </Link>
@@ -175,6 +175,7 @@ function Project_List() {
         </Box>
         </Toolbar>
       </AppBar>
+
       <div className='card'>
         {displayedJobs.map(job => (
           <Box
