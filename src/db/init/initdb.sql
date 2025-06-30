@@ -15,7 +15,7 @@ CREATE TABLE `Skills` (
 CREATE TABLE `Users` (
 	`id` CHAR(36) NOT NULL UNIQUE,
 	`name` VARCHAR(255) NOT NULL,
-	`rank` INTEGER NOT NULL,
+	`rank` INTEGER NOT NULL DEFAULT 1,
 	`email` VARCHAR(255) NOT NULL UNIQUE,
 	`password` VARCHAR(255) NOT NULL,
 	`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -110,3 +110,18 @@ ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE `Offers`
 ADD FOREIGN KEY(`rank`) REFERENCES `Ranks`(`id`)
 ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+INSERT INTO Ranks (name) VALUES ('D'), ('C'), ('B'), ('A'), ('S');
+INSERT INTO Skills (name) VALUES
+('JavaScript'),
+('Python'),
+('Java'),
+('C#'),
+('Ruby'),
+('PHP'),
+('Swift'),
+('Kotlin'),
+('TypeScript'),
+('Go');
