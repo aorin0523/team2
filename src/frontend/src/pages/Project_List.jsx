@@ -128,9 +128,6 @@ function Project_List() {
     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
   };
 
-  const handlePageClick = (page) => {
-    setCurrentPage(page);
-  };
 
   const getVisiblePages = () => {
     const pages = [];
@@ -219,7 +216,7 @@ function Project_List() {
               ) : (
                 <Button
                   className={`page${page} ${page === currentPage ? 'active' : ''}`}
-                  onClick={() => handlePageClick(page)}
+                  onClick={() => setCurrentPage(page)}
                 >
                   {page}
                 </Button>
