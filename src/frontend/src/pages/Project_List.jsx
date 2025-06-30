@@ -160,18 +160,18 @@ function Project_List() {
         </Box>
 
         {/* ナビリンク＆アイコン部分 */}
-        <Box className="link" sx={{ display: 'flex', alignItems: 'center', gap: 2 , textShadow: '0 0 4px rgba(0, 0, 0, 0.5)', }}>
-          <Link href="/" underline="none" sx={{ color: 'white' }}>
+        <Box className="link" sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          <Link href="/" underline="none" sx={{ color: 'white' , '&:hover': {backgroundColor: blue[600]},borderRadius: '9999px', }}>
             仕事を探す
           </Link>
-          <Link href="/" underline="none" sx={{ color: 'white' }}>
+          <Link href="/" underline="none" sx={{ color: 'white' , '&:hover': {backgroundColor: blue[600]}, borderRadius: '9999px', }}>
             仕事の管理
           </Link>
-          <IconButton sx={{ color: 'white' }}><BookmarkSharpIcon /></IconButton>
-          <IconButton sx={{ color: 'white' }}><NotificationsSharpIcon /></IconButton>
-          <IconButton sx={{ color: 'white' }}><EmailSharpIcon /></IconButton>
-          <IconButton sx={{ color: 'white' }}><HelpSharpIcon /></IconButton>
-          <IconButton sx={{ color: 'white' }}><AccountCircleSharpIcon /></IconButton>
+          <IconButton sx={{ color: 'white' , '&:hover': {backgroundColor: blue[600]},}}><BookmarkSharpIcon /></IconButton>
+          <IconButton sx={{ color: 'white' , '&:hover': {backgroundColor: blue[600]},}}><NotificationsSharpIcon /></IconButton>
+          <IconButton sx={{ color: 'white' , '&:hover': {backgroundColor: blue[600]},}}><EmailSharpIcon /></IconButton>
+          <IconButton sx={{ color: 'white' , '&:hover': {backgroundColor: blue[600]},}}><HelpSharpIcon /></IconButton>
+          <IconButton sx={{ color: 'white' , '&:hover': {backgroundColor: blue[600]},}}><AccountCircleSharpIcon /></IconButton>
         </Box>
         </Toolbar>
       </AppBar>
