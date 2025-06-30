@@ -27,9 +27,9 @@ function App() {
 return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
     <AppBar position="fixed" sx={{ backgroundColor: '#0057b2'}}>
-      <Toolbar>
+    <Toolbar>
         <Typography variant="h6" noWrap component="Box" sx={{ flexGrow: 1 }}>
-          <Box className='header-left'>
+        <Box className='header-left'>
             <Link href='/'>
                 <h3>ぱいざ</h3>
             </Link>
