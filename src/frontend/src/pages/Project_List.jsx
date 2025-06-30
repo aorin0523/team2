@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { IconButton, Box } from '@mui/material';
+import { IconButton, Box , Button , AppBar , Link , Toolbar} from '@mui/material';
 import AccountCircleSharpIcon from '@mui/icons-material/AccountCircleSharp';
 import BookmarkSharpIcon from '@mui/icons-material/BookmarkSharp';
 import NotificationsSharpIcon from '@mui/icons-material/NotificationsSharp';
@@ -19,7 +19,6 @@ import card9 from "../images/card9.jpg";
 import card10 from "../images/card10.jpg";
 import card11 from "../images/card11.png";
 import card12 from "../images/card12.jpg";
-
 import '../css/Project_list.css';
 import { blue, lightBlue } from '@mui/material/colors';
 
@@ -156,21 +155,29 @@ function Project_List() {
 
   return (
     <>
-      <Box component="header" className="header" sx={{ backgroundColor: blue[700], width: '100%' }}>
-        <div className="logo">ぱいざ</div>
-        <div className="link">
-          <nav className="nav-link">
-            <a href="/" style={{ color: 'white' }}>仕事を探す</a>
-            <a href="/" style={{ color: 'white' }}>仕事の管理</a>
-            <IconButton sx={{ color: 'white' }}><BookmarkSharpIcon /></IconButton>
-            <IconButton sx={{ color: 'white' }}><NotificationsSharpIcon /></IconButton>
-            <IconButton sx={{ color: 'white' }}><EmailSharpIcon /></IconButton>
-            <IconButton sx={{ color: 'white' }}><HelpSharpIcon /></IconButton>
-            <IconButton sx={{ color: 'white' }}><AccountCircleSharpIcon /></IconButton>
-          </nav>
-        </div>
-      </Box>
+      <AppBar position="static" sx={{ backgroundColor: blue[700] , alignItems: "center"}}>
+        <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        {/* ロゴ部分 */}
+        <Box sx={{ fontWeight: 'bold', fontSize: 20 }}>
+          ぱいざ
+        </Box>
 
+        {/* ナビリンク＆アイコン部分 */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          <Link href="/" underline="none" sx={{ color: 'white' }}>
+            仕事を探す
+          </Link>
+          <Link href="/" underline="none" sx={{ color: 'white' }}>
+            仕事の管理
+          </Link>
+          <IconButton sx={{ color: 'white' }}><BookmarkSharpIcon /></IconButton>
+          <IconButton sx={{ color: 'white' }}><NotificationsSharpIcon /></IconButton>
+          <IconButton sx={{ color: 'white' }}><EmailSharpIcon /></IconButton>
+          <IconButton sx={{ color: 'white' }}><HelpSharpIcon /></IconButton>
+          <IconButton sx={{ color: 'white' }}><AccountCircleSharpIcon /></IconButton>
+        </Box>
+        </Toolbar>
+      </AppBar>
       <div className='card'>
         {displayedJobs.map(job => (
           <Box
@@ -200,9 +207,9 @@ function Project_List() {
       <nav className='pagenation'>
         <ul className="pagenation-ui">
           <li className='previousBtn'>
-            <button onClick={handlePrevious} disabled={currentPage === 1}>
+            <Button onClick={handlePrevious} disabled={currentPage === 1}>
               <IconButton><ArrowBackSharpIcon /></IconButton>Previous
-            </button>
+            </Button>
           </li>
 
           {getVisiblePages().map((page, index) => (
@@ -210,12 +217,12 @@ function Project_List() {
               {page === '…' ? (
                 <div className="page-dots">…</div>
               ) : (
-                <button
+                <Button
                   className={`page${page} ${page === currentPage ? 'active' : ''}`}
                   onClick={() => handlePageClick(page)}
                 >
                   {page}
-                </button>
+                </Button>
               )}
             </li>
           ))}
