@@ -2,6 +2,7 @@ import { useState } from 'react'
 import flow2 from '../images/flow_02.png'
 import flow3 from '../images/flow_03.png'
 
+import { Link } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -16,6 +17,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
+
 
 import '../css/kigyohome.css'
 
@@ -87,16 +89,16 @@ function App() {
     </Box>
 
 
-    <link href="#" class="button">
+    <Link to="#" class="button">
     <img src={flow3}/>
         <span>募集フォーム 新規作成</span>
-    </link>
+    </Link>
 
-    <link href="#" class="button">
+    <Link to="#" class="button">
         
         <img src={flow2}/>
         <span>オファーページ</span>
-    </link>
+    </Link>
 
     </>
   )
