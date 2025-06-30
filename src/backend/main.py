@@ -28,12 +28,14 @@ root_router = APIRouter(prefix="/api/v1")
 # 例: import user
 import tests
 import users
+import offers
 
 # 新しくモジュールを作成したらここにインポートしたルーターを追加
 # 例: root_router.include_router(user.router)
 
 root_router.include_router(tests.router)
 root_router.include_router(users.router)
+root_router.include_router(offers.router)
 
 
 # root_routerをappにinclude
