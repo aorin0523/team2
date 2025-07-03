@@ -79,7 +79,7 @@ async def get_current_active_user(current_user: dict = Depends(get_current_user)
     return current_user
 
 # ユーザー登録エンドポイント
-@router.post("/register", response_model=dict)
+@router.post("/register", response_model=Token)
 async def register_user(user_data: UserRegister):
     """
     新規ユーザー登録
@@ -105,10 +105,13 @@ async def register_user(user_data: UserRegister):
                 detail=f"Registration failed {result['error']}"
             )
     
-    return {
-        "message": "User registered successfully",
-        "user_id": result["user_id"]
-    }
+    # 登録成功後、自動的にログイン用のトークンを発行
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = create_access_token(
+        data={"sub": user_data.email}, expires_delta=access_token_expires
+    )
+    
+    return Token(access_token=access_token, token_type="bearer")
 
 # ログインエンドポイント
 @router.post("/login", response_model=Token)

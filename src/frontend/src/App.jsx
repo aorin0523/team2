@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./contexts/AuthContext";
 import Home from "./pages/Home";
 
 import SignIn from "./pages/SignIn";
@@ -8,15 +9,16 @@ import Offer from "./pages/Offer";
 
 function App() {
   return ( 
-    <BrowserRouter>
-      <Routes>
-
-        <Route path="/" element={<Home />} />
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="/enterprise" element={<KigyoHome />} />
-        <Route path="/offer" element={<Offer />} />
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>        <Route path="/" element={<Home />} />
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/enterprise" element={<KigyoHome />} />
+          <Route path="/offer" element={<Offer />} />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 
