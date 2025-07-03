@@ -7,21 +7,11 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import jwt, JOSEError
 from passlib.context import CryptContext
 from pydantic import BaseModel
+from modules.db.users import Users
 
 SECRET_KEY = os.getenv("BACKEND_SECRET_KEY")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
-
-# モックデータ
-fake_users_db = {
-    "johndoe": {
-        "username": "johndoe",
-        "full_name": "John Doe",
-        "email": "johndoe@example.com",
-        "hashed_password": "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW",
-        "disabled": False,
-    }
-}
 
 
 class Token(BaseModel):
@@ -30,18 +20,17 @@ class Token(BaseModel):
 
 
 class TokenData(BaseModel):
-    username: Union[str, None] = None
+    email: Union[str, None] = None
 
 
 class User(BaseModel):
-    username: str
-    email: Union[str, None] = None
-    full_name: Union[str, None] = None
-    disabled: Union[bool, None] = None
+    id: str
+    name: str
+    email: str
 
 
 class UserInDB(User):
-    hashed_password: str
+    password: str
 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -50,27 +39,32 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/v1/auth/token")
 router = APIRouter()
 
 
-def verify_password(plain_password, hashed_password):
-    return pwd_context.verify(plain_password, hashed_password)
+def get_user_by_email(email: str):
+    """データベースからemailでユーザーを取得"""
+    users_db = Users()
+    user = users_db.get_user_by_email(email)
+    if user:
+        return UserInDB(
+            id=user["id"],
+            name=user["name"],
+            email=user["email"],
+            password=user["password"]
+        )
+    return None
 
 
-def get_password_hash(password):
-    return pwd_context.hash(password)
-
-
-def get_user(db, username: str):
-    if username in db:
-        user_dict = db[username]
-        return UserInDB(**user_dict)
-
-
-def authenticate_user(fake_db, username: str, password: str):
-    user = get_user(fake_db, username)
-    if not user:
-        return False
-    if not verify_password(password, user.hashed_password):
-        return False
-    return user
+def authenticate_user(email: str, password: str):
+    """ユーザー認証（emailとpasswordで）"""
+    users_db = Users()
+    user = users_db.authenticate_user(email, password)
+    if user:
+        return UserInDB(
+            id=user["id"],
+            name=user["name"], 
+            email=user["email"],
+            password=user["password"]
+        )
+    return False
 
 
 def create_access_token(data: dict, expires_delta: Union[timedelta, None] = None):
@@ -92,21 +86,19 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
     )
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        username = payload.get("sub")
-        if username is None:
+        email = payload.get("sub")
+        if email is None:
             raise credentials_exception
-        token_data = TokenData(username=username)
+        token_data = TokenData(email=email)
     except JOSEError:
         raise credentials_exception
-    user = get_user(fake_users_db, username=token_data.username)
+    user = get_user_by_email(email=token_data.email)
     if user is None:
         raise credentials_exception
-    return user
+    return User(id=user.id, name=user.name, email=user.email)
 
 
 async def get_current_active_user(current_user: User = Depends(get_current_user)):
-    if current_user.disabled:
-        raise HTTPException(status_code=400, detail="Inactive user")
     return current_user
 
 
@@ -114,16 +106,27 @@ async def get_current_active_user(current_user: User = Depends(get_current_user)
 async def login_for_access_token(
     form_data: OAuth2PasswordRequestForm = Depends(),
 ) -> Token:
-    user = authenticate_user(fake_users_db, form_data.username, form_data.password)
+    """
+    OAuth2 Password形式でのログイン (SwaggerUI Authorize用)
+    
+    注意: usernameフィールドにはemailアドレスを入力してください
+    """
+    print(f"Login attempt - Username: {form_data.username}")
+    
+    # usernameフィールドにemailが入力されることを想定
+    user = authenticate_user(form_data.username, form_data.password)
     if not user:
+        print(f"Authentication failed for email: {form_data.username}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
+            detail="Incorrect email or password (enter email in username field)",
             headers={"WWW-Authenticate": "Bearer"},
         )
+    
+    print(f"Authentication successful for user: {user.email}")
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user.username}, expires_delta=access_token_expires
+        data={"sub": user.email}, expires_delta=access_token_expires
     )
     print (f"JWT: {access_token}")
     return Token(access_token=access_token, token_type="bearer")
@@ -136,4 +139,4 @@ async def read_users_me(current_user: User = Depends(get_current_active_user)):
 
 @router.get("/users/me/items/")
 async def read_own_items(current_user: User = Depends(get_current_active_user)):
-    return [{"item_id": "Foo", "owner": current_user.username}]
+    return [{"item_id": "Foo", "owner": current_user.email}]
