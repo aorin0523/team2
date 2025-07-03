@@ -67,9 +67,29 @@ function Jobs() {
       tech: 'ネットワークエンジニア',
       detail: '教育系Webアプリ開発使用技術：React / Java / AWS 特徴：教育業界の大手。自社開発あり。リモート可'
     },
-    { id: 4, company: '株式会社サーバーワークス', area: 'hokkaido', prefecture: '北海道', rank: 'A', tech: 'システムエンジニア', detail: '詳細情報2' },
-    { id: 5, company: 'きらぼしコンサルティング', area: 'hokkaido', prefecture: '北海道', rank: 'D', tech: 'システムエンジニア', detail: '詳細情報2' },
-    { id: 6, company: '株式会社リクルートスタッフィング', area: 'hokkaido', prefecture: '北海道', rank: 'S', tech: 'システムエンジニア', detail: '詳細情報2' }
+    { id: 4, 
+      company: '株式会社サーバーワークス', 
+      area: 'hokkaido', 
+      prefecture: '北海道', 
+      rank: 'A', 
+      tech: 'システムエンジニア', 
+      detail: '詳細情報2' },
+
+    { id: 5, 
+      company: 'きらぼしコンサルティング', 
+      area: 'hokkaido', 
+      prefecture: '北海道', 
+      rank: 'D', 
+      tech: 'システムエンジニア', 
+      detail: '詳細情報2' },
+
+    { id: 6, 
+      company: '株式会社リクルートスタッフィング', 
+      area: 'hokkaido', 
+      prefecture: '北海道', 
+      rank: 'S', 
+      tech: 'システムエンジニア', 
+      detail: '詳細情報2' }
   ];
 
   return (
@@ -170,9 +190,9 @@ function Jobs() {
               mb: 2
             }}
           >
-            <div>会社名：{job.company}</div>
-            <div>地域：{job.prefecture}　ランク：{job.rank}　職種：{job.tech}</div>
-            <div>詳細：{job.detail}</div>
+            <div className='text'>会社名：{job.company}</div>
+            <div className='text'>地域：{job.prefecture}　ランク：{job.rank}　職種：{job.tech}</div>
+            <div className='text'>詳細：{job.detail}</div>
           </Box>
         ))}
       </Box>
