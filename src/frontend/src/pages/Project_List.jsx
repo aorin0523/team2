@@ -212,8 +212,8 @@ function Project_List() {
 
           {getVisiblePages().map((page, index) => (
             <li key={index}>
-              {page === '…' ? (
-                <div className="page-dots">…</div>
+              {page === '...' ? (
+                <div className="page-dots">...</div>
               ) : (
                 <Button
                   className={`page${page} ${page === currentPage ? 'active' : ''}`}
