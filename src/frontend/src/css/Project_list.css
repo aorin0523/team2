@@ -1,4 +1,4 @@
-/* ヘッダーのcss */
+/* ヘッダー */
 header {
   display: flex;
   justify-content: center; 
@@ -17,7 +17,7 @@ header {
 }
 
 
-/* cardのcss */
+/* 案件一覧 */
 .card {
   display: grid;
   grid-template-columns: repeat(3, 1fr); /* 3列 */
@@ -75,7 +75,7 @@ ul li {
 .pagenation-ui {
     display: flex;
     align-items: center;
-    margin-left: 100px;
+    margin-left: 460px;
 }
 
 .pagenation-ui button {
@@ -95,7 +95,7 @@ ul li {
 }
 
 
- body {
+body {
   background-color: white;
 } 
 
