@@ -1,0 +1,127 @@
+CREATE TABLE `Ranks` (
+	`id` INTEGER NOT NULL AUTO_INCREMENT UNIQUE,
+	`name` VARCHAR(255) NOT NULL,
+	PRIMARY KEY(`id`)
+);
+
+
+CREATE TABLE `Skills` (
+	`id` INTEGER NOT NULL AUTO_INCREMENT UNIQUE,
+	`name` VARCHAR(255) NOT NULL,
+	PRIMARY KEY(`id`)
+);
+
+
+CREATE TABLE `Users` (
+	`id` CHAR(36) NOT NULL UNIQUE,
+	`name` VARCHAR(255) NOT NULL,
+	`rank` INTEGER NOT NULL,
+	`email` VARCHAR(255) NOT NULL,
+	`password` VARCHAR(255) NOT NULL,
+	`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	`updated_at` TIMESTAMP,
+	`deleted_at` TIMESTAMP,
+	PRIMARY KEY(`id`)
+);
+
+
+CREATE TABLE `Enterprises` (
+	`id` CHAR(36) NOT NULL UNIQUE,
+	`name` VARCHAR(255) NOT NULL,
+	`description` TEXT(65535),
+	`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	`updated_at` TIMESTAMP,
+	`deleted_at` TIMESTAMP,
+	PRIMARY KEY(`id`)
+);
+
+
+CREATE TABLE `Offers` (
+	`id` CHAR(36) NOT NULL UNIQUE,
+	`enterprise_id` CHAR(36) NOT NULL,
+	`title` VARCHAR(255) NOT NULL,
+	`content` TEXT(65535) NOT NULL,
+	`rank` INTEGER NOT NULL,
+	`deadline` TIMESTAMP,
+	`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	`updated_at` TIMESTAMP,
+	`deleted_at` TIMESTAMP,
+	PRIMARY KEY(`id`)
+);
+
+
+CREATE TABLE `UserSkills` (
+	`user_id` CHAR(36) NOT NULL,
+	`skill_id` INTEGER NOT NULL,
+	`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	`updated_at` TIMESTAMP,
+	`deleted_at` TIMESTAMP,
+	PRIMARY KEY(`user_id`, `skill_id`)
+);
+
+
+CREATE TABLE `UserOffers` (
+	`user_id` CHAR(36) NOT NULL,
+	`offer_id` CHAR(36) NOT NULL,
+	`favorite` BOOLEAN,
+	`wish` BOOLEAN,
+	`assign` BOOLEAN,
+	`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	`updated_at` TIMESTAMP,
+	`deleted_at` TIMESTAMP,
+	PRIMARY KEY(`user_id`, `offer_id`)
+);
+
+
+CREATE TABLE `OfferSkills` (
+	`offer_id` CHAR(36) NOT NULL,
+	`skill_id` INTEGER NOT NULL,
+	`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	`updated_at` TIMESTAMP,
+	`deleted_at` TIMESTAMP,
+	PRIMARY KEY(`offer_id`, `skill_id`)
+);
+
+
+ALTER TABLE `UserSkills`
+ADD FOREIGN KEY(`user_id`) REFERENCES `Users`(`id`)
+ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE `UserSkills`
+ADD FOREIGN KEY(`skill_id`) REFERENCES `Skills`(`id`)
+ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE `Offers`
+ADD FOREIGN KEY(`enterprise_id`) REFERENCES `Enterprises`(`id`)
+ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE `UserOffers`
+ADD FOREIGN KEY(`user_id`) REFERENCES `Users`(`id`)
+ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE `UserOffers`
+ADD FOREIGN KEY(`offer_id`) REFERENCES `Offers`(`id`)
+ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE `OfferSkills`
+ADD FOREIGN KEY(`offer_id`) REFERENCES `Offers`(`id`)
+ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE `OfferSkills`
+ADD FOREIGN KEY(`skill_id`) REFERENCES `Skills`(`id`)
+ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE `Users`
+ADD FOREIGN KEY(`rank`) REFERENCES `Ranks`(`id`)
+ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE `Offers`
+ADD FOREIGN KEY(`rank`) REFERENCES `Ranks`(`id`)
+ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+INSERT INTO Ranks (name) VALUES ('D'), ('C'), ('B'), ('A'), ('S');
+INSERT INTO Skills (name) VALUES
+('JavaScript'),
+('Python'),
+('Java'),
+('C#'),
+('Ruby'),
+('PHP'),
+('Swift'),
+('Kotlin'),
+('TypeScript'),
+('Go');

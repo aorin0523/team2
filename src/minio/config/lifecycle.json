@@ -1,0 +1,14 @@
+{
+    "Rules": [
+        {
+            "ID": "ExpireOldObjects",
+            "Status": "Enabled",
+            "Expiration": {
+                "Days": 1
+            },
+            "Filter": {
+                "Prefix": ""
+            }
+        }
+    ]
+}
