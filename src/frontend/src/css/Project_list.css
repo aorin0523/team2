@@ -1,19 +1,16 @@
 /* ヘッダー */
 header {
   display: flex;
-  justify-content: center; 
-  align-items: center;
-  height: 100px;
+  height: 80px;
   width: 100%;
   margin: 0;
   background-color: #1976d2;
-}
+} 
 
 .link {
   display: flex;
   align-items: center;
   gap: 16px; 
-  margin-left: 800px;
 }
 
 
@@ -72,13 +69,13 @@ ul li {
     list-style: none;
 }
 
-.pagenation-ui {
+.pagination-ui {
     display: flex;
     align-items: center;
     margin-left: 460px;
 }
 
-.pagenation-ui button {
+.pagination-ui button {
   background-color: transparent; 
   border: none;                  
   color: black;                 
@@ -89,7 +86,7 @@ ul li {
   cursor: pointer;
 }
 
-.pagenation-ui button:hover {
+.pagination-ui button:hover {
   background-color: white;
   border-radius: 8px; 
 }
