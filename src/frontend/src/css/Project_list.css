@@ -21,7 +21,8 @@ header {
   gap: 20px; /* カード間の余白 */
   padding: 20px;
   margin: 0 auto;
-  width: 1200px; 
+  max-width: 1200px;
+  width: 90%;
 }
 
 .card1, .card2, .card3,
@@ -40,7 +41,9 @@ header {
 }
 
 .card1:hover, .card2:hover, .card3:hover,
-.card4:hover, .card5:hover, .card6:hover {
+.card4:hover, .card5:hover, .card6:hover,
+.card7:hover, .card8:hover, .card9:hover,
+.card10:hover, .card11:hover, .card12:hover {
   transform: scale(1.03);
 }
 
