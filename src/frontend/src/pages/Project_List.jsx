@@ -374,7 +374,7 @@ function Project_List() {
             <div className={`card${job.id}`}>
               <h2>{job.title}</h2>
               <img src={job.image} alt="求人画像" />
-              <h2>{job.company}</h2>
+              <h3>{job.company}</h3>
               <p className="detail">
                 {job.detail.split('\n').map((line, i) => <div key={i}>{line}</div>)}
               </p>
@@ -386,8 +386,8 @@ function Project_List() {
       <nav className='pagination'>
         <ul className="pagination-ui">
           <li className='previousBtn'>
-            <Button onClick={handlePrevious} disabled={currentPage === 1}>
-              <IconButton><ArrowBackSharpIcon /></IconButton>Previous
+            <Button onClick={handlePrevious} disabled={currentPage === 1}
+              startIcon={<ArrowBackSharpIcon />}> Previous
             </Button>
           </li>
 
