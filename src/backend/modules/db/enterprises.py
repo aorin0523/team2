@@ -28,7 +28,7 @@ class Enterprises(BaseDB):
         """
         企業のdescriptionを更新する
         """
-        with self.engine.connect() as conn:
+        with self.engine.begin() as conn:
             query = (
                 update(self.enterprises)
                 .where(self.enterprises.c.id == enterprise_id)
