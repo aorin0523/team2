@@ -10,6 +10,7 @@ click==8.2.1
 colorama==0.4.6
 cryptography==45.0.2
 ecdsa==0.19.1
+email-validator==2.1.0
 exceptiongroup==1.3.0
 fastapi==0.115.12
 fastapi-injector==0.8.0
