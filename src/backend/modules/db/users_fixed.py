@@ -36,15 +36,11 @@ class Users(BaseDB):
 
     def authenticate_user(self, email: str, password: str):
         """ユーザー認証"""
-        print(f"Authenticating user with email: {email}")
         user = self.get_user_by_email(email)
         if not user:
-            print(f"User not found for email: {email}")
             return False
         if not self.verify_password(password, user["password"]):
-            print(f"Password verification failed for email: {email}")
             return False
-        print(f"Authentication successful for email: {email}")
         return user
 
     def get_all_users(self):
@@ -129,7 +125,7 @@ class Users(BaseDB):
         except Exception as e:
             return {"status":"ng", "error": str(e)}
         
-    def create_user(self, name, email, password, rank=1):
+    def create_user(self, name, email, password):
         """
         ユーザーを追加する（パスワードをハッシュ化）
         """
@@ -147,8 +143,7 @@ class Users(BaseDB):
                     id=id,
                     name=name,
                     email=email,
-                    password=hashed_password,
-                    rank=rank
+                    password=hashed_password
                 )
                 conn.execute(query)
                 conn.commit()
