@@ -46,7 +46,7 @@ function App() {
           <Toolbar />
           <Divider />
           <List>
-            {['Home', '募集フォーム', 'オファー一覧', ''].map((text, index) => (
+            {['Home', '募集フォーム', 'オファー一覧'].map((text, index) => (
               <ListItem key={text} disablePadding>
                 <ListItemButton>
                   <ListItemIcon>
