@@ -10,20 +10,22 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import KigyoHome from "./pages/KigyoHome";
 import Offer from "./pages/Offer";
+import Profile from "./pages/Profile";
 import List from "./pages/Project_List";
 import "./App.css";
 
 function App() {
-  return ( 
+  return (
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-    　　　<Route path="/" element={<Home />} />
+          <Route path="/" element={<Home />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/enterprise" element={<KigyoHome />} />
           <Route path="/list" element={<List />} />
           <Route path="/offer" element={<Offer />} />
+          <Route path="/Profile" element={<Profile />} />
           <Route path="/header" element={<Header />} />
           <Route path="/side" element={<Side />} />
           <Route path="/Offerdetail" element={<Offerdetail />} />
