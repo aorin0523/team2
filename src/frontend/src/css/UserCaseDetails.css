@@ -1,0 +1,71 @@
+.header-left a,
+.header-right a{
+    color: white;
+    text-decoration: none;
+}
+
+.header-left{
+    display: flex;
+    justify-content: flex-start;
+}
+
+.header-right ul li a{
+    padding: 5px;
+}
+.header-right ul li:hover{
+    background-color: #1e88e5;
+    border-radius: 50px;
+    transition: background-color 0.3s ease; /* 0.3秒かけて背景色が変化する */
+}
+
+ul{
+    display: flex;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+    gap: 15px;
+}
+
+li{
+    list-style: none;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #f6f6f8;
+
+}
+
+.container {
+    width: 1140px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 40px;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    padding: 40px 20px;
+}
+
+.container .client p{
+    color: black;
+}
+.container .work-outline h2{
+    color: black;
+}
+.container .work-outline p{
+    color: black;
+    text-align: left;
+}
+.container .work-outline button{
+    margin-top: 50px;
+}
+
+img{
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+}
