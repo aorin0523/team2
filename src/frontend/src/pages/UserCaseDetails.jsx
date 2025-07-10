@@ -30,15 +30,15 @@ return (
     <Toolbar>
         <Typography variant="h6" noWrap component="Box" sx={{ flexGrow: 1 }}>
         <Box className='header-left'>
-            <Link href='/'>
+            <Link to='/'>
                 <h3>ぱいざ</h3>
             </Link>
         </Box>
         </Typography>
         {<Box className='header-right'>
             <ul>
-                <li><Link href='/'>仕事を探す</Link></li>
-                <li><Link href='/'>仕事の内容</Link></li>
+                <li><Link to='/'>仕事を探す</Link></li>
+                <li><Link to='/'>仕事の内容</Link></li>
                 <li>
                     <IconButton sx={{ color : "white"}} size="small" >
                         <BookmarkIcon/>
