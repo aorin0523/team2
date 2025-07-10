@@ -35,7 +35,7 @@ return (
             </Link>
         </Box>
         </Typography>
-        {<Box className='header-right'>
+        <Box className='header-right'>
             <ul>
                 <li><Link to='/'>仕事を探す</Link></li>
                 <li><Link to='/'>仕事の内容</Link></li>
@@ -65,7 +65,7 @@ return (
                     </IconButton>
                 </li>
             </ul>
-        </Box>}
+        </Box>
     </Toolbar>
     </AppBar>
 
