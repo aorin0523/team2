@@ -27,29 +27,16 @@ function App() {
 
   return (
     <>
-      <Box sx={{ display: 'flex' }}>
-        <CssBaseline />
-        <AppBar
-          position="fixed"
-          sx={{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }}
-        >
-          <Toolbar>
-            <Typography variant="h6" noWrap component="div">
-              Permanent drawer
-            </Typography>
-          </Toolbar>
-        </AppBar>
-
-        <Box
-          component="main"
-          sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 }}
-        >
-          <Toolbar />
-
-        </Box>
-      </Box>
-
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 4 }}>
+      <Box sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '100vh',
+        width: '100%',
+        flexDirection: 'column',
+        marginTop: 4,
+        marginX: "auto",
+        marginY: 0 }}>
         <Link to="#" class="button">
           <img src={flow3} />
           <span>募集フォーム 新規作成</span>
