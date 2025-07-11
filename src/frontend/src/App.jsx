@@ -22,33 +22,22 @@ function App() {
       <AuthProvider>
         <BrowserRouter>
           <Routes>
-
-              <Route index element={<Home />} />
-              <Route path="signin" element={<SignIn />} />
-              <Route path="signup" element={<SignUp />} />
+            <Route index element={<Home />} />
+            <Route path="signin" element={<SignIn />} />
+            <Route path="signup" element={<SignUp />} />
 
             <Route path="/user/*" element={<Header sx={{ margin: 0 }} />}>
               <Route path="list" element={<List />} />
               <Route path="offer" element={<Offer />} />
               <Route path="profile" element={<Profile />} />
-              <Route path="side" element={<Side />} />
               <Route path="offerdetail" element={<Offerdetail />} />
               <Route path="details" element={<UCD />} />
             </Route>
-          </Routes>
 
-          {/* <Routes
-            path="kigyo/*"
-            element={
-              <Stack direction={"row"}>
-                <Box>
-                  <Side />
-                </Box>
-              </Stack>
-            }
-          >
-            <Route path="/" element={<KigyoHome />} />
-          </Routes> */}
+            <Route path="/enterprise/*" element={<Side />}>
+              <Route path="test" element={<KigyoHome />} />
+            </Route>
+          </Routes>
         </BrowserRouter>
       </AuthProvider>
     </>
