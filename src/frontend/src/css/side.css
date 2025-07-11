@@ -45,8 +45,9 @@
 
 /* ナビゲーションメニュー */
 .nav-list {
+    display: block;
     padding-top: 16px !important;
-    flex-grow: 1;
+    /* flex-grow: 1; */
     overflow: hidden;
 }
 
