@@ -27,15 +27,15 @@ function App() {
             <Route path="signup" element={<SignUp />} />
 
             <Route path="/user/*" element={<Header sx={{ margin: 0 }} />}>
-              <Route path="list" element={<List />} />
               <Route path="offer" element={<Offer />} />
+              <Route path="list" element={<List />} />
               <Route path="profile" element={<Profile />} />
-              <Route path="offerdetail" element={<Offerdetail />} />
               <Route path="details" element={<UCD />} />
             </Route>
 
             <Route path="/enterprise/*" element={<Side />}>
-              <Route path="test" element={<KigyoHome />} />
+              <Route index element={<KigyoHome />} />
+              <Route path="offer/detail" element={<Offerdetail />} />
             </Route>
           </Routes>
         </BrowserRouter>

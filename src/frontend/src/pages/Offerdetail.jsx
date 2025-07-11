@@ -23,57 +23,21 @@ import { Button } from '@mui/material';
 import '../css/offerdetail.css'
 
 function App() {
-  const [count, setCount] = useState(0);
-  const drawerWidth = 248;
-
-
   return (
     <>
-      <Box sx={{ display: 'flex' }}>
-        <CssBaseline />
-        <Drawer
-          sx={{
-            width: drawerWidth,
-            flexShrink: 0,
-            '& .MuiDrawer-paper': {
-              width: drawerWidth,
-              boxSizing: 'border-box',
-            },
-          }}
-          variant="permanent"
-          anchor="left"
-        >
-          <Toolbar />
-          <Divider />
-          <List>
-            {['Home', '募集フォーム', 'オファー一覧'].map((text, index) => (
-              <ListItem key={text} disablePadding>
-                <ListItemButton>
-                  <ListItemIcon>
-                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                  </ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
-          <Divider />
-          <List>
-            {['All mail', 'Trash', 'Spam'].map((text, index) => (
-              <ListItem key={text} disablePadding>
-                <ListItemButton>
-                  <ListItemIcon>
-                    {index % 3 === 0 ? <InboxIcon /> : <MailIcon />}
-                  </ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
-        </Drawer>
+      <Box sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            minHeight: "100vh",
+            width: "100%",
+            flexDirection: "column",
+            marginX: "auto",
+            marginY: 0,
+          }}>
+        
         {/* 詳細ページメインエリアに表示される部分 */}
         <Box component="main" sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 ,justifyContent: 'space-between',}}>
-          <Toolbar />
           <Typography variant="h3" gutterBottom>
             企業詳細ページ
           </Typography>
