@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import {
   Container,
   Typography,
@@ -14,13 +14,7 @@ import {
 import { useAuth } from '../contexts/AuthContext';
 
 function Home() {
-  const { user, logout, isAuthenticated, loading } = useAuth();
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    logout();
-    navigate('/');
-  };
+  const { isAuthenticated, loading } = useAuth();
 
   if (loading) {
     return (
@@ -34,33 +28,6 @@ function Home() {
 
   return (
     <>
-      <AppBar position="static">
-        <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            スキル・求人マッチングシステム
-          </Typography>
-          {isAuthenticated ? (
-            <Box>
-              <Typography variant="body2" component="span" sx={{ mr: 2 }}>
-                ようこそ、{user?.name}さん
-              </Typography>
-              <Button color="inherit" onClick={handleLogout}>
-                ログアウト
-              </Button>
-            </Box>
-          ) : (
-            <Box>
-              <Button color="inherit" component={Link} to="/signin" sx={{ mr: 1 }}>
-                ログイン
-              </Button>
-              <Button color="inherit" component={Link} to="/signup">
-                登録
-              </Button>
-            </Box>
-          )}
-        </Toolbar>
-      </AppBar>
-
       <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
         <Box textAlign="center" mb={4}>
           <Typography variant="h2" component="h1" gutterBottom>
