@@ -17,27 +17,40 @@ import {
 } from '@mui/icons-material';
 import '../css/header.css';
 
+import { Link, Outlet, useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+
+
 const Header = () => {
+
+    const { user, logout, isAuthenticated, Loading } = useAuth();
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        logout();
+        navigate('/');
+    };
+
     return (
+        <>
         <AppBar
             position="static"
             className="header-appbar"
             sx={{
                 boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+                borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+                margin: 0,
             }}
         >
             <Toolbar className="header-toolbar">
                 {/* ロゴ */}
-                <Typography
-                    variant="h4"
-                    component="h1"
+                <Box
                     className="header-logo"
                 >
                     <Typography variant="h4" className="logo-text">
                         paiza
                     </Typography>
-                </Typography>
+                </Box>
 
                 {/* 中央のナビゲーション */}
                 <Box className="header-nav-box">
@@ -57,39 +70,60 @@ const Header = () => {
 
                 {/* 右側のアイコンメニュー */}
                 <Stack direction="row" spacing={1} className="header-icons-stack">
-                    <IconButton
-                        color="inherit"
-                        className="header-icon-button"
-                    >
-                        <Assignment />
-                    </IconButton>
-                    <IconButton
-                        color="inherit"
-                        className="header-icon-button"
-                    >
-                        <Notifications />
-                    </IconButton>
-                    <IconButton
-                        color="inherit"
-                        className="header-icon-button"
-                    >
-                        <Mail />
-                    </IconButton>
-                    <IconButton
-                        color="inherit"
-                        className="header-icon-button"
-                    >
-                        <Help />
-                    </IconButton>
-                    <IconButton
-                        color="inherit"
-                        className="header-profile-button"
-                    >
-                        <AccountCircle />
-                    </IconButton>
+                    {isAuthenticated ? (
+                        <Box>
+                            <IconButton
+                                color="inherit"
+                                className="header-icon-button"
+                            >
+                                <Assignment />
+                            </IconButton>
+                            <IconButton
+                                color="inherit"
+                                className="header-icon-button"
+                            >
+                                <Notifications />
+                            </IconButton>
+                            <IconButton
+                                color="inherit"
+                                className="header-icon-button"
+                            >
+                                <Mail />
+                            </IconButton>
+                            <IconButton
+                                color="inherit"
+                                className="header-icon-button"
+                            >
+                                <Help />
+                            </IconButton>
+                            <IconButton
+                                color="inherit"
+                                className="header-profile-button"
+                            >
+                                <AccountCircle />
+                            </IconButton>
+                            <Typography variant="body2" component="span" sx={{ mr: 2 }}>
+                                ようこそ、{user?.name}さん
+                            </Typography>
+                            <Button color="inherit" onClick={handleLogout}>
+                                ログアウト
+                            </Button>
+                        </Box>
+                    ) : (
+                        <Box>
+                            <Button color="inherit" component={Link} to="/signin" sx={{ mr: 1 }}>
+                                ログイン
+                            </Button>
+                            <Button color="inherit" component={Link} to="/signup">
+                                登録
+                            </Button>
+                        </Box>
+                    )}
                 </Stack>
             </Toolbar>
         </AppBar>
+        <Outlet />
+        </>
     );
 };
 
