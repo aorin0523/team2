@@ -87,13 +87,17 @@ function Home() {
                 </CardContent>
               </Card>
             </Grid>
-          </Grid>
-        ) : (
+          </Grid>        ) : (
           <Box textAlign="center">
             <Typography variant="body1" mb={3}>
               アカウントを作成して、あなたにぴったりの求人を見つけましょう
             </Typography>
-            <Box>
+            
+            {/* 一般ユーザー向けボタン */}
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="h6" sx={{ mb: 2 }}>
+                求職者の方
+              </Typography>
               <Button 
                 variant="contained" 
                 size="large" 
@@ -110,6 +114,32 @@ function Home() {
                 to="/signin"
               >
                 ログイン
+              </Button>
+            </Box>
+            
+            {/* 企業向けボタン */}
+            <Box>
+              <Typography variant="h6" sx={{ mb: 2 }}>
+                企業の方
+              </Typography>
+              <Button 
+                variant="contained" 
+                color="secondary"
+                size="large" 
+                component={Link} 
+                to="/enterprise/signup"
+                sx={{ mr: 2 }}
+              >
+                企業登録
+              </Button>
+              <Button 
+                variant="outlined" 
+                color="secondary"
+                size="large" 
+                component={Link} 
+                to="/enterprise/signin"
+              >
+                企業ログイン
               </Button>
             </Box>
           </Box>

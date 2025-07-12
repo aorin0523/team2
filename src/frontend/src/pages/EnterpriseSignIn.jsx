@@ -9,12 +9,13 @@ import {
   Box,
   Alert,
   InputAdornment,
-  IconButton
+  IconButton,
+  Chip
 } from '@mui/material';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { Visibility, VisibilityOff, Business } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
 
-const SignIn = () => {
+const EnterpriseSignIn = () => {
   const navigate = useNavigate();
   const { signIn } = useAuth();
   const [formData, setFormData] = useState({
@@ -48,7 +49,28 @@ const SignIn = () => {
     
     try {
       await signIn(formData.email, formData.password);
-      navigate('/');
+      
+      // ログイン後にユーザー情報を取得して企業アカウントかチェック
+      const userInfoResponse = await fetch('http://localhost:8000/api/v1/auth/me', {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+        },
+      });
+      
+      if (userInfoResponse.ok) {
+        const userInfo = await userInfoResponse.json();
+        
+        if (userInfo.enterprise_id) {
+          // 企業ユーザーの場合は企業ダッシュボードにリダイレクト
+          navigate('/enterprise');
+        } else {
+          // 一般ユーザーの場合はエラーメッセージを表示
+          setError('このページは企業アカウント専用です。一般ユーザーの方は通常のログインページをご利用ください。');
+          return;
+        }
+      } else {
+        setError('ユーザー情報の取得に失敗しました');
+      }
     } catch (error) {
       setError(error.message || 'ログインに失敗しました');
     } finally {
@@ -69,8 +91,22 @@ const SignIn = () => {
         }}
       >
         <Paper elevation={3} sx={{ padding: 4, width: '100%' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
+            <Chip
+              icon={<Business />}
+              label="企業アカウント専用"
+              color="primary"
+              variant="outlined"
+              sx={{ fontSize: '0.9rem', px: 2 }}
+            />
+          </Box>
+          
           <Typography component="h1" variant="h4" align="center" gutterBottom>
-            ログイン
+            企業ログイン
+          </Typography>
+          
+          <Typography variant="body2" align="center" color="text.secondary" sx={{ mb: 3 }}>
+            企業アカウントでのログインはこちら
           </Typography>
           
           {error && (
@@ -85,13 +121,14 @@ const SignIn = () => {
               required
               fullWidth
               id="email"
-              label="メールアドレス"
+              label="企業メールアドレス"
               name="email"
               type="email"
               value={formData.email}
               onChange={handleChange}
               autoComplete="email"
               autoFocus
+              placeholder="company@example.com"
             />
             
             <TextField
@@ -125,29 +162,45 @@ const SignIn = () => {
               fullWidth
               variant="contained"
               disabled={loading}
-              sx={{ mt: 3, mb: 2 }}
+              sx={{ 
+                mt: 3, 
+                mb: 2,
+                bgcolor: 'primary.main',
+                '&:hover': {
+                  bgcolor: 'primary.dark',
+                }
+              }}
             >
-              {loading ? 'ログイン中...' : 'ログイン'}
-            </Button>            <Box textAlign="center">
+              {loading ? 'ログイン中...' : '企業アカウントでログイン'}
+            </Button>
+
+            <Box textAlign="center" sx={{ mt: 2 }}>
               <Typography variant="body2" sx={{ mb: 1 }}>
-                アカウントをお持ちでない方は{' '}
-                <Link to="/signup" style={{ textDecoration: 'none' }}>
-                  こちらから登録
-                </Link>
-              </Typography>
-              
-              <Typography variant="body2" color="text.secondary">
-                企業アカウントをお持ちの方は{' '}
+                企業アカウントをお持ちでない方は{' '}
                 <Link 
-                  to="/enterprise/signin" 
+                  to="/enterprise/signup" 
                   style={{ 
                     textDecoration: 'none', 
                     color: '#1976d2',
                     fontWeight: 'bold'
                   }}
                 >
-                  企業ログイン
+                  企業登録はこちら
                 </Link>
+              </Typography>
+              
+              <Typography variant="body2" color="text.secondary">
+                一般ユーザーの方は{' '}
+                <Link 
+                  to="/signin" 
+                  style={{ 
+                    textDecoration: 'none', 
+                    color: '#666'
+                  }}
+                >
+                  通常のログインページ
+                </Link>
+                {' '}をご利用ください
               </Typography>
             </Box>
           </Box>
@@ -157,4 +210,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default EnterpriseSignIn;

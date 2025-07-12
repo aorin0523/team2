@@ -172,36 +172,3 @@ async def get_me(current_user: User = Depends(get_current_active_user)):
 @router.get("/users/me/items/")
 async def read_own_items(current_user: User = Depends(get_current_active_user)):
     return [{"item_id": "Foo", "owner": current_user.email}]
-
-
-# 企業ユーザー専用の認証依存関数
-async def get_current_enterprise_user(current_user: User = Depends(get_current_active_user)):
-    """企業ユーザーのみアクセス可能な依存関数"""
-    if not current_user.enterprise_id:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Enterprise access required"
-        )
-    return current_user
-
-# 一般ユーザー専用の認証依存関数
-async def get_current_regular_user(current_user: User = Depends(get_current_active_user)):
-    """一般ユーザーのみアクセス可能な依存関数"""
-    if current_user.enterprise_id:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Regular user access required"
-        )
-    return current_user
-
-
-@router.get("/enterprise/me")
-async def get_enterprise_me(current_user: User = Depends(get_current_enterprise_user)):
-    """企業ユーザー専用：現在のユーザー情報を取得"""
-    return {
-        "id": current_user.id,
-        "name": current_user.name,
-        "email": current_user.email,
-        "enterprise_id": current_user.enterprise_id,
-        "is_enterprise": True
-    }

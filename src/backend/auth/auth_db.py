@@ -30,11 +30,19 @@ class UserResponse(BaseModel):
     id: str
     name: str
     email: str
+    enterprise_id: Union[str, None] = None
 
 class UserRegister(BaseModel):
     name: str
     email: EmailStr
     password: str
+
+class EnterpriseUserRegister(BaseModel):
+    name: str
+    email: EmailStr
+    password: str
+    enterprise_id: str
+    rank: int = 1
 
 class UserLogin(BaseModel):
     email: EmailStr
@@ -104,11 +112,16 @@ async def register_user(user_data: UserRegister):
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"Registration failed {result['error']}"
             )
-    
-    # 登録成功後、自動的にログイン用のトークンを発行
+      # 登録成功後、自動的にログイン用のトークンを発行
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    
+    # JWTにenterprise_idを含める
+    token_data = {"sub": user_data.email}
+    # 一般ユーザーなのでenterprise_idはNone
+    token_data["is_enterprise"] = False
+    
     access_token = create_access_token(
-        data={"sub": user_data.email}, expires_delta=access_token_expires
+        data=token_data, expires_delta=access_token_expires
     )
     
     return Token(access_token=access_token, token_type="bearer")
@@ -123,8 +136,7 @@ async def login_user(user_data: UserLogin):
     
     # ユーザー認証
     user = users_db.authenticate_user(user_data.email, user_data.password)
-    if not user:
-        raise HTTPException(
+    if not user:        raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password",
             headers={"WWW-Authenticate": "Bearer"},
@@ -132,8 +144,17 @@ async def login_user(user_data: UserLogin):
     
     # アクセストークン作成
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    
+    # JWTにenterprise_idを含める
+    token_data = {"sub": user["email"]}
+    if user.get("enterprise_id"):
+        token_data["enterprise_id"] = user["enterprise_id"]
+        token_data["is_enterprise"] = True
+    else:
+        token_data["is_enterprise"] = False
+    
     access_token = create_access_token(
-        data={"sub": user["email"]}, expires_delta=access_token_expires
+        data=token_data, expires_delta=access_token_expires
     )
     
     return Token(access_token=access_token, token_type="bearer")
@@ -147,5 +168,54 @@ async def get_current_user_info(current_user: dict = Depends(get_current_active_
     return UserResponse(
         id=current_user["id"],
         name=current_user["name"],
-        email=current_user["email"]
+        email=current_user["email"],
+        enterprise_id=current_user.get("enterprise_id")
     )
+
+# 企業ユーザー登録エンドポイント
+@router.post("/register/enterprise", response_model=Token)
+async def register_enterprise_user(user_data: EnterpriseUserRegister):
+    """
+    新規企業ユーザー登録
+    """
+    users_db = Users()
+    
+    # 企業ユーザー作成
+    result = users_db.create_enterprise_user(
+        name=user_data.name,
+        email=user_data.email,
+        password=user_data.password,
+        enterprise_id=user_data.enterprise_id,
+        rank=user_data.rank
+    )
+    
+    if result["status"] == "ng":
+        if "Email already exists" in result["error"]:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Email already registered"
+            )
+        elif "Enterprise not found" in result["error"]:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Enterprise not found"
+            )
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Registration failed {result['error']}"
+            )
+    
+    # 登録成功後、自動的にログイン用のトークンを発行
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    
+    # JWTにenterprise_idを含める
+    token_data = {"sub": user_data.email}
+    token_data["enterprise_id"] = user_data.enterprise_id
+    token_data["is_enterprise"] = True
+    
+    access_token = create_access_token(
+        data=token_data, expires_delta=access_token_expires
+    )
+    
+    return Token(access_token=access_token, token_type="bearer")

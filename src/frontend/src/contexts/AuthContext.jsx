@@ -82,6 +82,29 @@ export const AuthProvider = ({ children }) => {
     return data;
   }, [login]);
 
+  // 企業ユーザー登録関数
+  const registerEnterprise = useCallback(async (userData) => {
+    const response = await fetch('http://localhost:8000/api/v1/auth/register/enterprise', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userData),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || '企業ユーザー登録に失敗しました');
+    }
+
+    const data = await response.json();
+    
+    // 登録後自動的にログイン
+    login(data.access_token, data.token_type);
+    
+    return data;
+  }, [login]);
+
   // ログイン関数
   const signIn = useCallback(async (email, password) => {
     const response = await fetch('http://localhost:8000/api/v1/auth/login', {
@@ -119,6 +142,7 @@ export const AuthProvider = ({ children }) => {
     logout,
     register,
     signIn,
+    registerEnterprise,
     isAuthenticated: !!user,
   };
 

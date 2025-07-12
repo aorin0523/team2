@@ -1,6 +1,7 @@
-from fastapi import APIRouter, Request, FastAPI, File, UploadFile
+from fastapi import APIRouter, Request, FastAPI, File, UploadFile, Depends
 from fastapi.responses import StreamingResponse
 from modules.db.offers import Offers
+from auth.token import get_current_enterprise_user, User
 
 
 router = APIRouter()
@@ -60,3 +61,37 @@ async def update_offer(offer_id: str):
     オファーを更新するエンドポイント
     """
     return Offers().delete_offer(offer_id)
+
+# 企業ユーザー専用エンドポイント
+@router.get("/my")
+async def get_my_offers(current_user: User = Depends(get_current_enterprise_user)):
+    """
+    ログイン中の企業ユーザーが作成したオファー一覧を取得
+    """
+    offers_db = Offers()
+    return offers_db.get_offers_by_enterprise(current_user.enterprise_id)
+
+@router.post("/my")
+async def create_my_offer(data: dict, current_user: User = Depends(get_current_enterprise_user)):
+    """
+    ログイン中の企業ユーザーがオファーを作成
+    """
+    # enterprise_idを自動的に設定
+    offer_data = offerCreate(
+        enterprise_id=current_user.enterprise_id,
+        title=data["title"],
+        content=data["content"],
+        rank=data["rank"],
+        skills=data.get("skills", []),
+        deadline=data["deadline"]
+    )
+    
+    offers_db = Offers()
+    return offers_db.create_offer(
+        enterprise_id=offer_data.enterprise_id,
+        title=offer_data.title,
+        content=offer_data.content,
+        rank=offer_data.rank,
+        skills=offer_data.skills,
+        deadline=offer_data.deadline
+    )

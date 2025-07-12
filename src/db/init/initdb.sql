@@ -20,6 +20,7 @@ CREATE TABLE `Users` (
 	`rank` INTEGER NOT NULL DEFAULT 1,
 	`email` VARCHAR(255) NOT NULL UNIQUE,
 	`password` VARCHAR(255) NOT NULL,
+  `enterprise_id` CHAR(36) DEFAULT NULL,
 	`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	`updated_at` TIMESTAMP,
 	`deleted_at` TIMESTAMP,
@@ -84,7 +85,9 @@ CREATE TABLE `OfferSkills` (
 	PRIMARY KEY(`offer_id`, `skill_id`)
 );
 
-
+ALTER TABLE `Users`
+ADD FOREIGN KEY(`enterprise_id`) REFERENCES `Enterprises`(`id`)
+ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE `UserSkills`
 ADD FOREIGN KEY(`user_id`) REFERENCES `Users`(`id`)
 ON UPDATE CASCADE ON DELETE CASCADE;
@@ -140,6 +143,14 @@ INSERT INTO Enterprises (id, name, description) VALUES
 ('66666666-6666-6666-6666-666666666666', 'Auto AI Ltd', '自動運転と車載 AI システムを研究・開発'),
 ('77777777-7777-7777-7777-777777777777', 'Green Energy Co', '再生可能エネルギーとスマートグリッド事業を展開'),
 ('88888888-8888-8888-8888-888888888888', 'Cyber Security Works', '企業向けサイバーセキュリティソリューションを提供');
+
+-- 企業ユーザーのテストデータ（パスワードは全て "secretPassword"）
+INSERT INTO Users (id, name, email, password, enterprise_id, `rank`) VALUES
+('e0000000-0000-0000-0000-000000000001', 'Tech Corp Manager', 'manager@techcorp.com', '$2b$12$8dEh8c5tfXTghBy514FKfugGaGMxjpNKRwhqkgDHhVazuALRylMm2', '11111111-1111-1111-1111-111111111111', 3),
+('e0000000-0000-0000-0000-000000000002', 'Finance Inc HR', 'hr@finance.com', '$2b$12$8dEh8c5tfXTghBy514FKfugGaGMxjpNKRwhqkgDHhVazuALRylMm2', '22222222-2222-2222-2222-222222222222', 2),
+('e0000000-0000-0000-0000-000000000003', 'Game Company Lead', 'lead@entertainment.com', '$2b$12$8dEh8c5tfXTghBy514FKfugGaGMxjpNKRwhqkgDHhVazuALRylMm2', '33333333-3333-3333-3333-333333333333', 4),
+('e0000000-0000-0000-0000-000000000004', 'Health Tech Admin', 'admin@healthsolutions.com', '$2b$12$8dEh8c5tfXTghBy514FKfugGaGMxjpNKRwhqkgDHhVazuALRylMm2', '44444444-4444-4444-4444-444444444444', 5);
+
 
 INSERT INTO Offers (id, enterprise_id, title, content, `rank`, deadline) VALUES
 ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', '11111111-1111-1111-1111-111111111111',

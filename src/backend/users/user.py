@@ -10,6 +10,13 @@ class UserCreate(BaseModel):
     email: str
     password: str
 
+class EnterpriseUserCreate(BaseModel):
+    name: str
+    email: str
+    password: str
+    enterprise_id: str
+    rank: int = 1
+
 # 初期値はNone(受け取った項目のみ更新する)
 class UserUpdate(BaseModel):
     name: str = None
@@ -41,6 +48,19 @@ async def create_user(data: UserCreate):
             email=data.email,
             password=data.password
         )
+
+@router.post("/enterprise")
+async def create_enterprise_user(data: EnterpriseUserCreate):
+    """
+    企業ユーザーを登録するエンドポイント
+    """
+    return Users().create_enterprise_user(
+        name=data.name,
+        email=data.email,
+        password=data.password,
+        enterprise_id=data.enterprise_id,
+        rank=data.rank
+    )
 
 @router.put("/{user_id}")
 async def update_user(user_id: str, data: UserUpdate):

@@ -14,7 +14,7 @@ class Users(BaseDB):
         """パスワードを検証"""
         return pwd_context.verify(plain_password, hashed_password)
 
-    def get_password_hash(self, password):
+        def get_password_hash(self, password):
         """パスワードをハッシュ化"""
         return pwd_context.hash(password)
 
@@ -124,8 +124,7 @@ class Users(BaseDB):
                     # skill追加
                     if row["skill_name"] and row["skill_name"] not in users_dict[user_id]["skills"]:
                         users_dict[user_id]["skills"].append(row["skill_name"])
-                
-                # [0]でリスト外す
+                  # [0]でリスト外す
                 return list(users_dict.values())[0]
         except Exception as e:
             return {"status":"ng", "error": str(e)}
