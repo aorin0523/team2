@@ -23,18 +23,18 @@ function App() {
     <>
       <AuthProvider>
         <BrowserRouter>
-          <Routes>            <Route index element={<Home />} />
+          <Routes>
+            {" "}
+            <Route index element={<Home />} />
             <Route path="signin" element={<SignIn />} />
             <Route path="signup" element={<SignUp />} />
             <Route path="enterprise/signin" element={<EnterpriseSignIn />} />
             <Route path="enterprise/signup" element={<EnterpriseSignUp />} />
-
             <Route path="/user/*" element={<Header sx={{ margin: 0 }} />}>
               <Route path="list" element={<List />} />
               <Route path="profile" element={<Profile />} />
               <Route path="details" element={<UCD />} />
             </Route>
-    
             <Route path="/enterprise/*" element={<Side />}>
               <Route index element={<KigyoHome />} />
               <Route path="offer" element={<Offer />} />

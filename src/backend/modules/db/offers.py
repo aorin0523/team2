@@ -22,6 +22,8 @@ class Offers(BaseDB):
                 self.enterprises.c.name.label("enterprise_name"),
                 self.offers.c.title.label("offer_title"),
                 self.offers.c.content.label("offer_content"),
+                self.offers.c.salary.label("salary"),
+                self.offers.c.capacity.label("capacity"),
                 self.ranks.c.name.label("rank"),
                 self.skills.c.name.label("skill_name")
             ).select_from(j4)
@@ -40,6 +42,8 @@ class Offers(BaseDB):
                         "enterprise_name": row["enterprise_name"],
                         "offer_title": row["offer_title"],
                         "offer_content": row["offer_content"],
+                        "salary": row["salary"],
+                        "capacity": row["capacity"],
                         "rank": row["rank"],
                         "skills": []
                     }
@@ -68,6 +72,8 @@ class Offers(BaseDB):
                 self.enterprises.c.name.label("enterprise_name"),
                 self.offers.c.title.label("offer_title"),
                 self.offers.c.content.label("offer_content"),
+                self.offers.c.salary.label("salary"),
+                self.offers.c.capacity.label("capacity"),
                 self.ranks.c.name.label("rank"),
                 self.skills.c.name.label("skill_name")
             ).select_from(j4).where(self.offers.c.id == id)
@@ -86,6 +92,8 @@ class Offers(BaseDB):
                         "enterprise_name": row["enterprise_name"],
                         "offer_title": row["offer_title"],
                         "offer_content": row["offer_content"],
+                        "salary": row["salary"],
+                        "capacity": row["capacity"],
                         "rank": row["rank"],
                         "skills": []
                     }
@@ -97,20 +105,27 @@ class Offers(BaseDB):
             return list(offer_dict.values())[0]
     
     
-    def create_offer(self, enterprise_id, title, content, rank, skills, deadline):
+    def create_offer(self, enterprise_id, title, content, rank, skills, deadline, salary=None, capacity=None):
         """
         オファーを追加する
         """
         id = uuid.uuid4()
         try:
             with self.engine.connect() as conn:
-                offer_query = self.offers.insert().values(
-                    id=id,
-                    enterprise_id=enterprise_id,
-                    title=title,
-                    content=content,
-                    rank=rank,
-                )
+                offer_values = {
+                    "id": id,
+                    "enterprise_id": enterprise_id,
+                    "title": title,
+                    "content": content,
+                    "rank": rank,
+                }
+                
+                if salary is not None:
+                    offer_values["salary"] = salary
+                if capacity is not None:
+                    offer_values["capacity"] = capacity
+                
+                offer_query = self.offers.insert().values(**offer_values)
                 conn.execute(offer_query)
                 
                 for skill in skills:
@@ -126,9 +141,9 @@ class Offers(BaseDB):
             return {"status": "ng", "error": str(e)}
         
     
-    def update_offer(self, offer_id, title, content, rank, skills):
+    def update_offer(self, offer_id, title, content, rank, skills, salary=None, capacity=None):
         try:
-            print(offer_id, title, content, rank, skills)
+            print(offer_id, title, content, rank, skills, salary, capacity)
             with self.engine.connect() as conn:
                 update_values = {}
                 update_values["deadline"] = datetime.now()
@@ -138,6 +153,10 @@ class Offers(BaseDB):
                     update_values["content"] = content
                 if rank is not None:
                     update_values["rank"] = rank
+                if salary is not None:
+                    update_values["salary"] = salary
+                if capacity is not None:
+                    update_values["capacity"] = capacity
                 
                 # オファーの編集
                 offer_query = self.offers.update().where(
@@ -197,6 +216,8 @@ class Offers(BaseDB):
                 self.offers.c.title.label("offer_title"),
                 self.offers.c.content.label("offer_content"),
                 self.offers.c.deadline.label("deadline"),
+                self.offers.c.salary.label("salary"),
+                self.offers.c.capacity.label("capacity"),
                 self.ranks.c.name.label("rank"),
                 self.skills.c.name.label("skill_name")
             ).select_from(j4).where(self.offers.c.enterprise_id == enterprise_id)
@@ -217,6 +238,8 @@ class Offers(BaseDB):
                         "offer_title": row["offer_title"],
                         "offer_content": row["offer_content"],
                         "deadline": row["deadline"],
+                        "salary": row["salary"],
+                        "capacity": row["capacity"],
                         "rank": row["rank"],
                         "skills": []
                     }

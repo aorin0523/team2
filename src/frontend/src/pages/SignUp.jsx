@@ -7,8 +7,7 @@ import {
   Button,
   Typography,
   Box,
-  Alert,
-  Grid
+  Alert
 } from '@mui/material';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -91,130 +90,182 @@ const SignUp = () => {
   };
 
   return (
-    <Container component="main" maxWidth="sm">
+    <Container component="main" maxWidth="md">
       <Box
         sx={{
-          marginTop: 8,
+          marginTop: 6,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
         }}
       >
-        <Paper elevation={3} sx={{ padding: 4, width: '100%' }}>
-          <Typography component="h1" variant="h4" align="center" gutterBottom>
-            アカウント作成
+        <Paper 
+          elevation={6} 
+          sx={{ 
+            padding: 5, 
+            width: '100%',
+            borderRadius: 3,
+            background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+          }}
+        >
+          <Typography component="h1" variant="h4" align="center" gutterBottom sx={{ color: '#1976d2', fontWeight: 'bold' }}>
+            一般ユーザー登録
+          </Typography>
+          
+          <Typography variant="body1" align="center" color="text.secondary" sx={{ mb: 4 }}>
+            アカウントを作成して、あなたにぴったりの求人を見つけましょう
           </Typography>
           
           {errors.submit && (
-            <Alert severity="error" sx={{ mb: 2 }}>
+            <Alert severity="error" sx={{ mb: 3, borderRadius: 2 }}>
               {errors.submit}
             </Alert>
           )}
 
-          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="name"
-                  label="名前"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  error={!!errors.name}
-                  helperText={errors.name}
-                  autoComplete="name"
-                />
-              </Grid>
+          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 3,
+                backgroundColor: 'white',
+                p: 4,
+                borderRadius: 3,
+                boxShadow: '0 2px 12px rgba(0,0,0,0.08)',
+              }}
+            >
+              <TextField
+                required
+                fullWidth
+                id="name"
+                label="👤 氏名"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                error={!!errors.name}
+                helperText={errors.name}
+                autoComplete="name"
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: 2,
+                    backgroundColor: '#f8f9fa',
+                  },
+                }}
+              />
               
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="email"
-                  label="メールアドレス"
-                  name="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  error={!!errors.email}
-                  helperText={errors.email}
-                  autoComplete="email"
-                />
-              </Grid>
+              <TextField
+                required
+                fullWidth
+                id="email"
+                label="📧 メールアドレス"
+                name="email"
+                type="email"
+                value={formData.email}
+                onChange={handleChange}
+                error={!!errors.email}
+                helperText={errors.email}
+                autoComplete="email"
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: 2,
+                    backgroundColor: '#f8f9fa',
+                  },
+                }}
+              />
 
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="password"
-                  label="パスワード"
-                  type="password"
-                  id="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  error={!!errors.password}
-                  helperText={errors.password}
-                  autoComplete="new-password"
-                />
-              </Grid>
+              <TextField
+                required
+                fullWidth
+                name="password"
+                label="🔒 パスワード"
+                type="password"
+                id="password"
+                value={formData.password}
+                onChange={handleChange}
+                error={!!errors.password}
+                helperText={errors.password}
+                autoComplete="new-password"
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: 2,
+                    backgroundColor: '#f8f9fa',
+                  },
+                }}
+              />
 
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="confirmPassword"
-                  label="パスワード確認"
-                  type="password"
-                  id="confirmPassword"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  error={!!errors.confirmPassword}
-                  helperText={errors.confirmPassword}
-                  autoComplete="new-password"
-                />
-              </Grid>
-            </Grid>
+              <TextField
+                required
+                fullWidth
+                name="confirmPassword"
+                label="🔒 パスワード確認"
+                type="password"
+                id="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                error={!!errors.confirmPassword}
+                helperText={errors.confirmPassword}
+                autoComplete="new-password"
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: 2,
+                    backgroundColor: '#f8f9fa',
+                  },
+                }}
+              />
+            </Box>
 
             <Button
               type="submit"
               fullWidth
               variant="contained"
               disabled={loading}
-              sx={{ mt: 3, mb: 2 }}
+              sx={{ 
+                mt: 4, 
+                mb: 2,
+                py: 1.5,
+                fontSize: '1.1rem',
+                fontWeight: 'bold',
+                borderRadius: 3,
+                background: 'linear-gradient(45deg, #424242 30%, #757575 90%)',
+                boxShadow: '0 3px 15px rgba(66, 66, 66, 0.3)',
+                '&:hover': {
+                  background: 'linear-gradient(45deg, #212121 30%, #424242 90%)',
+                  boxShadow: '0 5px 20px rgba(66, 66, 66, 0.4)',
+                },
+                '&:disabled': {
+                  background: '#e0e0e0',
+                  color: '#9e9e9e',
+                }
+              }}
             >
-              {loading ? '登録中...' : 'アカウント作成'}
-            </Button>            <Box textAlign="center">
+              {loading ? '登録中...' : '🎯 アカウント作成'}
+            </Button>
+            
+            <Box sx={{ textAlign: 'center', mt: 3 }}>
               <Typography variant="body2" sx={{ mb: 1 }}>
                 すでにアカウントをお持ちの方は{' '}
-                <Link to="/signin" style={{ textDecoration: 'none' }}>
+                <Link 
+                  to="/signin" 
+                  style={{ 
+                    textDecoration: 'none', 
+                    color: '#1976d2',
+                    fontWeight: 'bold'
+                  }}
+                >
                   こちらからログイン
                 </Link>
               </Typography>
               
-              <Typography variant="body2" sx={{ mb: 1 }}>
+              <Typography variant="body2" color="text.secondary">
                 企業ユーザーの方は{' '}
                 <Link 
                   to="/enterprise/signup" 
                   style={{ 
                     textDecoration: 'none', 
-                    color: '#1976d2',
-                    fontWeight: 'bold' 
+                    color: '#666'
                   }}
                 >
                   企業ユーザー登録
-                </Link>
-                {' '}または{' '}
-                <Link 
-                  to="/enterprise/signin" 
-                  style={{ 
-                    textDecoration: 'none', 
-                    color: '#1976d2',
-                    fontWeight: 'bold' 
-                  }}
-                >
-                  企業ログイン
                 </Link>
               </Typography>
             </Box>

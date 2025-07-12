@@ -8,12 +8,13 @@ import {
   Typography,
   Box,
   Alert,
-  Grid,
   FormControl,
   InputLabel,
   Select,
-  MenuItem
+  MenuItem,
+  Chip
 } from '@mui/material';
+import { Business } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
 
 const EnterpriseSignUp = () => {
@@ -121,152 +122,309 @@ const EnterpriseSignUp = () => {
   };
 
   return (
-    <Container component="main" maxWidth="sm">
+    <Container component="main" maxWidth="md">
       <Box
         sx={{
-          marginTop: 8,
+          marginTop: 6,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
         }}
       >
-        <Paper elevation={3} sx={{ padding: 4, width: '100%' }}>
-          <Typography component="h1" variant="h4" align="center" gutterBottom>
+        <Paper 
+          elevation={6} 
+          sx={{ 
+            padding: 5, 
+            width: '100%',
+            borderRadius: 3,
+            background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+          }}
+        >
+          <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
+            <Chip
+              icon={<Business />}
+              label="企業ユーザー登録"
+              color="primary"
+              variant="filled"
+              sx={{ 
+                fontSize: '1rem', 
+                px: 3, 
+                py: 2,
+                fontWeight: 'bold',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+              }}
+            />
+          </Box>
+          
+          <Typography component="h1" variant="h4" align="center" gutterBottom sx={{ color: '#1976d2', fontWeight: 'bold' }}>
             企業ユーザー登録
           </Typography>
           
+          <Typography variant="body1" align="center" color="text.secondary" sx={{ mb: 4 }}>
+            企業アカウントを作成して、優秀な人材との出会いを始めましょう
+          </Typography>
+          
           {errors.submit && (
-            <Alert severity="error" sx={{ mb: 2 }}>
+            <Alert severity="error" sx={{ mb: 3, borderRadius: 2 }}>
               {errors.submit}
             </Alert>
           )}
 
-          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="name"
-                  label="氏名"
-                  name="name"
-                  autoComplete="name"
-                  value={formData.name}
+          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 3,
+                backgroundColor: 'white',
+                p: 4,
+                borderRadius: 3,
+                boxShadow: '0 2px 12px rgba(0,0,0,0.08)',
+              }}
+            >
+              <TextField
+                required
+                fullWidth
+                id="name"
+                label="👤 氏名"
+                name="name"
+                autoComplete="name"
+                value={formData.name}
+                onChange={handleChange}
+                error={!!errors.name}
+                helperText={errors.name}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: 2,
+                    backgroundColor: '#f8f9fa',
+                  },
+                }}
+              />
+              
+              <TextField
+                required
+                fullWidth
+                id="email"
+                label="📧 メールアドレス"
+                name="email"
+                type="email"
+                autoComplete="email"
+                value={formData.email}
+                onChange={handleChange}
+                error={!!errors.email}
+                helperText={errors.email}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: 2,
+                    backgroundColor: '#f8f9fa',
+                  },
+                }}
+              />
+              
+              <FormControl fullWidth error={!!errors.enterprise_id}>
+                <InputLabel id="enterprise-select-label" sx={{ color: '#1976d2' }}>
+                  🏢 企業を選択 *
+                </InputLabel>
+                <Select
+                  labelId="enterprise-select-label"
+                  id="enterprise_id"
+                  name="enterprise_id"
+                  value={formData.enterprise_id}
+                  label="🏢 企業を選択 *"
                   onChange={handleChange}
-                  error={!!errors.name}
-                  helperText={errors.name}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="email"
-                  label="メールアドレス"
-                  name="email"
-                  autoComplete="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  error={!!errors.email}
-                  helperText={errors.email}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <FormControl fullWidth error={!!errors.enterprise_id}>
-                  <InputLabel id="enterprise-select-label">企業 *</InputLabel>
-                  <Select
-                    labelId="enterprise-select-label"
-                    id="enterprise_id"
-                    name="enterprise_id"
-                    value={formData.enterprise_id}
-                    label="企業 *"
-                    onChange={handleChange}
-                  >
-                    {enterprises.map((enterprise) => (
-                      <MenuItem key={enterprise.id} value={enterprise.id}>
+                  sx={{
+                    borderRadius: 2,
+                    backgroundColor: '#f8f9fa',
+                    '& .MuiOutlinedInput-notchedOutline': {
+                      borderColor: '#e0e0e0',
+                    },
+                    '&:hover .MuiOutlinedInput-notchedOutline': {
+                      borderColor: '#1976d2',
+                    },
+                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                      borderColor: '#1976d2',
+                    },
+                  }}
+                >
+                  <MenuItem value="" disabled>
+                    <em style={{ color: '#666' }}>企業を選択してください</em>
+                  </MenuItem>
+                  {enterprises.map((enterprise) => (
+                    <MenuItem key={enterprise.id} value={enterprise.id}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <Box
+                          sx={{
+                            width: 8,
+                            height: 8,
+                            borderRadius: '50%',
+                            backgroundColor: '#1976d2',
+                          }}
+                        />
                         {enterprise.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                  {errors.enterprise_id && (
-                    <Typography variant="caption" color="error" sx={{ mt: 0.5, ml: 1.5 }}>
-                      {errors.enterprise_id}
-                    </Typography>
-                  )}
-                </FormControl>
-              </Grid>
-              <Grid item xs={12}>
-                <FormControl fullWidth>
-                  <InputLabel id="rank-select-label">ランク</InputLabel>
-                  <Select
-                    labelId="rank-select-label"
-                    id="rank"
-                    name="rank"
-                    value={formData.rank}
-                    label="ランク"
-                    onChange={handleChange}
-                  >
-                    <MenuItem value={1}>D</MenuItem>
-                    <MenuItem value={2}>C</MenuItem>
-                    <MenuItem value={3}>B</MenuItem>
-                    <MenuItem value={4}>A</MenuItem>
-                    <MenuItem value={5}>S</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="password"
-                  label="パスワード"
-                  type="password"
-                  id="password"
-                  autoComplete="new-password"
-                  value={formData.password}
+                      </Box>
+                    </MenuItem>
+                  ))}
+                </Select>
+                {errors.enterprise_id && (
+                  <Typography variant="caption" color="error" sx={{ mt: 0.5, ml: 1.5 }}>
+                    {errors.enterprise_id}
+                  </Typography>
+                )}
+              </FormControl>
+              
+              <FormControl fullWidth>
+                <InputLabel id="rank-select-label" sx={{ color: '#1976d2' }}>
+                  ⭐ ランクを選択
+                </InputLabel>
+                <Select
+                  labelId="rank-select-label"
+                  id="rank"
+                  name="rank"
+                  value={formData.rank}
+                  label="⭐ ランクを選択"
                   onChange={handleChange}
-                  error={!!errors.password}
-                  helperText={errors.password}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="confirmPassword"
-                  label="パスワード確認"
-                  type="password"
-                  id="confirmPassword"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  error={!!errors.confirmPassword}
-                  helperText={errors.confirmPassword}
-                />
-              </Grid>
-            </Grid>
+                  sx={{
+                    borderRadius: 2,
+                    backgroundColor: '#f8f9fa',
+                    '& .MuiOutlinedInput-notchedOutline': {
+                      borderColor: '#e0e0e0',
+                    },
+                    '&:hover .MuiOutlinedInput-notchedOutline': {
+                      borderColor: '#1976d2',
+                    },
+                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                      borderColor: '#1976d2',
+                    },
+                  }}
+                >
+                  <MenuItem value={1}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <span style={{ color: '#9e9e9e' }}>D</span>
+                      <span style={{ fontSize: '0.9rem', color: '#666' }}>(入門レベル)</span>
+                    </Box>
+                  </MenuItem>
+                  <MenuItem value={2}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <span style={{ color: '#2196f3' }}>C</span>
+                      <span style={{ fontSize: '0.9rem', color: '#666' }}>(初級レベル)</span>
+                    </Box>
+                  </MenuItem>
+                  <MenuItem value={3}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <span style={{ color: '#ff9800' }}>B</span>
+                      <span style={{ fontSize: '0.9rem', color: '#666' }}>(中級レベル)</span>
+                    </Box>
+                  </MenuItem>
+                  <MenuItem value={4}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <span style={{ color: '#f44336' }}>A</span>
+                      <span style={{ fontSize: '0.9rem', color: '#666' }}>(上級レベル)</span>
+                    </Box>
+                  </MenuItem>
+                  <MenuItem value={5}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <span style={{ color: '#9c27b0', fontWeight: 'bold' }}>S</span>
+                      <span style={{ fontSize: '0.9rem', color: '#666' }}>(最高レベル)</span>
+                    </Box>
+                  </MenuItem>
+                </Select>
+              </FormControl>
+              
+              <TextField
+                required
+                fullWidth
+                name="password"
+                label="🔒 パスワード"
+                type="password"
+                id="password"
+                autoComplete="new-password"
+                value={formData.password}
+                onChange={handleChange}
+                error={!!errors.password}
+                helperText={errors.password}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: 2,
+                    backgroundColor: '#f8f9fa',
+                  },
+                }}
+              />
+              
+              <TextField
+                required
+                fullWidth
+                name="confirmPassword"
+                label="🔒 パスワード確認"
+                type="password"
+                id="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                error={!!errors.confirmPassword}
+                helperText={errors.confirmPassword}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: 2,
+                    backgroundColor: '#f8f9fa',
+                  },
+                }}
+              />
+            </Box>
+            
             <Button
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
               disabled={loading}
+              sx={{ 
+                mt: 4, 
+                mb: 2,
+                py: 1.5,
+                fontSize: '1.1rem',
+                fontWeight: 'bold',
+                borderRadius: 3,
+                background: 'linear-gradient(45deg, #424242 30%, #757575 90%)',
+                boxShadow: '0 3px 15px rgba(66, 66, 66, 0.3)',
+                '&:hover': {
+                  background: 'linear-gradient(45deg, #212121 30%, #424242 90%)',
+                  boxShadow: '0 5px 20px rgba(66, 66, 66, 0.4)',
+                },
+                '&:disabled': {
+                  background: '#e0e0e0',
+                  color: '#9e9e9e',
+                }
+              }}
             >
-              {loading ? '登録中...' : '企業ユーザー登録'}
+              {loading ? '登録中...' : '🚀 企業アカウントを作成'}
             </Button>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <Link to="/signin">
-                  すでにアカウントをお持ちですか？ログイン
+            
+            <Box sx={{ textAlign: 'center', mt: 3 }}>
+              <Typography variant="body2" sx={{ mb: 1 }}>
+                すでにアカウントをお持ちの方は{' '}
+                <Link 
+                  to="/enterprise/signin" 
+                  style={{ 
+                    textDecoration: 'none', 
+                    color: '#1976d2',
+                    fontWeight: 'bold'
+                  }}
+                >
+                  企業ログイン
                 </Link>
-              </Grid>
-            </Grid>
-            <Grid container justifyContent="flex-end" sx={{ mt: 1 }}>
-              <Grid item>
-                <Link to="/signup">
-                  一般ユーザーとして登録
+              </Typography>
+              
+              <Typography variant="body2" color="text.secondary">
+                一般ユーザーの方は{' '}
+                <Link 
+                  to="/signup" 
+                  style={{ 
+                    textDecoration: 'none', 
+                    color: '#666'
+                  }}
+                >
+                  一般ユーザー登録
                 </Link>
-              </Grid>
-            </Grid>
+              </Typography>
+            </Box>
           </Box>
         </Paper>
       </Box>

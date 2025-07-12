@@ -7,8 +7,7 @@ import {
   Link,
   Toolbar,
   FormControl,
-  InputLabel,
-  Select,
+  InputLabel,  Select,
   MenuItem,
 } from "@mui/material";
 import AccountCircleSharpIcon from "@mui/icons-material/AccountCircleSharp";
@@ -282,118 +281,243 @@ function Project_List() {
       "宮崎",
       "鹿児島",
       "沖縄",
-    ],
-  };
-
+    ],  };
   return (
     <>
+      {/* 検索フィルター部分を改善 */}
       <Box
-        className="search"
+        className="search-container"
         sx={{
-          display: "flex",
-          alignItems: "center",
-          gap: 2,
           mt: 4,
           px: 3,
+          display: "flex",
           justifyContent: "center",
         }}
       >
-        <FormControl sx={{ minWidth: 120, backgroundColor: blue[50] }}>
-          <InputLabel>地域</InputLabel>
-          <Select
-            value={area}
-            label="地域"
-            onChange={(e) => {
-              setArea(e.target.value);
-              setPrefecture("");
-            }}
-          >
-            <MenuItem value="hokkaido">北海道・東北</MenuItem>
-            <MenuItem value="kantou">関東</MenuItem>
-            <MenuItem value="hokuriku">北陸・甲信越</MenuItem>
-            <MenuItem value="toukai">東海</MenuItem>
-            <MenuItem value="kinki">近畿</MenuItem>
-            <MenuItem value="tyuugoku">中国・四国</MenuItem>
-            <MenuItem value="kyuusyuu">九州・沖縄</MenuItem>
-          </Select>
-        </FormControl>
-
-        {area && (
-          <FormControl sx={{ minWidth: 120, backgroundColor: blue[50] }}>
-            <InputLabel>都道府県</InputLabel>
-            <Select
-              value={prefecture}
-              label="都道府県"
-              onChange={(e) => setPrefecture(e.target.value)}
-            >
-              {prefectureOptions[area].map((pref) => (
-                <MenuItem key={pref} value={pref}>
-                  {pref}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        )}
-
-        <FormControl sx={{ minWidth: 120, backgroundColor: blue[50] }}>
-          <InputLabel>ランク</InputLabel>
-          <Select
-            value={jobType}
-            label="ランク"
-            onChange={(e) => setJobType(e.target.value)}
-          >
-            <MenuItem value="S">S</MenuItem>
-            <MenuItem value="A">A</MenuItem>
-            <MenuItem value="B">B</MenuItem>
-            <MenuItem value="C">C</MenuItem>
-            <MenuItem value="D">D</MenuItem>
-          </Select>
-        </FormControl>
-
-        <FormControl sx={{ minWidth: 160, backgroundColor: blue[50] }}>
-          <InputLabel>職種</InputLabel>
-          <Select
-            value={tech}
-            label="職種"
-            onChange={(e) => setTech(e.target.value)}
-          >
-            <MenuItem value="システムエンジニア">システムエンジニア</MenuItem>
-            <MenuItem value="WEBエンジニア">WEBエンジニア</MenuItem>
-            <MenuItem value="アプリケーションエンジニア">
-              アプリケーションエンジニア
-            </MenuItem>
-            <MenuItem value="ネットワークエンジニア">
-              ネットワークエンジニア
-            </MenuItem>
-            <MenuItem value="データベースエンジニア">
-              データベースエンジニア
-            </MenuItem>
-            <MenuItem value="セキュリティエンジニア">
-              セキュリティエンジニア
-            </MenuItem>
-            <MenuItem value="クラウドエンジニア">クラウドエンジニア</MenuItem>
-            <MenuItem value="プロダクトマネージャー">
-              プロダクトマネージャー
-            </MenuItem>
-            <MenuItem value="プロジェクトマネージャー">
-              プロジェクトマネージャー
-            </MenuItem>
-            <MenuItem value="システムコンサルタント">
-              システムコンサルタント
-            </MenuItem>
-          </Select>
-        </FormControl>
-
-        <Button
-          variant="contained"
-          onClick={handleSearch}
+        <Box
           sx={{
-            backgroundColor: blue[300],
-            "&:hover": { backgroundColor: blue[200] },
+            backgroundColor: "white",
+            borderRadius: 3,
+            p: 4,
+            boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+            minWidth: 320,
+            maxWidth: 400,
           }}
         >
-          検索
-        </Button>
+          <Box sx={{ textAlign: "center", mb: 3 }}>
+            <h2 style={{ margin: 0, color: blue[800], fontSize: "1.4rem" }}>
+              求人検索
+            </h2>
+            <p
+              style={{
+                margin: "8px 0 0 0",
+                color: blue[600],
+                fontSize: "0.9rem",
+              }}
+            >
+              条件を選択して検索してください
+            </p>
+          </Box>
+
+          {/* 検索フィルター - 縦に配置 */}
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 3,
+            }}
+          >
+            <FormControl fullWidth>
+              <InputLabel sx={{ color: blue[700] }}>地域</InputLabel>
+              <Select
+                value={area}
+                label="地域"
+                onChange={(e) => {
+                  setArea(e.target.value);
+                  setPrefecture("");
+                }}
+                sx={{
+                  backgroundColor: blue[50],
+                  borderRadius: 2,
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    borderColor: blue[200],
+                  },
+                  "&:hover .MuiOutlinedInput-notchedOutline": {
+                    borderColor: blue[400],
+                  },
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    borderColor: blue[600],
+                  },
+                }}
+              >
+                <MenuItem value="">全ての地域</MenuItem>
+                <MenuItem value="hokkaido">北海道・東北</MenuItem>
+                <MenuItem value="kantou">関東</MenuItem>
+                <MenuItem value="hokuriku">北陸・甲信越</MenuItem>
+                <MenuItem value="toukai">東海</MenuItem>
+                <MenuItem value="kinki">近畿</MenuItem>
+                <MenuItem value="tyuugoku">中国・四国</MenuItem>
+                <MenuItem value="kyuusyuu">九州・沖縄</MenuItem>
+              </Select>
+            </FormControl>
+
+            {area && (
+              <FormControl fullWidth>
+                <InputLabel sx={{ color: blue[700] }}>都道府県</InputLabel>
+                <Select
+                  value={prefecture}
+                  label="都道府県"
+                  onChange={(e) => setPrefecture(e.target.value)}
+                  sx={{
+                    backgroundColor: blue[50],
+                    borderRadius: 2,
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderColor: blue[200],
+                    },
+                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                      borderColor: blue[400],
+                    },
+                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                      borderColor: blue[600],
+                    },
+                  }}
+                >
+                  <MenuItem value="">全ての都道府県</MenuItem>
+                  {prefectureOptions[area].map((pref) => (
+                    <MenuItem key={pref} value={pref}>
+                      {pref}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            )}
+
+            <FormControl fullWidth>
+              <InputLabel sx={{ color: blue[700] }}>ランク</InputLabel>
+              <Select
+                value={jobType}
+                label="ランク"
+                onChange={(e) => setJobType(e.target.value)}
+                sx={{
+                  backgroundColor: blue[50],
+                  borderRadius: 2,
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    borderColor: blue[200],
+                  },
+                  "&:hover .MuiOutlinedInput-notchedOutline": {
+                    borderColor: blue[400],
+                  },
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    borderColor: blue[600],
+                  },
+                }}
+              >
+                <MenuItem value="">全てのランク</MenuItem>
+                <MenuItem value="S">S (最高レベル)</MenuItem>
+                <MenuItem value="A">A (上級レベル)</MenuItem>
+                <MenuItem value="B">B (中級レベル)</MenuItem>
+                <MenuItem value="C">C (初級レベル)</MenuItem>
+                <MenuItem value="D">D (入門レベル)</MenuItem>
+              </Select>
+            </FormControl>
+
+            <FormControl fullWidth>
+              <InputLabel sx={{ color: blue[700] }}>職種</InputLabel>
+              <Select
+                value={tech}
+                label="職種"
+                onChange={(e) => setTech(e.target.value)}
+                sx={{
+                  backgroundColor: blue[50],
+                  borderRadius: 2,
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    borderColor: blue[200],
+                  },
+                  "&:hover .MuiOutlinedInput-notchedOutline": {
+                    borderColor: blue[400],
+                  },
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    borderColor: blue[600],
+                  },
+                }}
+              >
+                <MenuItem value="">全ての職種</MenuItem>
+                <MenuItem value="システムエンジニア">システムエンジニア</MenuItem>
+                <MenuItem value="WEBエンジニア">WEBエンジニア</MenuItem>
+                <MenuItem value="アプリケーションエンジニア">
+                  アプリケーションエンジニア
+                </MenuItem>
+                <MenuItem value="ネットワークエンジニア">
+                  ネットワークエンジニア
+                </MenuItem>
+                <MenuItem value="データベースエンジニア">
+                  データベースエンジニア
+                </MenuItem>
+                <MenuItem value="セキュリティエンジニア">
+                  セキュリティエンジニア
+                </MenuItem>
+                <MenuItem value="クラウドエンジニア">クラウドエンジニア</MenuItem>
+                <MenuItem value="プロダクトマネージャー">
+                  プロダクトマネージャー
+                </MenuItem>
+                <MenuItem value="プロジェクトマネージャー">
+                  プロジェクトマネージャー
+                </MenuItem>
+                <MenuItem value="システムコンサルタント">
+                  システムコンサルタント
+                </MenuItem>
+              </Select>
+            </FormControl>
+
+            {/* 検索ボタンとリセットボタン */}
+            <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
+              <Button
+                variant="contained"
+                onClick={handleSearch}
+                fullWidth
+                sx={{
+                  backgroundColor: blue[600],
+                  color: "white",
+                  py: 1.5,
+                  borderRadius: 2,
+                  fontSize: "1rem",
+                  fontWeight: "bold",
+                  boxShadow: "0 2px 8px rgba(25, 118, 210, 0.3)",
+                  "&:hover": {
+                    backgroundColor: blue[700],
+                    boxShadow: "0 4px 12px rgba(25, 118, 210, 0.4)",
+                  },
+                }}
+              >
+                🔍 検索
+              </Button>
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  setArea("");
+                  setPrefecture("");
+                  setJobType("");
+                  setTech("");
+                  setResults([]);
+                  setCurrentPage(1);
+                }}
+                sx={{
+                  color: blue[600],
+                  borderColor: blue[300],
+                  py: 1.5,
+                  borderRadius: 2,
+                  minWidth: "100px",
+                  "&:hover": {
+                    borderColor: blue[600],
+                    backgroundColor: blue[50],
+                  },
+                }}
+              >
+                リセット
+              </Button>
+            </Box>
+          </Box>
+        </Box>
       </Box>
 
       <div className="card">
@@ -452,9 +576,7 @@ function Project_List() {
                 </Button>
               )}
             </li>
-          ))}
-
-          <li className="nextBtn">
+          ))}          <li className="nextBtn">
             <Button onClick={handleNext} disabled={currentPage === totalPages}>
               Next
             </Button>

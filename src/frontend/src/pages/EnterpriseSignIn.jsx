@@ -81,81 +81,119 @@ const EnterpriseSignIn = () => {
   const handleClickShowPassword = () => setShowPassword(!showPassword);
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="md">
       <Box
         sx={{
-          marginTop: 8,
+          marginTop: 6,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
         }}
       >
-        <Paper elevation={3} sx={{ padding: 4, width: '100%' }}>
-          <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
+        <Paper 
+          elevation={6} 
+          sx={{ 
+            padding: 5, 
+            width: '100%',
+            borderRadius: 3,
+            background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+          }}
+        >
+          <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
             <Chip
               icon={<Business />}
               label="企業アカウント専用"
-              color="primary"
-              variant="outlined"
-              sx={{ fontSize: '0.9rem', px: 2 }}
+              color="warning"
+              variant="filled"
+              sx={{ 
+                fontSize: '1rem', 
+                px: 3, 
+                py: 2,
+                fontWeight: 'bold',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+              }}
             />
           </Box>
           
-          <Typography component="h1" variant="h4" align="center" gutterBottom>
+          <Typography component="h1" variant="h4" align="center" gutterBottom sx={{ color: '#424242', fontWeight: 'bold' }}>
             企業ログイン
           </Typography>
           
-          <Typography variant="body2" align="center" color="text.secondary" sx={{ mb: 3 }}>
-            企業アカウントでのログインはこちら
+          <Typography variant="body1" align="center" color="text.secondary" sx={{ mb: 4 }}>
+            企業アカウントでログインして人材管理を始めましょう
           </Typography>
           
           {error && (
-            <Alert severity="error" sx={{ mb: 2 }}>
+            <Alert severity="error" sx={{ mb: 3, borderRadius: 2 }}>
               {error}
             </Alert>
           )}
 
-          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="企業メールアドレス"
-              name="email"
-              type="email"
-              value={formData.email}
-              onChange={handleChange}
-              autoComplete="email"
-              autoFocus
-              placeholder="company@example.com"
-            />
-            
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="パスワード"
-              type={showPassword ? 'text' : 'password'}
-              id="password"
-              value={formData.password}
-              onChange={handleChange}
-              autoComplete="current-password"
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={handleClickShowPassword}
-                      edge="end"
-                    >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
+          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 3,
+                backgroundColor: 'white',
+                p: 4,
+                borderRadius: 3,
+                boxShadow: '0 2px 12px rgba(0,0,0,0.08)',
               }}
-            />
+            >
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="🏢 企業メールアドレス"
+                name="email"
+                type="email"
+                value={formData.email}
+                onChange={handleChange}
+                autoComplete="email"
+                autoFocus
+                placeholder="company@example.com"
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: 2,
+                    backgroundColor: '#f8f9fa',
+                  },
+                }}
+              />
+              
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="🔒 パスワード"
+                type={showPassword ? 'text' : 'password'}
+                id="password"
+                value={formData.password}
+                onChange={handleChange}
+                autoComplete="current-password"
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: 2,
+                    backgroundColor: '#f8f9fa',
+                  },
+                }}
+              />
+            </Box>
 
             <Button
               type="submit"
@@ -163,25 +201,35 @@ const EnterpriseSignIn = () => {
               variant="contained"
               disabled={loading}
               sx={{ 
-                mt: 3, 
+                mt: 4, 
                 mb: 2,
-                bgcolor: 'primary.main',
+                py: 1.5,
+                fontSize: '1.1rem',
+                fontWeight: 'bold',
+                borderRadius: 3,
+                background: 'linear-gradient(45deg, #424242 30%, #757575 90%)',
+                boxShadow: '0 3px 15px rgba(66, 66, 66, 0.3)',
                 '&:hover': {
-                  bgcolor: 'primary.dark',
+                  background: 'linear-gradient(45deg, #212121 30%, #424242 90%)',
+                  boxShadow: '0 5px 20px rgba(66, 66, 66, 0.4)',
+                },
+                '&:disabled': {
+                  background: '#e0e0e0',
+                  color: '#9e9e9e',
                 }
               }}
             >
-              {loading ? 'ログイン中...' : '企業アカウントでログイン'}
+              {loading ? 'ログイン中...' : '🏢 企業アカウントでログイン'}
             </Button>
 
-            <Box textAlign="center" sx={{ mt: 2 }}>
+            <Box sx={{ textAlign: 'center', mt: 3 }}>
               <Typography variant="body2" sx={{ mb: 1 }}>
                 企業アカウントをお持ちでない方は{' '}
                 <Link 
                   to="/enterprise/signup" 
                   style={{ 
                     textDecoration: 'none', 
-                    color: '#1976d2',
+                    color: '#e65100',
                     fontWeight: 'bold'
                   }}
                 >
