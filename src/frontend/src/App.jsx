@@ -27,7 +27,6 @@ function App() {
             <Route path="signup" element={<SignUp />} />
 
             <Route path="/user/*" element={<Header sx={{ margin: 0 }} />}>
-              <Route path="offer" element={<Offer />} />
               <Route path="list" element={<List />} />
               <Route path="profile" element={<Profile />} />
               <Route path="details" element={<UCD />} />
@@ -35,6 +34,7 @@ function App() {
 
             <Route path="/enterprise/*" element={<Side />}>
               <Route index element={<KigyoHome />} />
+              <Route path="offer" element={<Offer />} />
               <Route path="offer/detail" element={<Offerdetail />} />
             </Route>
           </Routes>

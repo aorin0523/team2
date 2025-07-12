@@ -144,85 +144,6 @@ function Offer() {
 
 
     return (
-        <Box className="app-layout">
-            {/* サイドバー */}
-            <Drawer
-                variant="permanent"
-                sx={{
-                    width: 240,
-                    flexShrink: 0,
-                    '& .MuiDrawer-paper': {
-                        width: 240,
-                        boxSizing: 'border-box',
-                        bgcolor: 'white',
-                        borderRight: '1px solid #81D4FA'
-                    }
-                }}
-            >
-                {/* ロゴエリア */}
-                <div className="sidebar-logo">
-                    <div className="logo-container">
-                        <Avatar
-                            sx={{
-                                bgcolor: '#00bcd4',
-                                width: 32,
-                                height: 32,
-                                fontSize: '14px',
-                                fontWeight: 'bold'
-                            }}
-                        >
-                            P
-                        </Avatar>
-                        <Typography variant="h6" sx={{ ml: 1, fontWeight: 'bold' }}>
-                            paiza
-                        </Typography>
-                    </div>
-                </div>
-
-                {/* ナビゲーションメニュー */}
-                <List sx={{ pt: 2 }}>
-                    {sidebarItems.map((item, index) => (
-                        <ListItem
-                            button
-                            key={item.text}
-                            className={item.text === 'オファーページ' ? 'nav-item active' : 'nav-item'}
-                        >
-                            <ListItemIcon sx={{ minWidth: 40 }}>
-                                <Typography sx={{ fontSize: '18px' }}>
-                                    {item.icon}
-                                </Typography>
-                            </ListItemIcon>
-                            <ListItemText
-                                primary={item.text}
-                                primaryTypographyProps={{
-                                    fontSize: '14px',
-                                    color: item.text === 'オファーページ' ? '#1976d2' : '#333'
-                                }}
-                            />
-                        </ListItem>
-                    ))}
-                </List>
-
-                {/* ユーザー情報 */}
-                <div className="sidebar-user">
-                    <Typography variant="body2" sx={{ mb: 1, fontWeight: 'bold' }}>
-                        User Name
-                    </Typography>
-                    <Button
-                        variant="text"
-                        size="small"
-                        sx={{
-                            color: '#666',
-                            fontSize: '12px',
-                            textTransform: 'none'
-                        }}
-                    >
-                        ⭐ Logout
-                    </Button>
-                </div>
-            </Drawer>
-
-            {/* メインコンテンツ */}
             <main className="main-content">
                 {/* ページタイトル */}
                 <div className="offer-header">
@@ -274,7 +195,6 @@ function Offer() {
                     </div>
                 </div>
             </main>
-        </Box>
     );
 }
 
