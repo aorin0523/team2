@@ -1,0 +1,1 @@
+# MinIO routes module
