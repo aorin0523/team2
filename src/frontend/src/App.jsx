@@ -17,7 +17,8 @@ import Offer from "./pages/Offer";
 import CreateOffer from "./pages/CreateOffer";
 import Profile from "./pages/Profile";
 import List from "./pages/Project_List";
-import UserOfferDetail from "./pages/UserOfferDetail"
+import UserOfferDetail from "./pages/UserOfferDetail";
+import UserOfferApply from "./pages/UserOfferApply";
 // import "./App.css";
 
 function App() {
@@ -36,6 +37,7 @@ function App() {
               <Route path="profile" element={<Profile />} />
               <Route path="details" element={<UCD />} />
               <Route path="offer/:offer_id" element={<UserOfferDetail />} />
+              <Route path="offer/:offer_id/apply" element={<UserOfferApply />} />
             </Route>
             
             <Route path="/enterprise/*" element={<Side />}>

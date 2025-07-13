@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -25,6 +25,7 @@ import { API_ENDPOINTS } from '../config/api';
 
 function UserOfferDetail() {
   const { offer_id } = useParams();
+  const navigate = useNavigate();
   const [offerData, setOfferData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -120,6 +121,22 @@ function UserOfferDetail() {
           <Typography variant="h6" sx={{ color: '#666' }}>
             ランク: {offerData.rank}
           </Typography>
+          
+          <Button
+            variant="contained"
+            sx={{
+              width: "60%",
+              backgroundColor: "#4fc3f7",
+              color: "white",
+              borderRadius: "30px",
+              mt: 3,
+              "&:focus": {
+                outline: "none",
+              },
+            }}
+          >
+            気になる
+          </Button>
         </Box>
         <Box className="work-outline">
           <Typography variant="h4" component="h2" sx={{ mb: 3, fontWeight: 'bold', color: '#1976d2' }}>
@@ -170,8 +187,9 @@ function UserOfferDetail() {
           )}
           <Button
             variant="contained"
+            onClick={() => navigate(`/user/offer/${offer_id}/apply`)}
             sx={{
-              width: "80%",
+              width: "100%",
               backgroundColor: "#4fc3f7",
               color: "white",
               borderRadius: "30px",
