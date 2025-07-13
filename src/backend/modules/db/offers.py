@@ -34,11 +34,12 @@ class Offers(BaseDB):
                 return []
 
             offer_dict = {}
-
+            
             for row in result:
                 offer_id = row["offer_id"]
                 if offer_id not in offer_dict:
                     offer_dict[offer_id] = {
+                        "offer_id": offer_id,
                         "enterprise_name": row["enterprise_name"],
                         "offer_title": row["offer_title"],
                         "offer_content": row["offer_content"],
@@ -75,8 +76,7 @@ class Offers(BaseDB):
                 self.offers.c.salary.label("salary"),
                 self.offers.c.capacity.label("capacity"),
                 self.ranks.c.name.label("rank"),
-                self.skills.c.name.label("skill_name")
-            ).select_from(j4).where(self.offers.c.id == id)
+                self.skills.c.name.label("skill_name")            ).select_from(j4).where(self.offers.c.id == id)
 
             result = conn.execute(stmt).mappings().all()
 

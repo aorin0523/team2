@@ -233,7 +233,7 @@ function CreateOffer() {
         try {
           const fileExtension = imageFile.name.split('.').pop();
           const tempFileName = `${tempImageUuid}.${fileExtension}`;
-          const newFileName = `${offerId}.${fileExtension}`;
+          const newFileName = offerId; // 拡張子を削除してオファーIDのみを使用
 
           const moveResponse = await fetch(
             `${API_ENDPOINTS.MINIO_MOVE_TEMP_TO_STORAGE(tempFileName)}?new_file_name=${newFileName}`,
@@ -244,6 +244,8 @@ function CreateOffer() {
 
           if (!moveResponse.ok) {
             console.warn('画像の保存に失敗しましたが、オファーは正常に作成されました');
+          } else {
+            console.log('画像が正常にstorageバケットに保存されました（拡張子削除）');
           }
         } catch (err) {
           console.warn('画像の処理に失敗しましたが、オファーは正常に作成されました:', err);
