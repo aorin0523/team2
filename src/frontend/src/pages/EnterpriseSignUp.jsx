@@ -16,6 +16,7 @@ import {
 } from '@mui/material';
 import { Business } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
+import { API_ENDPOINTS } from '../config/api';
 
 const EnterpriseSignUp = () => {
   const navigate = useNavigate();
@@ -36,7 +37,7 @@ const EnterpriseSignUp = () => {
   useEffect(() => {
     const fetchEnterprises = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/v1/enterprises/');
+        const response = await fetch(`${API_ENDPOINTS.ENTERPRISES_PROFILE.replace('/profile', '')}/`);
         if (response.ok) {
           const data = await response.json();
           setEnterprises(data);

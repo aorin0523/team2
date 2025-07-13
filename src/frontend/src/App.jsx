@@ -14,6 +14,7 @@ import EnterpriseSignUp from "./pages/EnterpriseSignUp";
 import EnterpriseSignIn from "./pages/EnterpriseSignIn";
 import KigyoHome from "./pages/KigyoHome";
 import Offer from "./pages/Offer";
+import CreateOffer from "./pages/CreateOffer";
 import Profile from "./pages/Profile";
 import List from "./pages/Project_List";
 // import "./App.css";
@@ -34,11 +35,11 @@ function App() {
               <Route path="list" element={<List />} />
               <Route path="profile" element={<Profile />} />
               <Route path="details" element={<UCD />} />
-            </Route>
-            <Route path="/enterprise/*" element={<Side />}>
+            </Route>            <Route path="/enterprise/*" element={<Side />}>
               <Route index element={<KigyoHome />} />
               <Route path="offer" element={<Offer />} />
               <Route path="offer/detail" element={<Offerdetail />} />
+              <Route path="offer/create" element={<CreateOffer />} />
             </Route>
           </Routes>
         </BrowserRouter>

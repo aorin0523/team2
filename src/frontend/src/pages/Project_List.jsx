@@ -17,18 +17,7 @@ import EmailSharpIcon from "@mui/icons-material/EmailSharp";
 import HelpSharpIcon from "@mui/icons-material/HelpSharp";
 import ArrowBackSharpIcon from "@mui/icons-material/ArrowBackSharp";
 import ArrowForwardSharpIcon from "@mui/icons-material/ArrowForwardSharp";
-import card1 from "../images/card1_img.jpg";
-import card2 from "../images/card2.webp";
-import card3 from "../images/card3.jpg";
-import card4 from "../images/card4.jpg";
-import card5 from "../images/card5.png";
-import card6 from "../images/card6.jpg";
-import card7 from "../images/card7.jpg";
-import card8 from "../images/card8.png";
-import card9 from "../images/card9.jpg";
-import card10 from "../images/card10.jpg";
-import card11 from "../images/card11.png";
-import card12 from "../images/card12.jpg";
+import { API_ENDPOINTS } from '../config/api';
 import "../css/Project_list.css";
 import { blue, lightBlue } from "@mui/material/colors";
 
@@ -46,7 +35,7 @@ function Project_List() {
       prefecture: "東京",
       rank: "A",
       tech: "システムエンジニア",
-      image: card1,
+      image: API_ENDPOINTS.MINIO_DOWNLOAD('storage', 'card1_img.jpg'),
       detail:
         "求人マッチングシステム開発\n使用技術：Java / Spring Boot / React / AWS / Kubernetes\n特徴：大規模求人データを活用した開発。DX推進プロジェクトあり",
     },
@@ -58,7 +47,7 @@ function Project_List() {
       prefecture: "東京",
       rank: "B",
       tech: "WEBエンジニア",
-      image: card2,
+      image: API_ENDPOINTS.MINIO_DOWNLOAD('storage', 'card2.webp'),
       detail:
         "製造業向けERPシステム開発\n使用技術：C# / .NET / Oracle / PL/SQL\n特徴：研修制度あり。未経験者も安心。勤務地は首都圏中心",
     },
@@ -70,7 +59,7 @@ function Project_List() {
       prefecture: "石川",
       rank: "C",
       tech: "ネットワークエンジニア",
-      image: card3,
+      image: API_ENDPOINTS.MINIO_DOWNLOAD('storage', 'card3.jpg'),
       detail:
         "教育系Webアプリ開発\n使用技術：React / Java / AWS\n特徴：教育業界の大手。自社開発あり。リモート可",
     },
@@ -82,7 +71,7 @@ function Project_List() {
       prefecture: "北海道",
       rank: "A",
       tech: "システムエンジニア",
-      image: card4,
+      image: API_ENDPOINTS.MINIO_DOWNLOAD('storage', 'card4.jpg'),
       detail:
         "AWSクラウドインフラ支援・Webアプリ開発\n使用技術：AWS / Python / Node.js\n特徴：AWS専門。クラウド環境の設計・構築に携われる",
     },
@@ -94,7 +83,7 @@ function Project_List() {
       prefecture: "北海道",
       rank: "D",
       tech: "システムエンジニア",
-      image: card5,
+      image: API_ENDPOINTS.MINIO_DOWNLOAD('storage', 'card5.png'),
       detail:
         "DX推進支援プロジェクト\n使用技術：要件定義 / PM支援 / クラウド設計\n特徴：コンサル×エンジニアリング。PM志望者にもおすすめ",
     },
@@ -106,7 +95,7 @@ function Project_List() {
       prefecture: "北海道",
       rank: "S",
       tech: "システムエンジニア",
-      image: card6,
+      image: API_ENDPOINTS.MINIO_DOWNLOAD('storage', 'card6.jpg'),
       detail:
         "社内業務システムの開発支援\n使用技術：Java / SQL / JavaScript\n特徴：大手グループ案件。残業少なめ。働きやすい環境",
     },
@@ -118,7 +107,7 @@ function Project_List() {
       prefecture: "石川",
       rank: "B",
       tech: "セキュリティエンジニア",
-      image: card7,
+      image: API_ENDPOINTS.MINIO_DOWNLOAD('storage', 'card7.jpg'),
       detail:
         "建設業向けモバイルアプリ開発\n使用技術：Flutter / Firebase / Dart / REST API\n特徴：ユーザー向けアプリ開発。UI/UX設計に携われる",
     },
@@ -130,7 +119,7 @@ function Project_List() {
       prefecture: "広島",
       rank: "C",
       tech: "アプリケーションエンジニア",
-      image: card8,
+      image: API_ENDPOINTS.MINIO_DOWNLOAD('storage', 'card8.png'),
       detail:
         "AIチャットボットの設計・開発\n使用技術：Python / FastAPI / GCP / NLP\n特徴：AI開発に関われる。社会課題解決型プロジェクト",
     },
@@ -142,7 +131,7 @@ function Project_List() {
       prefecture: "大分",
       rank: "A",
       tech: "クラウドエンジニア",
-      image: card9,
+      image: API_ENDPOINTS.MINIO_DOWNLOAD('storage', 'card9.jpg'),
       detail:
         "投資系Webサービスの開発\n使用技術：Go / GraphQL / Docker / Kubernetes\n特徴：マイクロサービスアーキテクチャ。少数精鋭チーム",
     },
@@ -154,7 +143,7 @@ function Project_List() {
       prefecture: "大阪",
       rank: "C",
       tech: "データベースエンジニア",
-      image: card10,
+      image: API_ENDPOINTS.MINIO_DOWNLOAD('storage', 'card10.jpg'),
       detail:
         "Webサイトのフロントエンドリニューアル\n使用技術：Next.js / TypeScript / Figma\n特徴：デザインと連携したUI開発。パフォーマンス改善",
     },
@@ -166,7 +155,7 @@ function Project_List() {
       prefecture: "新潟",
       rank: "B",
       tech: "プロダクトマネージャー",
-      image: card11,
+      image: API_ENDPOINTS.MINIO_DOWNLOAD('storage', 'card11.png'),
       detail:
         "スマートフォン向けゲーム開発\n使用技術：Unity / C# / Git / Jenkins\n特徴：自社ゲーム開発。企画にも関われる環境",
     },
@@ -179,7 +168,7 @@ function Project_List() {
       prefecture: "神奈川",
       rank: "B",
       tech: "システムコンサルタント",
-      image: card12,
+      image: API_ENDPOINTS.MINIO_DOWNLOAD('storage', 'card12.jpg'),
       detail:
         "官公庁向け業務アプリの再構築\n使用技術：Java / Oracle / Spring Framework\n特徴：社会インフラを支える安定案件。長期プロジェクト",
     },

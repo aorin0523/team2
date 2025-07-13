@@ -14,6 +14,7 @@ import {
 } from '@mui/material';
 import { Visibility, VisibilityOff, Business } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
+import { API_ENDPOINTS } from '../config/api';
 
 const EnterpriseSignIn = () => {
   const navigate = useNavigate();
@@ -51,7 +52,7 @@ const EnterpriseSignIn = () => {
       await signIn(formData.email, formData.password);
       
       // ログイン後にユーザー情報を取得して企業アカウントかチェック
-      const userInfoResponse = await fetch('http://localhost:8000/api/v1/auth/me', {
+      const userInfoResponse = await fetch(API_ENDPOINTS.USERS_PROFILE.replace('/users/', '/auth/me'), {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
         },
