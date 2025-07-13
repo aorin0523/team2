@@ -170,202 +170,334 @@ function CreateOffer() {
       sx={{ 
         minHeight: '100vh',
         background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
-        py: 3
+        py: 4
       }}
     >
-      <Container maxWidth="md">
-        {/* ヘッダー */}
-        <Paper 
-          elevation={3}
-          sx={{ 
-            p: 3, 
-            mb: 4, 
-            borderRadius: 3,
-            background: 'linear-gradient(135deg, #424242 0%, #757575 100%)',
+      <Container maxWidth="lg">
+        {/* ヘッダーセクション */}
+        <Box
+          sx={{
+            textAlign: 'center',
+            mb: 4,
             color: 'white'
           }}
         >
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-            <Business sx={{ mr: 2, fontSize: '2rem' }} />
-            <Typography variant="h4" fontWeight="bold">
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 2 }}>
+            <Business sx={{ fontSize: '3rem', mr: 2 }} />
+            <Typography variant="h3" fontWeight="bold">
               新規オファー作成
             </Typography>
           </Box>
-          <Typography variant="body1" sx={{ opacity: 0.9 }}>
+          <Typography variant="h6" sx={{ opacity: 0.9, maxWidth: 600, mx: 'auto' }}>
             新しい求人オファーを作成して優秀な人材を募集しましょう
           </Typography>
-        </Paper>
+        </Box>
 
-        {/* メインフォーム */}
-        <Paper elevation={6} sx={{ borderRadius: 3, p: 4 }}>
-          <Box sx={{ mb: 4 }}>
-            <Typography variant="h5" fontWeight="bold" color="primary" sx={{ mb: 1 }}>
+        {/* メインコンテンツ */}
+        <Paper 
+          elevation={10} 
+          sx={{ 
+            borderRadius: 4, 
+            overflow: 'hidden',
+            background: 'linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)'
+          }}
+        >
+          {/* フォームヘッダー */}
+          <Box
+            sx={{
+              background: 'linear-gradient(135deg, #495057 0%, #6c757d 100%)',
+              color: 'white',
+              p: 3,
+              textAlign: 'center'
+            }}
+          >
+            <Typography variant="h5" fontWeight="bold" sx={{ mb: 1 }}>
               📝 オファー詳細情報
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body1" sx={{ opacity: 0.9 }}>
               必須項目は * マークで表示されています
             </Typography>
           </Box>
 
-          <Grid container spacing={3}>
-            {/* タイトル */}
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="オファータイトル *"
-                value={formData.title}
-                onChange={(e) => handleInputChange('title', e.target.value)}
-                error={!!validationErrors.title}
-                helperText={validationErrors.title}
-                placeholder="例: フルスタックエンジニア募集"
-                InputProps={{
-                  sx: { borderRadius: 2 }
-                }}
-              />
-            </Grid>
-
-            {/* 説明 */}
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                multiline
-                rows={6}
-                label="オファー内容・説明 *"
-                value={formData.content}
-                onChange={(e) => handleInputChange('content', e.target.value)}
-                error={!!validationErrors.content}
-                helperText={validationErrors.content}
-                placeholder="具体的な業務内容、必要なスキル、働く環境について詳しく記載してください"
-                InputProps={{
-                  sx: { borderRadius: 2 }
-                }}
-              />
-            </Grid>
-
-            {/* ランク */}
-            <Grid item xs={12} md={6}>
-              <FormControl fullWidth error={!!validationErrors.rank}>
-                <InputLabel>応募可能最低ランク *</InputLabel>
-                <Select
-                  value={formData.rank}
-                  onChange={(e) => handleInputChange('rank', e.target.value)}
-                  label="応募可能最低ランク *"
-                  sx={{ borderRadius: 2 }}
+          {/* フォームコンテンツ */}
+          <Box sx={{ p: 4 }}>
+            <Grid container spacing={4}>
+              {/* タイトルセクション */}
+              <Grid item xs={12}>
+                <Box
+                  sx={{
+                    p: 3,
+                    borderRadius: 3,
+                    background: 'linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)',
+                    border: '1px solid #90caf9'
+                  }}
                 >
-                  {rankOptions.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <Chip 
-                          label={option.label}
-                          size="small"
-                          color="primary"
-                          sx={{ minWidth: 30 }}
-                        />
-                        <Typography>{option.description}</Typography>
-                      </Box>
-                    </MenuItem>
-                  ))}
-                </Select>
-                {validationErrors.rank && (
-                  <Typography variant="caption" color="error" sx={{ mt: 1, ml: 2 }}>
-                    {validationErrors.rank}
+                  <TextField
+                    fullWidth
+                    label="オファータイトル"
+                    value={formData.title}
+                    onChange={(e) => handleInputChange('title', e.target.value)}
+                    error={!!validationErrors.title}
+                    helperText={validationErrors.title || 'わかりやすく魅力的なタイトルを入力してください'}
+                    placeholder="例: 【リモート可】フルスタックエンジニア募集 - 最新技術で事業成長を支える"
+                    required
+                    InputProps={{
+                      sx: { 
+                        borderRadius: 2,
+                        background: 'white',
+                        fontSize: '1.1rem'
+                      }
+                    }}
+                    InputLabelProps={{
+                      sx: { fontSize: '1.1rem', fontWeight: 'bold' }
+                    }}
+                  />
+                </Box>
+              </Grid>
+
+              {/* 説明セクション */}
+              <Grid item xs={12}>
+                <Box
+                  sx={{
+                    p: 3,
+                    borderRadius: 3,
+                    background: 'linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%)',
+                    border: '1px solid #ce93d8'
+                  }}
+                >
+                  <TextField
+                    fullWidth
+                    multiline
+                    rows={8}
+                    label="オファー内容・説明"
+                    value={formData.content}
+                    onChange={(e) => handleInputChange('content', e.target.value)}
+                    error={!!validationErrors.content}
+                    helperText={validationErrors.content || '具体的な業務内容、必要なスキル、働く環境、魅力について詳しく記載してください'}
+                    placeholder={`例:
+【業務内容】
+・Webアプリケーションのフロントエンド・バックエンド開発
+・新機能の設計・実装・テスト
+・既存システムの改善・最適化
+
+【必要なスキル】
+・JavaScript, TypeScript の実務経験（2年以上）
+・React, Node.js の開発経験
+・MySQL, PostgreSQL などのデータベース知識
+
+【働く環境】
+・リモートワーク可（週1-2回出社）
+・最新技術導入に積極的
+・チーム開発でのコードレビュー文化`}
+                    required
+                    InputProps={{
+                      sx: { 
+                        borderRadius: 2,
+                        background: 'white'
+                      }
+                    }}
+                    InputLabelProps={{
+                      sx: { fontSize: '1.1rem', fontWeight: 'bold' }
+                    }}
+                  />
+                </Box>
+              </Grid>
+
+              {/* 条件設定セクション */}
+              <Grid item xs={12}>
+                <Box
+                  sx={{
+                    p: 3,
+                    borderRadius: 3,
+                    background: 'linear-gradient(135deg, #fff3e0 0%, #ffcc02 20%, #fff3e0 100%)',
+                    border: '1px solid #ffb74d'
+                  }}
+                >
+                  <Typography variant="h6" fontWeight="bold" sx={{ mb: 3, color: '#e65100' }}>
+                    募集条件設定
                   </Typography>
-                )}
-              </FormControl>
+                  
+                  <Grid container spacing={3}>
+                    {/* ランク */}
+                    <Grid item xs={12} md={6}>
+                      <FormControl fullWidth error={!!validationErrors.rank}>
+                        <InputLabel sx={{ fontWeight: 'bold' }}>応募可能最低ランク *</InputLabel>
+                        <Select
+                          value={formData.rank}
+                          onChange={(e) => handleInputChange('rank', e.target.value)}
+                          label="応募可能最低ランク *"
+                          sx={{ 
+                            borderRadius: 2,
+                            background: 'white'
+                          }}
+                        >
+                          {rankOptions.map((option) => (
+                            <MenuItem key={option.value} value={option.value}>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '100%' }}>
+                                <Chip 
+                                  label={option.label}
+                                  size="small"
+                                  color="primary"
+                                  sx={{ 
+                                    minWidth: 40,
+                                    fontWeight: 'bold',
+                                    fontSize: '0.9rem'
+                                  }}
+                                />
+                                <Typography variant="body1">{option.description}</Typography>
+                              </Box>
+                            </MenuItem>
+                          ))}
+                        </Select>
+                        {validationErrors.rank && (
+                          <Typography variant="caption" color="error" sx={{ mt: 1, ml: 2 }}>
+                            {validationErrors.rank}
+                          </Typography>
+                        )}
+                      </FormControl>
+                    </Grid>
+
+                    {/* 募集人数 */}
+                    <Grid item xs={12} md={6}>
+                      <TextField
+                        fullWidth
+                        type="number"
+                        label="募集人数"
+                        value={formData.capacity}
+                        onChange={(e) => handleInputChange('capacity', parseInt(e.target.value) || '')}
+                        error={!!validationErrors.capacity}
+                        helperText={validationErrors.capacity || '未入力の場合は人数制限なし'}
+                        inputProps={{ min: 1, max: 999 }}
+                        InputProps={{
+                          sx: { 
+                            borderRadius: 2,
+                            background: 'white'
+                          }
+                        }}
+                        InputLabelProps={{
+                          sx: { fontWeight: 'bold' }
+                        }}
+                      />
+                    </Grid>
+
+                    {/* 給料 */}
+                    <Grid item xs={12} md={6}>
+                      <TextField
+                        fullWidth
+                        label="給料・待遇"
+                        value={formData.salary}
+                        onChange={(e) => handleInputChange('salary', e.target.value)}
+                        placeholder="例: 年収500万円〜700万円、賞与年2回"
+                        helperText="年収、時給、賞与、その他待遇について記載"
+                        InputProps={{
+                          sx: { 
+                            borderRadius: 2,
+                            background: 'white'
+                          }
+                        }}
+                        InputLabelProps={{
+                          sx: { fontWeight: 'bold' }
+                        }}
+                      />
+                    </Grid>
+
+                    {/* 締切日 */}
+                    <Grid item xs={12} md={6}>
+                      <TextField
+                        fullWidth
+                        type="date"
+                        label="応募締切日"
+                        value={formData.deadline}
+                        onChange={(e) => handleInputChange('deadline', e.target.value)}
+                        error={!!validationErrors.deadline}
+                        helperText={validationErrors.deadline || '未設定の場合は締切なし'}
+                        InputLabelProps={{ 
+                          shrink: true,
+                          sx: { fontWeight: 'bold' }
+                        }}
+                        inputProps={{ min: getTodayString() }}
+                        InputProps={{
+                          sx: { 
+                            borderRadius: 2,
+                            background: 'white'
+                          }
+                        }}
+                      />
+                    </Grid>
+                  </Grid>
+                </Box>
+              </Grid>
             </Grid>
 
-            {/* 募集人数 */}
-            <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
-                type="number"
-                label="募集人数"
-                value={formData.capacity}
-                onChange={(e) => handleInputChange('capacity', parseInt(e.target.value) || '')}
-                error={!!validationErrors.capacity}
-                helperText={validationErrors.capacity || '未入力の場合は人数制限なし'}
-                inputProps={{ min: 1, max: 999 }}
-                InputProps={{
-                  sx: { borderRadius: 2 }
-                }}
-              />
-            </Grid>
-
-            {/* 給料 */}
-            <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
-                label="給料・待遇"
-                value={formData.salary}
-                onChange={(e) => handleInputChange('salary', e.target.value)}
-                placeholder="例: 500万円〜700万円"
-                helperText="年収や時給、その他待遇について記載"
-                InputProps={{
-                  sx: { borderRadius: 2 }
-                }}
-              />
-            </Grid>
-
-            {/* 締切日 */}
-            <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
-                type="date"
-                label="応募締切日"
-                value={formData.deadline}
-                onChange={(e) => handleInputChange('deadline', e.target.value)}
-                error={!!validationErrors.deadline}
-                helperText={validationErrors.deadline || '未設定の場合は締切なし'}
-                InputLabelProps={{ shrink: true }}
-                inputProps={{ min: getTodayString() }}
-                InputProps={{
-                  sx: { borderRadius: 2 }
-                }}
-              />
-            </Grid>
-          </Grid>
-
-          {/* アクションボタン */}
-          <Box sx={{ display: 'flex', gap: 2, mt: 4, justifyContent: 'flex-end' }}>
-            <Button
-              variant="outlined"
-              size="large"
-              onClick={handleCancel}
-              startIcon={<Cancel />}
-              sx={{
-                borderRadius: 2,
-                px: 4,
-                borderColor: '#757575',
-                color: '#757575',
-                '&:hover': {
-                  borderColor: '#424242',
-                  backgroundColor: '#f5f5f5'
-                }
+            {/* アクションボタンセクション */}
+            <Box 
+              sx={{ 
+                mt: 5,
+                p: 3,
+                borderRadius: 3,
+                background: 'linear-gradient(135deg, #f5f5f5 0%, #eeeeee 100%)',
+                border: '1px solid #e0e0e0'
               }}
             >
-              キャンセル
-            </Button>
-            
-            <Button
-              variant="contained"
-              size="large"
-              onClick={handleCreateOffer}
-              disabled={loading}
-              startIcon={loading ? null : <Save />}
-              sx={{
-                borderRadius: 2,
-                px: 4,
-                background: 'linear-gradient(45deg, #424242 30%, #757575 90%)',
-                '&:hover': {
-                  background: 'linear-gradient(45deg, #212121 30%, #424242 90%)',
-                },
-                '&:disabled': {
-                  background: '#cccccc'
-                }
-              }}
-            >
-              {loading ? '作成中...' : 'オファーを作成'}
-            </Button>
+              <Box sx={{ display: 'flex', gap: 3, justifyContent: 'center', flexWrap: 'wrap' }}>
+                <Button
+                  variant="outlined"
+                  size="large"
+                  onClick={handleCancel}
+                  startIcon={<Cancel />}
+                  sx={{
+                    borderRadius: 3,
+                    px: 5,
+                    py: 1.5,
+                    borderColor: '#757575',
+                    color: '#757575',
+                    fontSize: '1.1rem',
+                    fontWeight: 'bold',
+                    minWidth: 160,
+                    '&:hover': {
+                      borderColor: '#424242',
+                      backgroundColor: '#f5f5f5',
+                      transform: 'translateY(-2px)',
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                    },
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  キャンセル
+                </Button>
+                
+                <Button
+                  variant="contained"
+                  size="large"
+                  onClick={handleCreateOffer}
+                  disabled={loading}
+                  startIcon={loading ? null : <Save />}
+                  sx={{
+                    borderRadius: 3,
+                    px: 5,
+                    py: 1.5,
+                    fontSize: '1.1rem',
+                    fontWeight: 'bold',
+                    minWidth: 200,
+                    background: 'linear-gradient(45deg, #667eea 30%, #764ba2 90%)',
+                    boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)',
+                    '&:hover': {
+                      background: 'linear-gradient(45deg, #5a6fd8 30%, #6a4190 90%)',
+                      transform: 'translateY(-2px)',
+                      boxShadow: '0 6px 20px rgba(102, 126, 234, 0.6)'
+                    },
+                    '&:disabled': {
+                      background: '#cccccc',
+                      transform: 'none',
+                      boxShadow: 'none'
+                    },
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  {loading ? '作成中...' : 'オファーを作成'}
+                </Button>
+              </Box>
+            </Box>
           </Box>
         </Paper>
 
@@ -374,8 +506,13 @@ function CreateOffer() {
           open={!!error}
           autoHideDuration={6000}
           onClose={() => setError('')}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         >
-          <Alert severity="error" onClose={() => setError('')}>
+          <Alert 
+            severity="error" 
+            onClose={() => setError('')}
+            sx={{ borderRadius: 2, fontWeight: 'bold' }}
+          >
             {error}
           </Alert>
         </Snackbar>
@@ -384,8 +521,13 @@ function CreateOffer() {
           open={!!success}
           autoHideDuration={6000}
           onClose={() => setSuccess('')}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         >
-          <Alert severity="success" onClose={() => setSuccess('')}>
+          <Alert 
+            severity="success" 
+            onClose={() => setSuccess('')}
+            sx={{ borderRadius: 2, fontWeight: 'bold' }}
+          >
             {success}
           </Alert>
         </Snackbar>
