@@ -28,7 +28,6 @@ function UserOfferDetail() {
   const [offerData, setOfferData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const ratingValue = 3;
 
   // オファーデータを取得
   useEffect(() => {
@@ -115,53 +114,51 @@ function UserOfferDetail() {
               e.target.src = business_man; // 画像読み込み失敗時はデフォルト画像を表示
             }}
           />
-          <p>{offerData.enterprise_name}</p>
-          <Typography component="legend"></Typography>
-          <Rating name="read-only" value={ratingValue} readOnly />
-          <p>ランク: {offerData.rank}</p>
-          <Button
-            variant="contained"
-            sx={{
-              backgroundColor: "#4fc3f7",
-              color: "white",
-              borderRadius: "30px",
-              "&:focus": {
-                outline: "none",
-              },
-            }}
-          >
-            質問する
-          </Button>
+          <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 1, color: '#1976d2' }}>
+            {offerData.enterprise_name}
+          </Typography>
+          <Typography variant="h6" sx={{ color: '#666' }}>
+            ランク: {offerData.rank}
+          </Typography>
         </Box>
         <Box className="work-outline">
-          <h2>{offerData.offer_title}</h2>
-          <p>
+          <Typography variant="h4" component="h2" sx={{ mb: 3, fontWeight: 'bold', color: '#1976d2' }}>
+            {offerData.offer_title}
+          </Typography>
+          <Typography variant="body1" sx={{ fontSize: '1.1rem', lineHeight: 1.8, mb: 3 }}>
             {offerData.offer_content.split('\n').map((line, index) => (
               <span key={index}>
                 {line}
                 <br />
               </span>
             ))}
-          </p>
+          </Typography>
           {offerData.salary && (
-            <p><strong>給与:</strong> {offerData.salary}</p>
+            <Typography variant="body1" sx={{ fontSize: '1.1rem', mb: 2, fontWeight: 'bold' }}>
+              <strong>給与:</strong> {offerData.salary}
+            </Typography>
           )}
           {offerData.capacity && (
-            <p><strong>募集人数:</strong> {offerData.capacity}人</p>
+            <Typography variant="body1" sx={{ fontSize: '1.1rem', mb: 2 }}>
+              <strong>募集人数:</strong> {offerData.capacity}人
+            </Typography>
           )}
           {offerData.skills && offerData.skills.length > 0 && (
-            <div>
-              <strong>必要スキル:</strong>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px', marginTop: '5px' }}>
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="body1" sx={{ fontSize: '1.1rem', fontWeight: 'bold', mb: 1 }}>
+                必要スキル:
+              </Typography>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '10px' }}>
                 {offerData.skills.map((skill, index) => (
                   <span 
                     key={index}
                     style={{
                       backgroundColor: '#e3f2fd',
                       color: '#1976d2',
-                      padding: '4px 12px',
-                      borderRadius: '16px',
-                      fontSize: '0.9rem',
+                      padding: '6px 16px',
+                      borderRadius: '20px',
+                      fontSize: '1rem',
+                      fontWeight: '500',
                       border: '1px solid #bbdefb'
                     }}
                   >
@@ -169,7 +166,7 @@ function UserOfferDetail() {
                   </span>
                 ))}
               </div>
-            </div>
+            </Box>
           )}
           <Button
             variant="contained"
