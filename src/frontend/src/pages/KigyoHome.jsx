@@ -223,67 +223,7 @@ function App() {
         </Grid>
 
         {/* 統計カード */}
-        <Grid container spacing={3} sx={{ mt: 4 }}>
-          <Grid item xs={12} sm={4}>
-            <Paper 
-              elevation={3}
-              sx={{ 
-                p: 3, 
-                textAlign: 'center',
-                borderRadius: 2,
-                background: 'linear-gradient(45deg, #e3f2fd 30%, #bbdefb 90%)',
-              }}
-            >
-              <BarChart sx={{ fontSize: '2.5rem', color: '#1976d2', mb: 1 }} />
-              <Typography variant="h4" fontWeight="bold" color="primary">
-                12
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                アクティブな募集
-              </Typography>
-            </Paper>
-          </Grid>
-          
-          <Grid item xs={12} sm={4}>
-            <Paper 
-              elevation={3}
-              sx={{ 
-                p: 3, 
-                textAlign: 'center',
-                borderRadius: 2,
-                background: 'linear-gradient(45deg, #e8f5e8 30%, #c8e6c9 90%)',
-              }}
-            >
-              <Assignment sx={{ fontSize: '2.5rem', color: '#4caf50', mb: 1 }} />
-              <Typography variant="h4" fontWeight="bold" color="success.main">
-                47
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                総応募者数
-              </Typography>
-            </Paper>
-          </Grid>
-          
-          <Grid item xs={12} sm={4}>
-            <Paper 
-              elevation={3}
-              sx={{ 
-                p: 3, 
-                textAlign: 'center',
-                borderRadius: 2,
-                background: 'linear-gradient(45deg, #fff3e0 30%, #ffcc80 90%)',
-              }}
-            >
-              <Work sx={{ fontSize: '2.5rem', color: '#ff9800', mb: 1 }} />
-              <Typography variant="h4" fontWeight="bold" color="warning.main">
-                8
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                成約件数
-              </Typography>
-            </Paper>
-          </Grid>
-        </Grid>      </Container>
+          </Container>
     </Box>
   );
 }

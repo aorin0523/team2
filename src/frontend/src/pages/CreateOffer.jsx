@@ -354,7 +354,7 @@ function CreateOffer() {
                     required
                     InputProps={{
                       sx: {
-                        minWidth: "14vw", 
+                        minWidth: "16vw", 
                         borderRadius: 2,
                         background: 'white',
                         fontSize: '1.1rem'
@@ -404,7 +404,7 @@ function CreateOffer() {
                     required
                     InputProps={{
                       sx: { 
-                        minWidth: "24vw", 
+                        minWidth: "26vw", 
                         borderRadius: 2,
                         background: 'white',
                         '& .MuiInputBase-inputMultiline': {
