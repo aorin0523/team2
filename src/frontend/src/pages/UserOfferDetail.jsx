@@ -22,13 +22,17 @@ import business_man from "../img/business_man.png";
 // css
 import "../css/UserCaseDetails.css";
 import { API_ENDPOINTS } from '../config/api';
+import { useAuth } from '../contexts/AuthContext';
 
 function UserOfferDetail() {
   const { offer_id } = useParams();
   const navigate = useNavigate();
+  const { user, token } = useAuth();
   const [offerData, setOfferData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [applicationStatus, setApplicationStatus] = useState(null);
+  const [checkingStatus, setCheckingStatus] = useState(false);
 
   // オファーデータを取得
   useEffect(() => {
@@ -55,6 +59,33 @@ function UserOfferDetail() {
       fetchOfferData();
     }
   }, [offer_id]);
+
+  // 応募状況をチェック
+  useEffect(() => {
+    const checkApplicationStatus = async () => {
+      if (!user || !token || !offer_id) return;
+
+      try {
+        setCheckingStatus(true);
+        const response = await fetch(API_ENDPOINTS.USER_APPLICATION_STATUS(user.id, offer_id), {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setApplicationStatus(data.applied);
+        }
+      } catch (err) {
+        console.error('応募状況チェックエラー:', err);
+      } finally {
+        setCheckingStatus(false);
+      }
+    };
+
+    checkApplicationStatus();
+  }, [user, token, offer_id]);
 
   // ローディング状態
   if (loading) {
@@ -185,22 +216,69 @@ function UserOfferDetail() {
               </div>
             </Box>
           )}
-          <Button
-            variant="contained"
-            onClick={() => navigate(`/user/offer/${offer_id}/apply`)}
-            sx={{
-              width: "100%",
-              backgroundColor: "#4fc3f7",
-              color: "white",
-              borderRadius: "30px",
-              mt: 3,
-              "&:focus": {
-                outline: "none",
-              },
-            }}
-          >
-            応募する
-          </Button>
+          {/* 応募ボタン */}
+          {user ? (
+            applicationStatus === true ? (
+              <Button
+                variant="contained"
+                disabled
+                sx={{
+                  width: "100%",
+                  backgroundColor: "#ccc",
+                  color: "white",
+                  borderRadius: "30px",
+                  mt: 3,
+                  "&:focus": {
+                    outline: "none",
+                  },
+                }}
+              >
+                応募済み
+              </Button>
+            ) : (
+              <Button
+                variant="contained"
+                onClick={() => navigate(`/user/offer/${offer_id}/apply`)}
+                disabled={checkingStatus}
+                sx={{
+                  width: "100%",
+                  backgroundColor: "#4fc3f7",
+                  color: "white",
+                  borderRadius: "30px",
+                  mt: 3,
+                  "&:hover": {
+                    backgroundColor: "#29b6f6",
+                  },
+                  "&:focus": {
+                    outline: "none",
+                  },
+                }}
+              >
+                {checkingStatus ? "確認中..." : "応募する"}
+              </Button>
+            )
+          ) : (
+            <Button
+              variant="outlined"
+              onClick={() => navigate('/signin')}
+              sx={{
+                width: "100%",
+                borderColor: "#4fc3f7",
+                color: "#4fc3f7",
+                borderRadius: "30px",
+                mt: 3,
+                "&:hover": {
+                  borderColor: "#29b6f6",
+                  backgroundColor: "#f0f8ff",
+                },
+                "&:focus": {
+                  outline: "none",
+                },
+              }}
+            >
+              ログインして応募する
+            </Button>
+          )}
         </Box>
       </Box>
   );

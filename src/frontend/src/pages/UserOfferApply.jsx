@@ -8,13 +8,16 @@ import {
   Alert,
 } from "@mui/material";
 import { API_ENDPOINTS } from '../config/api';
+import { useAuth } from '../contexts/AuthContext';
 import "../css/UserCaseDetails.css";
 
 function UserOfferApply() {
   const { offer_id } = useParams();
   const navigate = useNavigate();
+  const { user, token } = useAuth();
   const [offerData, setOfferData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [applying, setApplying] = useState(false);
   const [error, setError] = useState(null);
 
   // オファーデータを取得
@@ -44,10 +47,47 @@ function UserOfferApply() {
   }, [offer_id]);
 
   // 応募処理
-  const handleApply = () => {
-    // TODO: 実際の応募APIを呼び出す
-    alert('応募が完了しました！');
-    navigate('/user/list');
+  const handleApply = async () => {
+    if (!user || !token) {
+      setError('ログインが必要です');
+      return;
+    }
+
+    try {
+      setApplying(true);
+      
+      const response = await fetch(API_ENDPOINTS.USER_APPLY, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          user_id: user.id,
+          offer_id: offer_id
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || '応募に失敗しました');
+      }
+
+      const result = await response.json();
+      
+      if (result.status === 'success') {
+        // 成功時の処理
+        alert('応募が完了しました！');
+        navigate('/user/list');
+      } else {
+        throw new Error(result.message || '応募に失敗しました');
+      }
+    } catch (err) {
+      setError(`応募エラー: ${err.message}`);
+      console.error('応募エラー:', err);
+    } finally {
+      setApplying(false);
+    }
   };
 
   // 戻る処理
@@ -131,6 +171,13 @@ function UserOfferApply() {
           </Typography>
         </Box>
 
+        {/* エラー表示 */}
+        {error && (
+          <Alert severity="error" sx={{ mb: 3 }}>
+            {error}
+          </Alert>
+        )}
+
         {/* 確認メッセージ */}
         <Typography variant="h6" sx={{ mb: 4, lineHeight: 1.6 }}>
           上記のオファーに応募しますか？
@@ -142,6 +189,7 @@ function UserOfferApply() {
             variant="outlined"
             size="large"
             onClick={handleCancel}
+            disabled={applying}
             sx={{
               minWidth: 150,
               py: 2,
@@ -162,6 +210,7 @@ function UserOfferApply() {
             variant="contained"
             size="large"
             onClick={handleApply}
+            disabled={applying}
             sx={{
               minWidth: 150,
               py: 2,
@@ -175,9 +224,19 @@ function UserOfferApply() {
               "&:focus": {
                 outline: "none",
               },
+              "&:disabled": {
+                backgroundColor: "#ccc",
+              },
             }}
           >
-            応募する
+            {applying ? (
+              <>
+                <CircularProgress size={20} sx={{ mr: 1, color: 'white' }} />
+                応募中...
+              </>
+            ) : (
+              '応募する'
+            )}
           </Button>
         </Box>
       </Box>

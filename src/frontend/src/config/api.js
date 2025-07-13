@@ -29,6 +29,9 @@ export const API_ENDPOINTS = {
   
   // ユーザー
   AUTH_ME: `${API_BASE_URL}/api/v1/auth/me`,
+  USER_APPLY: `${API_BASE_URL}/api/v1/users/apply`,
+  USER_APPLICATIONS: (userId) => `${API_BASE_URL}/api/v1/users/${userId}/applications`,
+  USER_APPLICATION_STATUS: (userId, offerId) => `${API_BASE_URL}/api/v1/users/${userId}/offer/${offerId}/status`,
   
   // 企業
   ENTERPRISES_PROFILE: `${API_BASE_URL}/api/v1/enterprises/profile`,
