@@ -100,6 +100,11 @@ function CreateOffer() {
       errors.rank = '有効なランクを選択してください';
     }
 
+    // 画像アップロードの必須チェック
+    if (!tempImageUuid) {
+      errors.image = 'オファー画像は必須です';
+    }
+
     if (formData.capacity && (formData.capacity < 1 || formData.capacity > 999)) {
       errors.capacity = '募集人数は1〜999人の範囲で入力してください';
     }
@@ -164,6 +169,12 @@ function CreateOffer() {
       const previewUrl = URL.createObjectURL(file);
       setUploadedImage(previewUrl);
 
+      // 画像アップロード成功時にバリデーションエラーをクリア
+      setValidationErrors(prev => ({
+        ...prev,
+        image: ''
+      }));
+
     } catch (err) {
       setError(err.message);
       setImageFile(null);
@@ -187,12 +198,28 @@ function CreateOffer() {
     setUploadedImage(null);
     setImageFile(null);
     setTempImageUuid(null);
+    
+    // 画像を削除した際にバリデーションエラーを設定
+    setValidationErrors(prev => ({
+      ...prev,
+      image: 'オファー画像は必須です'
+    }));
   };
 
   // オファー作成処理
   const handleCreateOffer = async () => {
     if (!validateForm()) {
-      setError('入力内容を確認してください');
+      // 具体的にどの項目が不足しているかを表示
+      const missingFields = [];
+      if (!formData.title.trim()) missingFields.push('タイトル');
+      if (!formData.content.trim()) missingFields.push('説明');
+      if (!tempImageUuid) missingFields.push('画像');
+      
+      const errorMessage = missingFields.length > 0 
+        ? `以下の必須項目を入力してください: ${missingFields.join('、')}`
+        : '入力内容を確認してください';
+      
+      setError(errorMessage);
       return;
     }
 
@@ -557,13 +584,33 @@ function CreateOffer() {
                   sx={{
                     p: 3,
                     borderRadius: 3,
-                    background: 'linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%)',
-                    border: '1px solid #81c784'
+                    background: validationErrors.image 
+                      ? 'linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%)'
+                      : 'linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%)',
+                    border: validationErrors.image 
+                      ? '2px solid #f44336'
+                      : '1px solid #81c784'
                   }}
                 >
-                  <Typography variant="h6" fontWeight="bold" sx={{ mb: 3, color: '#2e7d32' }}>
-                    📷 オファー画像 (任意)
+                  <Typography variant="h6" fontWeight="bold" sx={{ mb: 3, color: validationErrors.image ? '#d32f2f' : '#2e7d32' }}>
+                    📷 オファー画像 *
                   </Typography>
+                  
+                  {validationErrors.image && (
+                    <Typography 
+                      variant="body2" 
+                      color="error" 
+                      sx={{ 
+                        mb: 2, 
+                        fontWeight: 'bold',
+                        p: 1,
+                        borderRadius: 1,
+                        backgroundColor: 'rgba(244, 67, 54, 0.1)'
+                      }}
+                    >
+                      {validationErrors.image}
+                    </Typography>
+                  )}
                   
                   {uploadedImage ? (
                     // アップロード済み画像の表示
@@ -623,15 +670,17 @@ function CreateOffer() {
                     // 画像アップロード部分
                     <Box
                       sx={{
-                        border: '2px dashed #81c784',
+                        border: validationErrors.image 
+                          ? '2px dashed #f44336'
+                          : '2px dashed #81c784',
                         borderRadius: 3,
                         p: 4,
                         textAlign: 'center',
                         background: 'white',
                         transition: 'all 0.3s ease',
                         '&:hover': {
-                          borderColor: '#4caf50',
-                          backgroundColor: '#f1f8e9'
+                          borderColor: validationErrors.image ? '#d32f2f' : '#4caf50',
+                          backgroundColor: validationErrors.image ? '#ffebee' : '#f1f8e9'
                         }
                       }}
                     >
@@ -644,12 +693,19 @@ function CreateOffer() {
                         </Box>
                       ) : (
                         <>
-                          <ImageIcon sx={{ fontSize: '4rem', color: '#81c784', mb: 2 }} />
-                          <Typography variant="h6" fontWeight="bold" sx={{ mb: 1, color: '#2e7d32' }}>
-                            画像をアップロード
+                          <ImageIcon sx={{ 
+                            fontSize: '4rem', 
+                            color: validationErrors.image ? '#f44336' : '#81c784', 
+                            mb: 2 
+                          }} />
+                          <Typography variant="h6" fontWeight="bold" sx={{ 
+                            mb: 1, 
+                            color: validationErrors.image ? '#d32f2f' : '#2e7d32' 
+                          }}>
+                            画像をアップロード（必須）
                           </Typography>
                           <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-                            JPG, PNG, GIF形式、5MB以下のファイルをアップロードできます
+                            JPG, PNG, GIF形式、5MB以下のファイルをアップロードしてください
                           </Typography>
                           <input
                             accept="image/*"
