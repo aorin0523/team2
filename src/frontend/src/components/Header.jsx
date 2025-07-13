@@ -19,6 +19,7 @@ import '../css/header.css';
 
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import ProtectedRoute from './ProtectedRoute';
 
 
 const Header = () => {
@@ -29,10 +30,8 @@ const Header = () => {
     const handleLogout = () => {
         logout();
         navigate('/');
-    };
-
-    return (
-        <>
+    };    return (
+        <ProtectedRoute requireUser={true}>
         <AppBar
             position="static"
             className="header-appbar"
@@ -123,7 +122,7 @@ const Header = () => {
             </Toolbar>
         </AppBar>
         <Outlet />
-        </>
+        </ProtectedRoute>
     );
 };
 

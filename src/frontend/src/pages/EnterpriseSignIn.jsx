@@ -52,7 +52,7 @@ const EnterpriseSignIn = () => {
       await signIn(formData.email, formData.password);
       
       // ログイン後にユーザー情報を取得して企業アカウントかチェック
-      const userInfoResponse = await fetch(API_ENDPOINTS.USERS_PROFILE.replace('/users/', '/auth/me'), {
+      const userInfoResponse = await fetch(API_ENDPOINTS.AUTH_ME, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
         },
@@ -60,7 +60,7 @@ const EnterpriseSignIn = () => {
       
       if (userInfoResponse.ok) {
         const userInfo = await userInfoResponse.json();
-        
+        console.log(userInfo);        
         if (userInfo.enterprise_id) {
           // 企業ユーザーの場合は企業ダッシュボードにリダイレクト
           navigate('/enterprise');

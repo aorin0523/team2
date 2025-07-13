@@ -14,20 +14,27 @@ import {
   Alert,
   Snackbar,
   Grid,
-  Chip
+  Chip,
+  IconButton,
+  Card,
+  CardMedia,
+  CircularProgress
 } from '@mui/material';
 import {
   Business,
   Add,
   Save,
-  Cancel
+  Cancel,
+  CloudUpload,
+  Delete,
+  Image as ImageIcon
 } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
 import { API_ENDPOINTS } from '../config/api';
 
 function CreateOffer() {
   const navigate = useNavigate();
-  const { token, user } = useAuth();
+  const { token } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -40,6 +47,12 @@ function CreateOffer() {
     capacity: 1,
     deadline: ''
   });
+
+  // 画像アップロード関連のstate
+  const [uploadedImage, setUploadedImage] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
+  const [imageUploading, setImageUploading] = useState(false);
+  const [tempImageUuid, setTempImageUuid] = useState(null);
 
   // バリデーションエラー
   const [validationErrors, setValidationErrors] = useState({});
@@ -105,6 +118,77 @@ function CreateOffer() {
     return Object.keys(errors).length === 0;
   };
 
+  // 画像ファイル選択処理
+  const handleImageSelect = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    // ファイルタイプチェック
+    if (!file.type.startsWith('image/')) {
+      setError('画像ファイルのみアップロード可能です');
+      return;
+    }
+
+    // ファイルサイズチェック (5MB以下)
+    if (file.size > 5 * 1024 * 1024) {
+      setError('ファイルサイズは5MB以下にしてください');
+      return;
+    }
+
+    setImageFile(file);
+    handleImageUpload(file);
+  };
+
+  // 画像アップロード処理 (tempバケットに保存)
+  const handleImageUpload = async (file) => {
+    try {
+      setImageUploading(true);
+      setError('');
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch(API_ENDPOINTS.MINIO_UPLOAD_TEMP, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('画像のアップロードに失敗しました');
+      }
+
+      const result = await response.json();
+      setTempImageUuid(result.file_uuid);
+      
+      // プレビュー用のURL作成
+      const previewUrl = URL.createObjectURL(file);
+      setUploadedImage(previewUrl);
+
+    } catch (err) {
+      setError(err.message);
+      setImageFile(null);
+    } finally {
+      setImageUploading(false);
+    }
+  };
+
+  // 画像削除処理
+  const handleImageRemove = async () => {
+    if (tempImageUuid) {
+      try {
+        await fetch(API_ENDPOINTS.MINIO_DELETE('temp', `${tempImageUuid}.${imageFile?.name.split('.').pop()}`), {
+          method: 'DELETE',
+        });
+      } catch (err) {
+        console.error('Temp画像の削除に失敗:', err);
+      }
+    }
+
+    setUploadedImage(null);
+    setImageFile(null);
+    setTempImageUuid(null);
+  };
+
   // オファー作成処理
   const handleCreateOffer = async () => {
     if (!validateForm()) {
@@ -116,10 +200,12 @@ function CreateOffer() {
       setLoading(true);
       setError('');
 
+      // まずオファーを作成してIDを取得
       const offerData = {
         title: formData.title.trim(),
         content: formData.content.trim(),
         rank: formData.rank,
+        skills: [], // 空のスキルリストを明示的に追加
         salary: formData.salary.trim() || null,
         capacity: formData.capacity || null,
         deadline: formData.deadline || null
@@ -140,6 +226,30 @@ function CreateOffer() {
       }
 
       const result = await response.json();
+      const offerId = result.offer_id; // バックエンドから返されるオファーID
+
+      // 画像がアップロードされている場合、オファーIDをファイル名としてstorageバケットに移動
+      if (tempImageUuid && imageFile && offerId) {
+        try {
+          const fileExtension = imageFile.name.split('.').pop();
+          const tempFileName = `${tempImageUuid}.${fileExtension}`;
+          const newFileName = `${offerId}.${fileExtension}`;
+
+          const moveResponse = await fetch(
+            `${API_ENDPOINTS.MINIO_MOVE_TEMP_TO_STORAGE(tempFileName)}?new_file_name=${newFileName}`,
+            {
+              method: 'POST',
+            }
+          );
+
+          if (!moveResponse.ok) {
+            console.warn('画像の保存に失敗しましたが、オファーは正常に作成されました');
+          }
+        } catch (err) {
+          console.warn('画像の処理に失敗しましたが、オファーは正常に作成されました:', err);
+        }
+      }
+
       setSuccess('オファーが正常に作成されました');
       
       // 3秒後にオファー管理ページに遷移
@@ -221,7 +331,7 @@ function CreateOffer() {
 
           {/* フォームコンテンツ */}
           <Box sx={{ p: 4 }}>
-            <Grid container spacing={4}>
+            <Grid container spacing={4} sx={{ display: 'flex', justifyContent: 'center' }}>
               {/* タイトルセクション */}
               <Grid item xs={12}>
                 <Box
@@ -233,7 +343,6 @@ function CreateOffer() {
                   }}
                 >
                   <TextField
-                    fullWidth
                     label="オファータイトル"
                     value={formData.title}
                     onChange={(e) => handleInputChange('title', e.target.value)}
@@ -242,7 +351,8 @@ function CreateOffer() {
                     placeholder="例: 【リモート可】フルスタックエンジニア募集 - 最新技術で事業成長を支える"
                     required
                     InputProps={{
-                      sx: { 
+                      sx: {
+                        minWidth: "14vw", 
                         borderRadius: 2,
                         background: 'white',
                         fontSize: '1.1rem'
@@ -266,9 +376,9 @@ function CreateOffer() {
                   }}
                 >
                   <TextField
-                    fullWidth
                     multiline
                     rows={8}
+
                     label="オファー内容・説明"
                     value={formData.content}
                     onChange={(e) => handleInputChange('content', e.target.value)}
@@ -292,8 +402,19 @@ function CreateOffer() {
                     required
                     InputProps={{
                       sx: { 
+                        minWidth: "24vw", 
                         borderRadius: 2,
-                        background: 'white'
+                        background: 'white',
+                        '& .MuiInputBase-inputMultiline': {
+                          resize: 'vertical',
+                          overflow: 'auto'
+                        }
+                      }
+                    }}
+                    FormHelperTextProps={{
+                      sx: {
+                        margin: '3px 14px 0 14px',
+                        lineHeight: '1.4'
                       }
                     }}
                     InputLabelProps={{
@@ -425,6 +546,140 @@ function CreateOffer() {
                       />
                     </Grid>
                   </Grid>
+                </Box>
+              </Grid>
+
+              {/* 画像アップロードセクション */}
+              <Grid item xs={12}>
+                <Box
+                  sx={{
+                    p: 3,
+                    borderRadius: 3,
+                    background: 'linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%)',
+                    border: '1px solid #81c784'
+                  }}
+                >
+                  <Typography variant="h6" fontWeight="bold" sx={{ mb: 3, color: '#2e7d32' }}>
+                    📷 オファー画像 (任意)
+                  </Typography>
+                  
+                  {uploadedImage ? (
+                    // アップロード済み画像の表示
+                    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+                      <Card sx={{ maxWidth: 400, borderRadius: 3 }}>
+                        <CardMedia
+                          component="img"
+                          height="200"
+                          image={uploadedImage}
+                          alt="アップロード画像"
+                          sx={{ objectFit: 'cover' }}
+                        />
+                      </Card>
+                      <Box sx={{ display: 'flex', gap: 2 }}>
+                        <Button
+                          variant="outlined"
+                          startIcon={<Delete />}
+                          onClick={handleImageRemove}
+                          sx={{
+                            borderColor: '#f44336',
+                            color: '#f44336',
+                            '&:hover': {
+                              borderColor: '#d32f2f',
+                              backgroundColor: '#ffebee'
+                            }
+                          }}
+                        >
+                          画像を削除
+                        </Button>
+                        <input
+                          accept="image/*"
+                          style={{ display: 'none' }}
+                          id="image-upload-replace"
+                          type="file"
+                          onChange={handleImageSelect}
+                        />
+                        <label htmlFor="image-upload-replace">
+                          <Button
+                            variant="outlined"
+                            component="span"
+                            startIcon={<CloudUpload />}
+                            sx={{
+                              borderColor: '#2e7d32',
+                              color: '#2e7d32',
+                              '&:hover': {
+                                borderColor: '#1b5e20',
+                                backgroundColor: '#e8f5e8'
+                              }
+                            }}
+                          >
+                            画像を変更
+                          </Button>
+                        </label>
+                      </Box>
+                    </Box>
+                  ) : (
+                    // 画像アップロード部分
+                    <Box
+                      sx={{
+                        border: '2px dashed #81c784',
+                        borderRadius: 3,
+                        p: 4,
+                        textAlign: 'center',
+                        background: 'white',
+                        transition: 'all 0.3s ease',
+                        '&:hover': {
+                          borderColor: '#4caf50',
+                          backgroundColor: '#f1f8e9'
+                        }
+                      }}
+                    >
+                      {imageUploading ? (
+                        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+                          <CircularProgress size={40} color="success" />
+                          <Typography variant="body1" color="text.secondary">
+                            画像をアップロード中...
+                          </Typography>
+                        </Box>
+                      ) : (
+                        <>
+                          <ImageIcon sx={{ fontSize: '4rem', color: '#81c784', mb: 2 }} />
+                          <Typography variant="h6" fontWeight="bold" sx={{ mb: 1, color: '#2e7d32' }}>
+                            画像をアップロード
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+                            JPG, PNG, GIF形式、5MB以下のファイルをアップロードできます
+                          </Typography>
+                          <input
+                            accept="image/*"
+                            style={{ display: 'none' }}
+                            id="image-upload"
+                            type="file"
+                            onChange={handleImageSelect}
+                          />
+                          <label htmlFor="image-upload">
+                            <Button
+                              variant="contained"
+                              component="span"
+                              startIcon={<CloudUpload />}
+                              sx={{
+                                background: 'linear-gradient(45deg, #4caf50 30%, #81c784 90%)',
+                                borderRadius: 2,
+                                px: 4,
+                                py: 1.5,
+                                fontSize: '1rem',
+                                fontWeight: 'bold',
+                                '&:hover': {
+                                  background: 'linear-gradient(45deg, #388e3c 30%, #66bb6a 90%)',
+                                }
+                              }}
+                            >
+                              ファイルを選択
+                            </Button>
+                          </label>
+                        </>
+                      )}
+                    </Box>
+                  )}
                 </Box>
               </Grid>
             </Grid>

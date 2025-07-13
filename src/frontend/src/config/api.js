@@ -22,13 +22,13 @@ export const API_ENDPOINTS = {
   
   // オファー
   OFFERS_ALL: `${API_BASE_URL}/api/v1/offers/all`,
-  OFFERS_MY_LIST: `${API_BASE_URL}/api/v1/offers/my/list`,
-  OFFERS_MY_CREATE: `${API_BASE_URL}/api/v1/offers/my/create`,
+  OFFERS_MY_LIST: `${API_BASE_URL}/api/v1/offers/my`,
+  OFFERS_MY_CREATE: `${API_BASE_URL}/api/v1/offers/my`,
   OFFERS_DETAIL: (id) => `${API_BASE_URL}/api/v1/offers/${id}`,
   OFFERS_DELETE: (id) => `${API_BASE_URL}/api/v1/offers/${id}`,
   
   // ユーザー
-  USERS_PROFILE: `${API_BASE_URL}/api/v1/users/profile`,
+  AUTH_ME: `${API_BASE_URL}/api/v1/auth/me`,
   
   // 企業
   ENTERPRISES_PROFILE: `${API_BASE_URL}/api/v1/enterprises/profile`,

@@ -133,7 +133,6 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     fetchUserInfo();
   }, [fetchUserInfo]);
-
   const value = {
     user,
     token,
@@ -144,6 +143,8 @@ export const AuthProvider = ({ children }) => {
     signIn,
     registerEnterprise,
     isAuthenticated: !!user,
+    isEnterpriseUser: !!user?.enterprise_id,
+    isRegularUser: !!user && !user?.enterprise_id,
   };
 
   return (

@@ -26,6 +26,7 @@ import {
 import "../css/side.css";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import ProtectedRoute from "./ProtectedRoute";
 
 const Side = () => {
   const navigate = useNavigate();
@@ -87,17 +88,17 @@ const Side = () => {
         return "#9e9e9e";
     }
   };
-
   return (
-    <Stack direction={"row"}>
-      <Drawer 
-        variant="permanent" 
-        sx={{
-          width: 280,
-          flexShrink: 0,
-          '& .MuiDrawer-paper': {
+    <ProtectedRoute requireEnterprise={true}>
+      <Stack direction={"row"}>
+        <Drawer 
+          variant="permanent" 
+          sx={{
             width: 280,
-            boxSizing: 'border-box',
+            flexShrink: 0,
+            '& .MuiDrawer-paper': {
+              width: 280,
+              boxSizing: 'border-box',
             background: 'linear-gradient(180deg, #424242 0%, #212121 100%)',
             color: 'white',
             borderRight: 'none',
@@ -295,11 +296,11 @@ const Side = () => {
           flexGrow: 1, 
           minHeight: '100vh',
           backgroundColor: '#f5f5f5',
-        }}
-      >
+        }}      >
         <Outlet />
       </Box>
     </Stack>
+    </ProtectedRoute>
   );
 };
 

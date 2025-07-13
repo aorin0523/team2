@@ -14,6 +14,8 @@ class offerCreate(BaseModel):
     rank: int
     skills: list
     deadline: str
+    salary: str = None
+    capacity: int = None
 
 # 初期値はNone(受け取った項目のみ更新する)
 class OfferUpdate(BaseModel):
@@ -83,7 +85,9 @@ async def create_my_offer(data: dict, current_user: User = Depends(get_current_e
         content=data["content"],
         rank=data["rank"],
         skills=data.get("skills", []),
-        deadline=data["deadline"]
+        deadline=data.get("deadline"),
+        salary=data.get("salary"),
+        capacity=data.get("capacity")
     )
     
     offers_db = Offers()
@@ -93,5 +97,7 @@ async def create_my_offer(data: dict, current_user: User = Depends(get_current_e
         content=offer_data.content,
         rank=offer_data.rank,
         skills=offer_data.skills,
-        deadline=offer_data.deadline
+        deadline=offer_data.deadline,
+        salary=offer_data.salary,
+        capacity=offer_data.capacity
     )

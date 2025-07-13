@@ -96,14 +96,11 @@ class Offers(BaseDB):
                         "capacity": row["capacity"],
                         "rank": row["rank"],
                         "skills": []
-                    }
-
-                # skill追加
+                    }                # skill追加
                 if row["skill_name"] and row["skill_name"] not in offer_dict[offer_id]["skills"]:
                     offer_dict[offer_id]["skills"].append(row["skill_name"])
 
             return list(offer_dict.values())[0]
-    
     
     def create_offer(self, enterprise_id, title, content, rank, skills, deadline, salary=None, capacity=None):
         """
@@ -124,6 +121,8 @@ class Offers(BaseDB):
                     offer_values["salary"] = salary
                 if capacity is not None:
                     offer_values["capacity"] = capacity
+                if deadline is not None:
+                    offer_values["deadline"] = deadline
                 
                 offer_query = self.offers.insert().values(**offer_values)
                 conn.execute(offer_query)
@@ -136,7 +135,7 @@ class Offers(BaseDB):
                     conn.execute(offerSkill_query)
 
                 conn.commit()
-                return {"status": "ok"}
+                return {"status": "ok", "offer_id": str(id)}
         except Exception as e:
             return {"status": "ng", "error": str(e)}
         
