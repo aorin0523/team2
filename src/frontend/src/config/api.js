@@ -32,6 +32,8 @@ export const API_ENDPOINTS = {
   USER_APPLY: `${API_BASE_URL}/api/v1/users/apply`,
   USER_APPLICATIONS: (userId) => `${API_BASE_URL}/api/v1/users/${userId}/applications`,
   USER_APPLICATION_STATUS: (userId, offerId) => `${API_BASE_URL}/api/v1/users/${userId}/offer/${offerId}/status`,
+  USER_FAVORITE: `${API_BASE_URL}/api/v1/users/favorite`,
+  USER_FAVORITES: (userId) => `${API_BASE_URL}/api/v1/users/${userId}/favorites`,
   
   // 企業
   ENTERPRISES_PROFILE: `${API_BASE_URL}/api/v1/enterprises/profile`,

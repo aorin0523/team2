@@ -32,7 +32,9 @@ function UserOfferDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [applicationStatus, setApplicationStatus] = useState(null);
+  const [favoriteStatus, setFavoriteStatus] = useState(null);
   const [checkingStatus, setCheckingStatus] = useState(false);
+  const [togglingFavorite, setTogglingFavorite] = useState(false);
 
   // オファーデータを取得
   useEffect(() => {
@@ -76,6 +78,7 @@ function UserOfferDetail() {
         if (response.ok) {
           const data = await response.json();
           setApplicationStatus(data.applied);
+          setFavoriteStatus(data.favorite);
         }
       } catch (err) {
         console.error('応募状況チェックエラー:', err);
@@ -86,6 +89,49 @@ function UserOfferDetail() {
 
     checkApplicationStatus();
   }, [user, token, offer_id]);
+
+  // 気になる状態を切り替える処理
+  const handleToggleFavorite = async () => {
+    if (!user || !token) {
+      setError('ログインが必要です');
+      return;
+    }
+
+    try {
+      setTogglingFavorite(true);
+      
+      const response = await fetch(API_ENDPOINTS.USER_FAVORITE, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          user_id: user.id,
+          offer_id: offer_id
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || '気になる状態の更新に失敗しました');
+      }
+
+      const result = await response.json();
+      
+      if (result.status === 'success') {
+        // 成功時は状態を切り替える
+        setFavoriteStatus(!favoriteStatus);
+      } else {
+        throw new Error(result.message || '気になる状態の更新に失敗しました');
+      }
+    } catch (err) {
+      setError(`エラー: ${err.message}`);
+      console.error('気になる更新エラー:', err);
+    } finally {
+      setTogglingFavorite(false);
+    }
+  };
 
   // ローディング状態
   if (loading) {
@@ -155,18 +201,26 @@ function UserOfferDetail() {
           
           <Button
             variant="contained"
+            onClick={handleToggleFavorite}
+            disabled={togglingFavorite || !user}
             sx={{
               width: "60%",
-              backgroundColor: "#4fc3f7",
+              backgroundColor: favoriteStatus ? "#ff6b6b" : "#aaaaaa",
               color: "white",
               borderRadius: "30px",
               mt: 3,
+              "&:hover": {
+                backgroundColor: favoriteStatus ? "#ff5252" : "#999999",
+              },
               "&:focus": {
                 outline: "none",
               },
+              "&:disabled": {
+                backgroundColor: "#cccccc",
+              },
             }}
           >
-            気になる
+            {togglingFavorite ? "更新中..." : favoriteStatus ? "気になる済み" : "気になる"}
           </Button>
         </Box>
         <Box className="work-outline">

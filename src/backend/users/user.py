@@ -29,6 +29,10 @@ class UserOfferApply(BaseModel):
     user_id: str
     offer_id: str
 
+class UserOfferFavorite(BaseModel):
+    user_id: str
+    offer_id: str
+
 @router.get("/all")
 async def read_all_users():
     """
@@ -119,7 +123,39 @@ async def check_application_status(user_id: str, offer_id: str):
     ユーザーが特定の求人に応募済みかチェックするエンドポイント
     """
     try:
-        status = UserOffers().check_application_status(user_id, offer_id)
-        return {"status": "success", "applied": status}
+        result = UserOffers().check_application_status(user_id, offer_id)
+        if result["status"] == "ok":
+            return {
+                "status": "success", 
+                "applied": result["applied"],
+                "favorite": result["favorite"]
+            }
+        else:
+            raise HTTPException(status_code=500, detail=result["error"])
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/favorite")
+async def toggle_favorite(data: UserOfferFavorite):
+    """
+    ユーザーがオファーを「気になる」に追加/削除するエンドポイント
+    """
+    try:
+        result = UserOffers().toggle_favorite(data.user_id, data.offer_id)
+        if result["status"] == "ok":
+            return {"status": "success", "message": result["message"]}
+        else:
+            raise HTTPException(status_code=400, detail=result["error"])
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/{user_id}/favorites")
+async def get_user_favorites(user_id: str):
+    """
+    ユーザーの気になるオファー一覧を取得するエンドポイント
+    """
+    try:
+        favorites = UserOffers().get_user_favorites(user_id)
+        return {"status": "success", "favorites": favorites}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
