@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   Button,
@@ -17,6 +18,7 @@ import "../css/Project_list.css";
 import { blue, lightBlue } from "@mui/material/colors";
 
 function Project_List() {
+  const navigate = useNavigate();
   const [results, setResults] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [offers, setOffers] = useState([]);
@@ -163,6 +165,11 @@ function Project_List() {
     setCurrentPage(1);
   };
 
+  // オファーカードクリック時の遷移処理
+  const handleOfferClick = (offerId) => {
+    navigate(`/user/offer/${offerId}`);
+  };
+
   return (
     <>
       {/* 検索フィルター部分 */}
@@ -297,7 +304,14 @@ function Project_List() {
               backgroundColor: "white",
               maxWidth: 400,
               margin: "20px auto",
+              cursor: 'pointer',
+              transition: 'all 0.3s ease',
+              '&:hover': {
+                transform: 'translateY(-5px)',
+                boxShadow: `0 12px 25px 12px ${lightBlue[200]}`,
+              },
             }}
+            onClick={() => handleOfferClick(job.offer_id)}
           >
             <div className={`card${job.id}`}>
               <h2>{job.title}</h2>

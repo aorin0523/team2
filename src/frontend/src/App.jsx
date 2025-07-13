@@ -17,6 +17,7 @@ import Offer from "./pages/Offer";
 import CreateOffer from "./pages/CreateOffer";
 import Profile from "./pages/Profile";
 import List from "./pages/Project_List";
+import UserOfferDetail from "./pages/UserOfferDetail"
 // import "./App.css";
 
 function App() {
@@ -30,17 +31,20 @@ function App() {
             <Route path="signin" element={<SignIn />} />
             <Route path="signup" element={<SignUp />} />
             <Route path="enterprise/signin" element={<EnterpriseSignIn />} />
-            <Route path="enterprise/signup" element={<EnterpriseSignUp />} />
-            <Route path="/user/*" element={<Header sx={{ margin: 0 }} />}>
+            <Route path="enterprise/signup" element={<EnterpriseSignUp />} />            <Route path="/user/*" element={<Header sx={{ margin: 0 }} />}>
               <Route path="list" element={<List />} />
               <Route path="profile" element={<Profile />} />
               <Route path="details" element={<UCD />} />
-            </Route>            <Route path="/enterprise/*" element={<Side />}>
+              <Route path="offer/:offer_id" element={<UserOfferDetail />} />
+            </Route>
+            
+            <Route path="/enterprise/*" element={<Side />}>
               <Route index element={<KigyoHome />} />
               <Route path="offer" element={<Offer />} />
               <Route path="offer/detail" element={<Offerdetail />} />
               <Route path="offer/create" element={<CreateOffer />} />
             </Route>
+          
           </Routes>
         </BrowserRouter>
       </AuthProvider>
