@@ -136,7 +136,7 @@ const Side = () => {
         </Box>
 
         {/* ナビゲーションメニュー */}
-        <List sx={{ flexGrow: 1, px: 2, py: 2 }}>
+        <List sx={{ flexGrow: 1, px: 2, py: 2, display: "flex", flexFlow: 'column' }}>
           {sidebarItems.map((item) => (
             <ListItem
               key={item.id}
