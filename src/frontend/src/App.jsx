@@ -19,6 +19,7 @@ import Profile from "./pages/Profile";
 import List from "./pages/Project_List";
 import UserOfferDetail from "./pages/UserOfferDetail";
 import UserOfferApply from "./pages/UserOfferApply";
+import ApplicantsList from "./pages/ApplicantsList";
 // import "./App.css";
 
 function App() {
@@ -50,6 +51,10 @@ function App() {
               <Route index element={<KigyoHome />} />
               <Route path="offer" element={<Offer />} />
               <Route path="offer/:offer_id" element={<Offerdetail />} />
+              <Route
+                path="offer/:offer_id/applicants"
+                element={<ApplicantsList />}
+              />
               <Route path="offer/create" element={<CreateOffer />} />
             </Route>
           </Routes>

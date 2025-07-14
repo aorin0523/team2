@@ -35,6 +35,7 @@ export const API_ENDPOINTS = {
   USER_FAVORITE: `${API_BASE_URL}/api/v1/users/favorite`,
   USER_FAVORITES: (userId) => `${API_BASE_URL}/api/v1/users/${userId}/favorites`,
   OFFER_APPLICATIONS_COUNT: (offerId) => `${API_BASE_URL}/api/v1/users/offer/${offerId}/applications/count`,
+  OFFER_APPLICANTS: (offerId) => `${API_BASE_URL}/api/v1/users/offer/${offerId}/applicants`,
   
   // 企業
   ENTERPRISES_PROFILE: `${API_BASE_URL}/api/v1/enterprises/profile`,

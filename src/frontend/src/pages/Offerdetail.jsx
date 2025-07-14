@@ -19,13 +19,11 @@ import {
 } from '@mui/material';
 import {
   ArrowBack,
-  Business,
   Schedule,
   Group,
   Star,
   CalendarToday,
   Assignment,
-  LocationOn,
   AttachMoney
 } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
@@ -79,8 +77,7 @@ function Offerdetail() {
 
         const data = await response.json();
         console.log('Fetched offer data:', data);
-        
-        // バックエンドのデータ構造をフロントエンド用に変換
+          // バックエンドのデータ構造をフロントエンド用に変換
         const transformedData = {
           id: data.offer_id || offer_id,
           title: data.offer_title,
@@ -88,8 +85,6 @@ function Offerdetail() {
           description: data.offer_content,
           requirements: data.skills ? data.skills.join(', ') : '',
           salary: data.salary || '応相談',
-          location: '勤務地情報なし',
-          employmentType: '雇用形態情報なし',
           deadline: data.deadline ? new Date(data.deadline).toLocaleDateString('ja-JP') : '未設定',
           applications: 0, // 応募者数は別途取得が必要
           capacity: data.capacity || 1,
@@ -106,13 +101,15 @@ function Offerdetail() {
               'Authorization': `Bearer ${token}`,
               'Content-Type': 'application/json',
             },
-          });
-
-          if (applicationsResponse.ok) {
+          });          if (applicationsResponse.ok) {
             const applicationsData = await applicationsResponse.json();
             console.log('Applications count data:', applicationsData);
             
             setApplicationsData({
+              applications: applicationsData.count || 0,
+              capacity: transformedData.capacity
+            });
+            console.log('Updated applicationsData:', {
               applications: applicationsData.count || 0,
               capacity: transformedData.capacity
             });
@@ -220,26 +217,37 @@ function Offerdetail() {
             background: 'linear-gradient(135deg, #424242 0%, #757575 100%)',
             color: 'white'
           }}
-        >
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+        >          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
             <IconButton 
               onClick={() => navigate('/enterprise/offer')}
               sx={{ color: 'white', mr: 2 }}
             >
               <ArrowBack />
             </IconButton>
-            <Typography variant="h4" fontWeight="bold">
+            <Typography variant="h4" fontWeight="bold" sx={{ flexGrow: 1 }}>
               📋 オファー詳細管理
             </Typography>
+            <Button
+              variant="contained"
+              color="secondary"
+              startIcon={<Group />}
+              onClick={() => navigate(`/enterprise/offer/${offer_id}/applicants`)}
+              sx={{ 
+                bgcolor: 'rgba(255, 255, 255, 0.2)', 
+                '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.3)' }
+              }}
+            >
+              応募者一覧
+            </Button>
           </Box>
           <Typography variant="body1" sx={{ opacity: 0.9 }}>
             募集の詳細情報と応募状況を確認できます
           </Typography>
         </Paper>
 
-        <Grid container spacing={4}>
+        <Grid container spacing={4} sx={{ display: 'flex', alignItems: 'stretch' }}>
           {/* メイン情報 */}
-          <Grid item xs={12} md={8}>
+          <Grid item xs={12} md={8} sx={{ width: '100%' }}>
             <Card elevation={6} sx={{ borderRadius: 3, mb: 3 }}>
               <CardContent sx={{ p: 4 }}>
                 {/* タイトルと状況 */}
@@ -257,12 +265,10 @@ function Offerdetail() {
                   <Typography variant="h6" color="text.secondary" sx={{ mb: 2 }}>
                     🏢 {offerData.company}
                   </Typography>
-                </Box>
-
-                {/* 進捗バー */}
+                </Box>                {/* 進捗バー */}
                 <Box sx={{ mb: 4 }}>
                   <Typography variant="subtitle1" fontWeight="bold" sx={{ mb: 1 }}>
-                    📊 応募状況: {offerData.applications}/{offerData.capacity}名
+                    📊 応募状況: {applicationsData.applications}/{applicationsData.capacity}名
                   </Typography>
                   <LinearProgress 
                     variant="determinate" 
@@ -279,9 +285,7 @@ function Offerdetail() {
                   <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
                     進捗率: {progressPercentage.toFixed(1)}%
                   </Typography>
-                </Box>
-
-                {/* 基本情報 */}
+                </Box>{/* 基本情報 */}
                 <Grid container spacing={3} sx={{ mb: 4 }}>
                   <Grid item xs={12} sm={6}>
                     <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
@@ -293,25 +297,9 @@ function Offerdetail() {
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                      <LocationOn sx={{ mr: 1, color: '#2196f3' }} />
-                      <Typography variant="body1">
-                        <strong>勤務地:</strong> {offerData.location}
-                      </Typography>
-                    </Box>
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                      <Business sx={{ mr: 1, color: '#ff9800' }} />
-                      <Typography variant="body1">
-                        <strong>雇用形態:</strong> {offerData.employmentType}
-                      </Typography>
-                    </Box>
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                       <CalendarToday sx={{ mr: 1, color: '#e91e63' }} />
                       <Typography variant="body1">
-                        <strong>締切:</strong> {offerData.deadline}
+                        <strong>応募締切:</strong> {offerData.deadline}
                       </Typography>
                     </Box>
                   </Grid>
@@ -340,17 +328,17 @@ function Offerdetail() {
           </Grid>
 
           {/* サイドバー */}
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={4}  sx={{ marginX: 'auto' }}>
             <Card elevation={6} sx={{ borderRadius: 3 }}>
               <CardContent sx={{ p: 3 }}>
                 <Typography variant="h6" fontWeight="bold" sx={{ mb: 3 }}>
                   🎯 管理アクション
                 </Typography>
-                
-                <Button
+                  <Button
                   variant="contained"
                   fullWidth
                   startIcon={<Assignment />}
+                  onClick={() => navigate(`/enterprise/offer/${offer_id}/applicants`)}
                   sx={{
                     mb: 2,
                     borderRadius: 2,

@@ -34,6 +34,10 @@ class UserOfferFavorite(BaseModel):
     user_id: str
     offer_id: str
 
+class UserAssign(BaseModel):
+    user_id: str
+    offer_id: str
+
 @router.get("/all")
 async def read_all_users():
     """
@@ -172,5 +176,40 @@ async def get_offer_applications_count(offer_id: str, current_user: User = Depen
             return {"status": "success", "count": result["count"]}
         else:
             raise HTTPException(status_code=500, detail=result["error"])
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/offer/{offer_id}/applicants")
+async def get_offer_applicants(offer_id: str, current_user: User = Depends(get_current_enterprise_user)):
+    """
+    特定のオファーの応募者一覧を取得するエンドポイント（企業ユーザー専用）
+    """
+    try:
+        print(f"DEBUG: API endpoint called with offer_id: {offer_id}")
+        print(f"DEBUG: Current user: {current_user.id}")
+        result = UserOffers().get_offer_applicants(offer_id)
+        print(f"DEBUG: Result from UserOffers: {result}")
+        if result["status"] == "ok":
+            return {"status": "success", "applicants": result["applicants"]}
+        else:
+            print(f"ERROR: UserOffers returned error: {result}")
+            raise HTTPException(status_code=500, detail=result["error"])
+    except Exception as e:
+        print(f"ERROR: Exception in API endpoint: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/offer/assign")
+async def assign_applicant(data: UserAssign, current_user: User = Depends(get_current_enterprise_user)):
+    """
+    応募者をオファーにアサインする（企業ユーザー専用）
+    """
+    try:
+        result = UserOffers().assign_applicant(data.user_id, data.offer_id)
+        if result["status"] == "ok":
+            return {"status": "success", "message": result["message"]}
+        else:
+            raise HTTPException(status_code=400, detail=result["error"])
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
