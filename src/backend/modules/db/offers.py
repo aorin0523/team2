@@ -1,7 +1,10 @@
 from modules.db import BaseDB
 from sqlalchemy import outerjoin, select, func
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
+
+# 日本時間のタイムゾーンを定義
+JST = timezone(timedelta(hours=9))
 
 class Offers(BaseDB):
     def __init__(self):
@@ -164,7 +167,7 @@ class Offers(BaseDB):
         try:
             with self.engine.connect() as conn:
                 update_values = {}
-                update_values["deadline"] = datetime.now()
+                update_values["deadline"] = datetime.now(JST)
                 if title is not None:
                     update_values["title"] = title
                 if content is not None:

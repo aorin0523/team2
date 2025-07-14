@@ -1,7 +1,10 @@
 from modules.db import BaseDB
 from sqlalchemy import select, update, delete, and_
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
+
+# 日本時間のタイムゾーンを定義
+JST = timezone(timedelta(hours=9))
 
 class Notifications(BaseDB):
     def __init__(self):
@@ -104,7 +107,7 @@ class Notifications(BaseDB):
                     )
                 ).values(
                     is_read=True,
-                    updated_at=datetime.utcnow()
+                    updated_at=datetime.now(JST)
                 )
                 
                 result = conn.execute(stmt)
@@ -130,7 +133,7 @@ class Notifications(BaseDB):
                     )
                 ).values(
                     is_read=True,
-                    updated_at=datetime.utcnow()
+                    updated_at=datetime.now(JST)
                 )
                 
                 result = conn.execute(stmt)
@@ -157,7 +160,7 @@ class Notifications(BaseDB):
                     offer_id=offer_id,
                     enterprise_name=enterprise_name,
                     is_read=False,
-                    created_at=datetime.utcnow()
+                    created_at=datetime.now(JST)
                 )
                 
                 conn.execute(stmt)

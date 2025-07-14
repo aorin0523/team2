@@ -165,7 +165,7 @@ const ApplicantsList = () => {
   };
 
   const handleConfirmAssign = async () => {
-    const { applicantId } = confirmDialog;
+    const { applicantId, applicantName } = confirmDialog;
     
     try {
       if (!token) {
@@ -192,7 +192,39 @@ const ApplicantsList = () => {
               : applicant
           )
         );
-        alert('応募者をアサインしました');
+
+        // アサイン成功後に通知を送信
+        try {
+          const notificationData = {
+            user_id: applicantId,
+            type: 'assignment',
+            title: 'プロジェクトアサインのお知らせ',
+            message: `おめでとうございます！「${offerData?.title}」のプロジェクトにアサインされました。企業担当者からの詳細な連絡をお待ちください。`,
+            offer_id: offer_id,
+            enterprise_name: offerData?.company || '企業'
+          };
+
+          console.log('Sending notification:', notificationData);
+
+          const notificationResponse = await fetch(API_ENDPOINTS.CREATE_NOTIFICATION, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(notificationData),
+          });
+
+          if (notificationResponse.ok) {
+            console.log('通知が正常に送信されました');
+          } else {
+            console.warn('通知送信に失敗しましたが、アサインは成功しました');
+          }
+        } catch (notificationError) {
+          console.warn('通知送信中にエラーが発生しましたが、アサインは成功しました:', notificationError);
+        }
+
+        alert(`${applicantName}さんをアサインしました`);
       } else {
         const errorData = await response.json();
         alert('アサインに失敗しました: ' + (errorData.detail || '')); 
@@ -386,7 +418,11 @@ const ApplicantsList = () => {
             <strong>{confirmDialog.applicantName}</strong> さんを
             <strong>「{offerData?.title}」</strong> のポジションにアサインしますか？
             <br /><br />
-            この操作は取り消すことができません。
+            アサイン後は以下の処理が行われます：
+            <br />
+            • 採用が確定し、該当ユーザーに通知が送信されます
+            <br />
+            • この操作は取り消すことができません
           </DialogContentText>
         </DialogContent>
         <DialogActions>

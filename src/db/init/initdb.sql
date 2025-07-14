@@ -1,4 +1,5 @@
 SET NAMES 'utf8mb4';
+SET GLOBAL time_zone = 'Asia/Tokyo';
 
 CREATE TABLE `Ranks` (
 	`id` INTEGER NOT NULL AUTO_INCREMENT UNIQUE,

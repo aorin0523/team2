@@ -1,7 +1,10 @@
 from modules.db import BaseDB
 from sqlalchemy import select, insert, update, delete
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 import uuid
+
+# 日本時間のタイムゾーンを定義
+JST = timezone(timedelta(hours=9))
 
 class UserOffers(BaseDB):
     def __init__(self):
@@ -27,7 +30,7 @@ class UserOffers(BaseDB):
                         (self.user_offers.c.offer_id == offer_id)
                     ).values(
                         wish=True,
-                        updated_at=datetime.now()
+                        updated_at=datetime.now(JST)
                     )
                     conn.execute(update_stmt)
                 else:
@@ -38,7 +41,7 @@ class UserOffers(BaseDB):
                         wish=True,
                         favorite=False,
                         assign=False,
-                        created_at=datetime.now()
+                        created_at=datetime.now(JST)
                     )
                     conn.execute(insert_stmt)
                 
@@ -127,7 +130,7 @@ class UserOffers(BaseDB):
                         (self.user_offers.c.offer_id == offer_id)
                     ).values(
                         favorite=new_favorite_status,
-                        updated_at=datetime.now()
+                        updated_at=datetime.now(JST)
                     )
                     conn.execute(update_stmt)
                 else:
@@ -138,7 +141,7 @@ class UserOffers(BaseDB):
                         wish=False,
                         favorite=True,
                         assign=False,
-                        created_at=datetime.now()
+                        created_at=datetime.now(JST)
                     )
                     conn.execute(insert_stmt)
                 
@@ -336,7 +339,7 @@ class UserOffers(BaseDB):
                     (self.user_offers.c.offer_id == offer_id)
                 ).values(
                     assign=True,
-                    updated_at=datetime.now()
+                    updated_at=datetime.now(JST)
                 )
                 conn.execute(update_stmt)
                 
@@ -365,7 +368,7 @@ class UserOffers(BaseDB):
                         (self.user_offers.c.offer_id == offer_id)
                     ).values(
                         assign=True,
-                        updated_at=datetime.now()
+                        updated_at=datetime.now(JST)
                     )
                     conn.execute(update_stmt)
                 else:
