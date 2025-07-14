@@ -102,13 +102,14 @@ const SignUp = () => {
       }}
     >
       {/* paizaロゴ */}
-      <Box sx={{ marginBottom: '40px' }}>
+      <Box sx={{ mb: 6 }}>
         <Typography
+          variant="h3"
           sx={{
-            fontSize: '32px',
+            color: '#00a6b8',
             fontWeight: 'bold',
-            color: '#333',
-            fontFamily: 'Arial, sans-serif'
+            fontFamily: 'Arial, sans-serif',
+            fontSize: '48px',
           }}
         >
           paiza
