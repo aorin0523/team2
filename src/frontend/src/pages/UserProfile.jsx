@@ -182,7 +182,7 @@ const UserProfile = () => {
     <Container maxWidth="sm" sx={{ mt: 4, mb: 4 }}>
       <Paper elevation={3} sx={{ p: 4 }}>
         <Typography variant="h4" component="h1" gutterBottom align="center" sx={{ color: '#1976d2', fontWeight: 'bold' }}>
-          📝 プロフィール編集
+          プロフィール編集
         </Typography>
 
         {pageLoading ? (
@@ -267,14 +267,37 @@ const UserProfile = () => {
                         key={value} 
                         label={value} 
                         size="small" 
-                        sx={{ backgroundColor: '#e3f2fd', color: '#1976d2' }}
+                        sx={{ 
+                          backgroundColor: '#2196F3', 
+                          color: '#FFFFFF',
+                          fontWeight: 'bold',
+                          '&:hover': {
+                            backgroundColor: '#1976D2',
+                          }
+                        }}
                       />
                     ))}
                   </Box>
                 )}
               >
                 {availableSkills.map((skill) => (
-                  <MenuItem key={skill} value={skill}>
+                  <MenuItem 
+                    key={skill} 
+                    value={skill}
+                    sx={{
+                      '&.Mui-selected': {
+                        backgroundColor: '#2196F3 !important',
+                        color: '#FFFFFF',
+                        fontWeight: 'bold',
+                      },
+                      '&.Mui-selected:hover': {
+                        backgroundColor: '#1976D2 !important',
+                      },
+                      '&:hover': {
+                        backgroundColor: '#E3F2FD',
+                      }
+                    }}
+                  >
                     {skill}
                   </MenuItem>
                 ))}
@@ -282,9 +305,14 @@ const UserProfile = () => {
             </FormControl>
 
             {/* 選択されたスキル数の表示 */}
-            <Box sx={{ p: 2, backgroundColor: '#f5f5f5', borderRadius: 1 }}>
-              <Typography variant="body2" color="text.secondary">
-                選択中のスキル: <strong>{formData.selectedSkills.length}個</strong>
+            <Box sx={{ 
+              p: 2, 
+              backgroundColor: '#E3F2FD', 
+              borderRadius: 1, 
+              border: '1px solid #2196F3' 
+            }}>
+              <Typography variant="body2" sx={{ color: '#1976D2', fontWeight: 'bold' }}>
+                選択中のスキル: <strong style={{ color: '#2196F3' }}>{formData.selectedSkills.length}個</strong>
               </Typography>
             </Box>
 
@@ -311,7 +339,7 @@ const UserProfile = () => {
                   更新中...
                 </Box>
               ) : (
-                '💾 プロフィールを更新'
+                'プロフィールを更新'
               )}
             </Button>
 
