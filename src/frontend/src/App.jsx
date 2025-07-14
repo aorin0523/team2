@@ -28,10 +28,10 @@ function App() {
       <AuthProvider>
         <BrowserRouter>
           <Routes>
-            {" "}
-            <Route index element={<Home />} />
+            {" "}            <Route index element={<Home />} />
             <Route path="signin" element={<SignIn />} />
             <Route path="signup" element={<SignUp />} />
+            <Route path="project_list" element={<List />} />
             <Route path="enterprise/signin" element={<EnterpriseSignIn />} />
             <Route
               path="enterprise/signup"

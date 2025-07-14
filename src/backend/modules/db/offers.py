@@ -38,7 +38,8 @@ class Offers(BaseDB):
             
             for row in result:
                 offer_id = row["offer_id"]
-                if offer_id not in offer_dict:                    offer_dict[offer_id] = {
+                if offer_id not in offer_dict:
+                    offer_dict[offer_id] = {
                         "offer_id": offer_id,
                         "enterprise_name": row["enterprise_name"],
                         "offer_title": row["offer_title"],
@@ -53,17 +54,14 @@ class Offers(BaseDB):
                 # skill追加
                 if row["skill_name"] and row["skill_name"] not in offer_dict[offer_id]["skills"]:
                     offer_dict[offer_id]["skills"].append(row["skill_name"])
-            print()
 
             return list(offer_dict.values())
-    
     
     def read_offers(self, id):
         """
         オファーを個別取得
         """
         with self.engine.connect() as conn:
-            print("offerrrrrr")
             j1 = outerjoin(self.offers, self.enterprises, self.offers.c.enterprise_id == self.enterprises.c.id)
             j2 = outerjoin(j1, self.offer_skills, self.offers.c.id == self.offer_skills.c.offer_id)
             j3 = outerjoin(j2, self.skills, self.offer_skills.c.skill_id == self.skills.c.id)
@@ -90,7 +88,8 @@ class Offers(BaseDB):
 
             for row in result:
                 offer_id = row["offer_id"]
-                if offer_id not in offer_dict:                    offer_dict[offer_id] = {
+                if offer_id not in offer_dict:
+                    offer_dict[offer_id] = {
                         "enterprise_name": row["enterprise_name"],
                         "offer_title": row["offer_title"],
                         "offer_content": row["offer_content"],
@@ -105,6 +104,7 @@ class Offers(BaseDB):
                     offer_dict[offer_id]["skills"].append(row["skill_name"])
 
             return list(offer_dict.values())[0]
+
     def create_offer(self, enterprise_id, title, content, rank, skills, salary=None, capacity=None, deadline=None):
         """
         オファーを追加する
@@ -141,11 +141,9 @@ class Offers(BaseDB):
                 return {"status": "ok", "offer_id": str(id)}
         except Exception as e:
             return {"status": "ng", "error": str(e)}
-        
     
     def update_offer(self, offer_id, title, content, rank, skills, salary=None, capacity=None):
         try:
-            print(offer_id, title, content, rank, skills, salary, capacity)
             with self.engine.connect() as conn:
                 update_values = {}
                 update_values["deadline"] = datetime.now()
@@ -184,7 +182,6 @@ class Offers(BaseDB):
         
         except Exception as e:
             return {"status": "ng", "error": str(e)}
-    
     
     def delete_offer(self, offer_id):
         """
@@ -269,7 +266,7 @@ class Offers(BaseDB):
         except Exception as e:
             return {"status": "ng", "error": str(e)}
     
-    def read_all_offers_paginated(self, page: int = 1, limit: int = 6, rank_filter: str = None):
+    def read_all_offers_paginated(self, page: int = 1, limit: int = 6, rank_filter: str = None, user_id: str = None, favorites_only: bool = False):
         """
         オファーをページング対応で取得
         """
@@ -278,6 +275,15 @@ class Offers(BaseDB):
             j2 = outerjoin(j1, self.offer_skills, self.offers.c.id == self.offer_skills.c.offer_id)
             j3 = outerjoin(j2, self.skills, self.offer_skills.c.skill_id == self.skills.c.id)
             j4 = outerjoin(j3, self.ranks, self.offers.c.rank == self.ranks.c.id)
+            
+            # 気になるオファーフィルター用のjoin
+            if favorites_only and user_id:
+                j5 = outerjoin(j4, self.user_offers, 
+                    (self.offers.c.id == self.user_offers.c.offer_id) & 
+                    (self.user_offers.c.user_id == user_id) & 
+                    (self.user_offers.c.favorite == True))
+            else:
+                j5 = j4
 
             # ベースクエリ
             base_stmt = select(
@@ -290,29 +296,43 @@ class Offers(BaseDB):
                 self.offers.c.capacity.label("capacity"),
                 self.ranks.c.name.label("rank"),
                 self.skills.c.name.label("skill_name")
-            ).select_from(j4)
+            ).select_from(j5)
 
+            # フィルター条件の構築
+            where_conditions = []
+            
             # ランクフィルターの適用
             if rank_filter:
-                base_stmt = base_stmt.where(self.ranks.c.name == rank_filter)
+                where_conditions.append(self.ranks.c.name == rank_filter)
+            
+            # 気になるオファーフィルターの適用
+            if favorites_only and user_id:
+                where_conditions.append(self.user_offers.c.favorite == True)
+                where_conditions.append(self.user_offers.c.user_id == user_id)
+            
+            # WHERE条件を適用
+            if where_conditions:
+                base_stmt = base_stmt.where(*where_conditions)
 
             # 総件数を取得（distinct offer_idで重複除去）
-            count_stmt = select(func.count(func.distinct(self.offers.c.id))).select_from(j4)
-            if rank_filter:
-                count_stmt = count_stmt.where(self.ranks.c.name == rank_filter)
+            count_stmt = select(func.count(func.distinct(self.offers.c.id))).select_from(j5)
+            if where_conditions:
+                count_stmt = count_stmt.where(*where_conditions)
             
             total_count = conn.execute(count_stmt).scalar()
 
             # ページング計算
             offset = (page - 1) * limit
-            total_pages = (total_count + limit - 1) // limit  # 切り上げ計算            # データ取得（LIMIT/OFFSET適用前にdistinct offer_idで重複除去）
+            total_pages = (total_count + limit - 1) // limit  # 切り上げ計算
+
+            # データ取得（LIMIT/OFFSET適用前にdistinct offer_idで重複除去）
             # まず、対象のoffer_idを取得
             offer_ids_stmt = select(
                 func.distinct(self.offers.c.id).label("offer_id"),
                 self.offers.c.created_at
-            ).select_from(j4)
-            if rank_filter:
-                offer_ids_stmt = offer_ids_stmt.where(self.ranks.c.name == rank_filter)
+            ).select_from(j5)
+            if where_conditions:
+                offer_ids_stmt = offer_ids_stmt.where(*where_conditions)
             offer_ids_stmt = offer_ids_stmt.order_by(self.offers.c.created_at.desc()).limit(limit).offset(offset)
             
             offer_ids_result = conn.execute(offer_ids_stmt).fetchall()

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 import {
   Box,
   Button,
@@ -10,6 +11,8 @@ import {
   CircularProgress,
   Alert,
   Typography,
+  FormControlLabel,
+  Checkbox,
 } from "@mui/material";
 import ArrowBackSharpIcon from "@mui/icons-material/ArrowBackSharp";
 import ArrowForwardSharpIcon from "@mui/icons-material/ArrowForwardSharp";
@@ -19,6 +22,7 @@ import { blue, lightBlue } from "@mui/material/colors";
 
 function Project_List() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [offers, setOffers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -29,8 +33,9 @@ function Project_List() {
   console.log('Total count:', totalCount); // totalCount使用でlint警告回避
   const itemsPerPage = 6;
 
-  // 検索結果のstate（ランクのみ）
+  // 検索結果のstate（ランクと気になるオファーフィルター）
   const [jobType, setJobType] = useState("");
+  const [favoritesOnly, setFavoritesOnly] = useState(false);
 
   // APIからオファーデータを取得
   useEffect(() => {
@@ -39,7 +44,13 @@ function Project_List() {
         setLoading(true);
         
         // ページング対応のAPIエンドポイントを使用
-        const url = API_ENDPOINTS.OFFERS_ALL_PAGINATED(currentPage, itemsPerPage, jobType || null);
+        const url = API_ENDPOINTS.OFFERS_ALL_PAGINATED(
+          currentPage, 
+          itemsPerPage, 
+          jobType || null,
+          user?.id || null,
+          favoritesOnly
+        );
         const response = await fetch(url);
         
         if (!response.ok) {
@@ -74,7 +85,7 @@ function Project_List() {
     };
 
     fetchOffers();
-  }, [currentPage, jobType]); // currentPageとjobTypeに依存
+  }, [currentPage, jobType, favoritesOnly, user]); // currentPage、jobType、favoritesOnly、userに依存
 
   // ローディング状態
   if (loading) {
@@ -242,6 +253,35 @@ function Project_List() {
               </Select>
             </FormControl>
 
+            {/* 気になるオファーフィルター */}
+            {user && (
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={favoritesOnly}
+                    onChange={(e) => setFavoritesOnly(e.target.checked)}
+                    sx={{
+                      color: blue[600],
+                      "&.Mui-checked": {
+                        color: blue[700],
+                      },
+                    }}
+                  />
+                }
+                label="気になっているオファーのみ表示"
+                sx={{
+                  backgroundColor: blue[50],
+                  borderRadius: 2,
+                  padding: 2,
+                  border: `1px solid ${blue[200]}`,
+                  "&:hover": {
+                    backgroundColor: blue[100],
+                  },
+                  margin: 0,
+                }}
+              />
+            )}
+
             {/* 検索ボタンとリセットボタン */}
             <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
               <Button
@@ -268,6 +308,7 @@ function Project_List() {
                 variant="outlined"
                 onClick={() => {
                   setJobType("");
+                  setFavoritesOnly(false);
                   setCurrentPage(1);
                 }}
                 sx={{

@@ -22,11 +22,13 @@ export const API_ENDPOINTS = {
   
   // オファー
   OFFERS_ALL: `${API_BASE_URL}/api/v1/offers/all`,
-  OFFERS_ALL_PAGINATED: (page, limit, rank) => {
+  OFFERS_ALL_PAGINATED: (page, limit, rank, userId, favoritesOnly) => {
     const params = new URLSearchParams();
     if (page) params.append('page', page);
     if (limit) params.append('limit', limit);
     if (rank) params.append('rank', rank);
+    if (userId) params.append('user_id', userId);
+    if (favoritesOnly) params.append('favorites_only', 'true');
     return `${API_BASE_URL}/api/v1/offers/all?${params.toString()}`;
   },
   OFFERS_MY_LIST: `${API_BASE_URL}/api/v1/offers/my`,
