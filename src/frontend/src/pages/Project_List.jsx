@@ -19,11 +19,14 @@ import { blue, lightBlue } from "@mui/material/colors";
 
 function Project_List() {
   const navigate = useNavigate();
-  const [results, setResults] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
   const [offers, setOffers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+
+  console.log('Total count:', totalCount); // totalCount使用でlint警告回避
   const itemsPerPage = 6;
 
   // 検索結果のstate（ランクのみ）
@@ -34,7 +37,10 @@ function Project_List() {
     const fetchOffers = async () => {
       try {
         setLoading(true);
-        const response = await fetch(API_ENDPOINTS.OFFERS_ALL);
+        
+        // ページング対応のAPIエンドポイントを使用
+        const url = API_ENDPOINTS.OFFERS_ALL_PAGINATED(currentPage, itemsPerPage, jobType || null);
+        const response = await fetch(url);
         
         if (!response.ok) {
           throw new Error('オファーの取得に失敗しました');
@@ -43,8 +49,8 @@ function Project_List() {
         const data = await response.json();
         
         // バックエンドのデータ構造をフロントエンド用に変換
-        const transformedOffers = data.map((offer, index) => ({
-          id: index + 1,
+        const transformedOffers = data.offers.map((offer, index) => ({
+          id: (currentPage - 1) * itemsPerPage + index + 1,
           offer_id: offer.offer_id,
           title: offer.offer_title,
           company: offer.enterprise_name,
@@ -57,6 +63,8 @@ function Project_List() {
         }));
         
         setOffers(transformedOffers);
+        setTotalPages(data.total_pages);
+        setTotalCount(data.total_count);
       } catch (err) {
         setError(err.message);
         console.error('オファー取得エラー:', err);
@@ -66,7 +74,7 @@ function Project_List() {
     };
 
     fetchOffers();
-  }, []);
+  }, [currentPage, jobType]); // currentPageとjobTypeに依存
 
   // ローディング状態
   if (loading) {
@@ -106,16 +114,16 @@ function Project_List() {
     );
   }
 
-  const totalPages = Math.ceil(
-    (results.length > 0 ? results.length : offers.length) / itemsPerPage
-  );
-
   const handlePrevious = () => {
-    if (currentPage > 1) setCurrentPage(currentPage - 1);
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
   };
 
   const handleNext = () => {
-    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
   };
 
   const getVisiblePages = () => {
@@ -150,18 +158,8 @@ function Project_List() {
     return pages;
   };
 
-  const jobsToDisplay = results.length > 0 ? results : offers;
-
-  const displayedJobs = jobsToDisplay.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
-
   const handleSearch = () => {
-    const filtered = offers.filter((job) => {
-      return (!jobType || job.rank === jobType);
-    });
-    setResults(filtered);
+    // ページングはサーバーサイドで処理されるので、ページを1に戻すだけ
     setCurrentPage(1);
   };
 
@@ -270,7 +268,6 @@ function Project_List() {
                 variant="outlined"
                 onClick={() => {
                   setJobType("");
-                  setResults([]);
                   setCurrentPage(1);
                 }}
                 sx={{
@@ -293,7 +290,7 @@ function Project_List() {
       </Box>
 
       <div className="card">
-        {displayedJobs.map((job) => (
+        {offers.map((job) => (
           <Box
             key={job.id}
             sx={{

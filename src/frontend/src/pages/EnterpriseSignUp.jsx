@@ -16,14 +16,12 @@ import { API_ENDPOINTS } from '../config/api';
 
 const EnterpriseSignUp = () => {
   const navigate = useNavigate();
-  const { registerEnterprise } = useAuth();
-  const [formData, setFormData] = useState({
+  const { registerEnterprise } = useAuth();  const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
     confirmPassword: '',
-    enterprise_id: '',
-    rank: 1
+    enterprise_id: ''
   });
   const [enterprises, setEnterprises] = useState([]);
   const [errors, setErrors] = useState({});
@@ -100,13 +98,11 @@ const EnterpriseSignUp = () => {
 
     setLoading(true);
 
-    try {
-      const userData = {
+    try {      const userData = {
         name: formData.name,
         email: formData.email,
         password: formData.password,
-        enterprise_id: formData.enterprise_id,
-        rank: formData.rank
+        enterprise_id: formData.enterprise_id
       };
 
       await registerEnterprise(userData);
@@ -305,75 +301,7 @@ const EnterpriseSignUp = () => {
                 <Typography variant="caption" color="error" sx={{ mt: 0.5, ml: 1.5 }}>
                   {errors.enterprise_id}
                 </Typography>
-              )}
-            </FormControl>
-          </Box>
-
-          <Box sx={{ marginBottom: '20px' }}>
-            <Typography
-              sx={{
-                fontSize: '14px',
-                color: '#333',
-                marginBottom: '8px',
-                fontWeight: '500'
-              }}
-            >
-              ランクを選択
-            </Typography>
-            <FormControl fullWidth>
-              <Select
-                id="rank"
-                name="rank"
-                value={formData.rank}
-                onChange={handleChange}
-                sx={{
-                  fontSize: '14px',
-                  '& .MuiOutlinedInput-notchedOutline': {
-                    borderColor: '#ddd',
-                  },
-                  '&:hover .MuiOutlinedInput-notchedOutline': {
-                    borderColor: '#ff9800',
-                  },
-                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                    borderColor: '#ff9800',
-                  },
-                  '& .MuiSelect-select': {
-                    padding: '12px 14px'
-                  }
-                }}
-              >
-                <MenuItem value={1}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <span style={{ color: '#9e9e9e' }}>D</span>
-                    <span style={{ fontSize: '0.9rem', color: '#666' }}>(入門レベル)</span>
-                  </Box>
-                </MenuItem>
-                <MenuItem value={2}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <span style={{ color: '#2196f3' }}>C</span>
-                    <span style={{ fontSize: '0.9rem', color: '#666' }}>(初級レベル)</span>
-                  </Box>
-                </MenuItem>
-                <MenuItem value={3}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <span style={{ color: '#ff9800' }}>B</span>
-                    <span style={{ fontSize: '0.9rem', color: '#666' }}>(中級レベル)</span>
-                  </Box>
-                </MenuItem>
-                <MenuItem value={4}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <span style={{ color: '#f44336' }}>A</span>
-                    <span style={{ fontSize: '0.9rem', color: '#666' }}>(上級レベル)</span>
-                  </Box>
-                </MenuItem>
-                <MenuItem value={5}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <span style={{ color: '#9c27b0', fontWeight: 'bold' }}>S</span>
-                    <span style={{ fontSize: '0.9rem', color: '#666' }}>(最高レベル)</span>
-                  </Box>
-                </MenuItem>
-              </Select>
-            </FormControl>
+              )}            </FormControl>
           </Box>
 
           <Box sx={{ marginBottom: '20px' }}>

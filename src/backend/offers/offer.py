@@ -25,12 +25,12 @@ class OfferUpdate(BaseModel):
     skill: list
 
 @router.get("/all")
-async def read_all_offers():
-    print("offer")
+async def read_all_offers(page: int = 1, limit: int = 6, rank: str = None):
     """
-    ユーザ情報を全件取得するエンドポイント
+    オファー一覧をページング対応で取得するエンドポイント
     """
-    return Offers().read_all_offers()
+    result = Offers().read_all_offers_paginated(page=page, limit=limit, rank_filter=rank)
+    return result
 
 @router.get("/skills")
 async def get_all_skills():
