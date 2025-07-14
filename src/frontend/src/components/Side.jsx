@@ -37,7 +37,6 @@ const Side = () => {
     { text: "ホーム", icon: "🏠", path: "/enterprise", id: "home" },
     { text: "募集フォーム作成", icon: "📝", path: "/enterprise/offer/create", id: "create" },
     { text: "オファー管理", icon: "👥", path: "/enterprise/offer", id: "offers" },
-    { text: "応募者管理", icon: "📊", path: "/enterprise/applications", id: "applications" },
     { text: "設定", icon: "⚙️", path: "/enterprise/settings", id: "settings" },
   ];
 
