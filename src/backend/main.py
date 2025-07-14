@@ -31,6 +31,7 @@ import auth
 import users
 import enterprises
 import offers
+import notifications.notification as notifications
 from minio_routes import minio
 
 # 新しくモジュールを作成したらここにインポートしたルーターを追加
@@ -41,6 +42,7 @@ root_router.include_router(auth.router, prefix="/auth", tags=["auth"])
 root_router.include_router(users.router, prefix="/users", tags=["users"])
 root_router.include_router(enterprises.router, prefix="/enterprises", tags=["enterprises"])
 root_router.include_router(offers.router, prefix="/offers", tags=["offers"])
+root_router.include_router(notifications.router, prefix="/users", tags=["notifications"])
 root_router.include_router(minio.router, prefix="/minio", tags=["minio"])
 
 

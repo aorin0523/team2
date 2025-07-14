@@ -8,12 +8,11 @@ router = APIRouter()
 
 from pydantic import BaseModel
 class offerCreate(BaseModel):
-    enterprise_id: str
     title: str
     content: str
     rank: int
     skills: list
-    deadline: str
+    deadline: str = None
     salary: str = None
     capacity: int = None
 
@@ -96,19 +95,46 @@ async def create_my_offer(data: offerCreate, current_user: User = Depends(get_cu
     """
     ログイン中の企業ユーザーが新しいオファーを作成
     """
-    # 現在のユーザーのenterprise_idを使用してオファーを作成
-    result = Offers().create_offer(
-        enterprise_id=current_user.enterprise_id, 
-        title=data.title, 
-        content=data.content, 
-        rank=data.rank, 
-        skills=data.skills,
-        salary=data.salary,
-        capacity=data.capacity,
-        deadline=data.deadline
-    )
-    
-    if result["status"] == "ok":
-        return {"status": "success", "offer_id": result["offer_id"]}
-    else:
-        raise HTTPException(status_code=500, detail=result["error"])
+    try:
+        print(f"=== Creating offer for enterprise: {current_user.enterprise_id} ===")
+        print(f"Received data: {data.dict()}")
+        
+        # データの検証
+        if not data.title or not data.title.strip():
+            raise HTTPException(status_code=422, detail="タイトルは必須です")
+        if not data.content or not data.content.strip():
+            raise HTTPException(status_code=422, detail="内容は必須です")
+        if not isinstance(data.rank, int) or data.rank < 1 or data.rank > 5:
+            raise HTTPException(status_code=422, detail="ランクは1-5の整数である必要があります")
+        if not isinstance(data.skills, list):
+            raise HTTPException(status_code=422, detail="スキルは配列である必要があります")
+        
+        # 現在のユーザーのenterprise_idを使用してオファーを作成
+        result = Offers().create_offer(
+            enterprise_id=current_user.enterprise_id, 
+            title=data.title.strip(), 
+            content=data.content.strip(), 
+            rank=data.rank, 
+            skills=data.skills,
+            salary=data.salary.strip() if data.salary else None,
+            capacity=data.capacity,
+            deadline=data.deadline
+        )
+        
+        print(f"Database result: {result}")
+        
+        if result["status"] == "ok":
+            print(f"Offer created successfully with ID: {result['offer_id']}")
+            return {"status": "success", "offer_id": result["offer_id"]}
+        else:
+            print(f"Database error: {result['error']}")
+            raise HTTPException(status_code=500, detail=result["error"])
+            
+    except HTTPException:
+        # HTTPExceptionは再投げ
+        raise
+    except Exception as e:
+        print(f"Unexpected error in create_my_offer: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"内部サーバーエラー: {str(e)}")

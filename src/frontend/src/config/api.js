@@ -47,6 +47,10 @@ export const API_ENDPOINTS = {
   USER_PROFILE: (userId) => `${API_BASE_URL}/api/v1/users/${userId}/profile`,
   USER_PROFILE_UPDATE: (userId) => `${API_BASE_URL}/api/v1/users/${userId}/profile`,
   USER_SKILLS_ALL: `${API_BASE_URL}/api/v1/users/skills/all`,
+  USER_NOTIFICATIONS: (userId) => `${API_BASE_URL}/api/v1/users/${userId}/notifications`,
+  USER_NOTIFICATIONS_UNREAD_COUNT: (userId) => `${API_BASE_URL}/api/v1/users/${userId}/notifications/unread-count`,
+  MARK_NOTIFICATION_READ: (notificationId) => `${API_BASE_URL}/api/v1/users/notifications/${notificationId}/read`,
+  MARK_ALL_NOTIFICATIONS_READ: (userId) => `${API_BASE_URL}/api/v1/users/${userId}/notifications/mark-all-read`,
   OFFER_APPLICATIONS_COUNT: (offerId) => `${API_BASE_URL}/api/v1/users/offer/${offerId}/applications/count`,
   OFFER_APPLICANTS: (offerId) => `${API_BASE_URL}/api/v1/users/offer/${offerId}/applicants`,
   

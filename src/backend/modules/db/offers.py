@@ -111,6 +111,17 @@ class Offers(BaseDB):
         """
         id = uuid.uuid4()
         try:
+            print(f"=== Database: Creating offer ===")
+            print(f"ID: {id}")
+            print(f"Enterprise ID: {enterprise_id}")
+            print(f"Title: {title}")
+            print(f"Content length: {len(content) if content else 0}")
+            print(f"Rank: {rank}")
+            print(f"Skills: {skills}")
+            print(f"Salary: {salary}")
+            print(f"Capacity: {capacity}")
+            print(f"Deadline: {deadline}")
+            
             with self.engine.connect() as conn:
                 offer_values = {
                     "id": id,
@@ -127,10 +138,13 @@ class Offers(BaseDB):
                 if deadline is not None:
                     offer_values["deadline"] = deadline
                 
+                print(f"Inserting offer with values: {offer_values}")
                 offer_query = self.offers.insert().values(**offer_values)
                 conn.execute(offer_query)
                 
-                for skill in skills:
+                print(f"Inserting {len(skills)} skills...")
+                for i, skill in enumerate(skills):
+                    print(f"  Skill {i+1}: {skill}")
                     offerSkill_query = self.offer_skills.insert().values(
                         offer_id=id,
                         skill_id=skill
@@ -138,8 +152,12 @@ class Offers(BaseDB):
                     conn.execute(offerSkill_query)
 
                 conn.commit()
+                print(f"Offer created successfully with ID: {id}")
                 return {"status": "ok", "offer_id": str(id)}
         except Exception as e:
+            print(f"Database error in create_offer: {str(e)}")
+            import traceback
+            traceback.print_exc()
             return {"status": "ng", "error": str(e)}
     
     def update_offer(self, offer_id, title, content, rank, skills, salary=None, capacity=None):

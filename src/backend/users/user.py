@@ -2,6 +2,8 @@ from fastapi import APIRouter, Request, FastAPI, File, UploadFile, HTTPException
 from fastapi.responses import StreamingResponse
 from modules.db.users import Users
 from modules.db.user_offers import UserOffers
+from modules.db.notifications import Notifications
+from modules.db.offers import Offers
 from auth.token import get_current_enterprise_user, User
 
 router = APIRouter()
@@ -267,8 +269,37 @@ async def assign_applicant(data: UserAssign, current_user: User = Depends(get_cu
     応募者をオファーにアサインする（企業ユーザー専用）
     """
     try:
+        # アサインを実行
         result = UserOffers().assign_applicant(data.user_id, data.offer_id)
         if result["status"] == "ok":
+            # アサイン成功時に通知を作成
+            try:
+                # オファー情報を取得
+                offers_db = Offers()
+                offer_result = offers_db.get_offers(id=data.offer_id)
+                
+                if offer_result and len(offer_result) > 0:
+                    offer_data = offer_result[0]
+                    
+                    # 通知を作成
+                    notifications_db = Notifications()
+                    notification_result = notifications_db.create_assignment_notification(
+                        user_id=data.user_id,
+                        offer_title=offer_data.get('title', 'プロジェクト'),
+                        enterprise_name=offer_data.get('enterprise_name', '企業'),
+                        offer_id=data.offer_id
+                    )
+                    
+                    if notification_result["status"] != "ok":
+                        print(f"WARNING: 通知作成に失敗しました: {notification_result}")
+                        # 通知作成失敗はアサイン処理には影響させない
+                    else:
+                        print(f"INFO: アサイン通知を作成しました: user_id={data.user_id}, offer_id={data.offer_id}")
+                        
+            except Exception as notification_error:
+                print(f"WARNING: 通知作成中にエラーが発生しました: {notification_error}")
+                # 通知作成エラーはアサイン処理には影響させない
+            
             return {"status": "success", "message": result["message"]}
         else:
             raise HTTPException(status_code=400, detail=result["error"])

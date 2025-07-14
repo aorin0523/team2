@@ -266,10 +266,15 @@ function CreateOffer() {
         content: formData.content.trim(),
         rank: formData.rank,
         skills: formData.skills, // 選択されたスキルIDの配列
+        deadline: formData.deadline || null,
         salary: formData.salary.trim() || null,
-        capacity: formData.capacity || null,
-        deadline: formData.deadline || null
+        capacity: formData.capacity || null
       };
+
+      console.log('=== Creating Offer ===');
+      console.log('Offer data:', offerData);
+      console.log('API Endpoint:', API_ENDPOINTS.OFFERS_MY_CREATE);
+      console.log('Token:', token ? `${token.substring(0, 20)}...` : 'No token');
 
       const response = await fetch(API_ENDPOINTS.OFFERS_MY_CREATE, {
         method: 'POST',
@@ -280,9 +285,21 @@ function CreateOffer() {
         body: JSON.stringify(offerData),
       });
 
+      console.log('Response status:', response.status);
+      console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || 'オファーの作成に失敗しました');
+        const errorText = await response.text();
+        console.error('Error response:', errorText);
+        
+        let errorData;
+        try {
+          errorData = JSON.parse(errorText);
+        } catch {
+          errorData = { detail: errorText };
+        }
+        
+        throw new Error(errorData.detail || `HTTP ${response.status}: オファーの作成に失敗しました`);
       }
 
       const result = await response.json();

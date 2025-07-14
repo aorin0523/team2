@@ -18,7 +18,12 @@ import {
   ListItemAvatar,
   ListItemText,
   ListItemSecondaryAction,
-  Paper
+  Paper,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions
 } from '@mui/material';
 import {
   Person as PersonIcon,
@@ -39,6 +44,11 @@ const ApplicantsList = () => {
   const [error, setError] = useState('');
   const [offerData, setOfferData] = useState(null);
   const [applicants, setApplicants] = useState([]);
+  const [confirmDialog, setConfirmDialog] = useState({
+    open: false,
+    applicantId: null,
+    applicantName: ''
+  });
 
   // オファー詳細を取得
   useEffect(() => {
@@ -146,12 +156,23 @@ const ApplicantsList = () => {
     navigate('/enterprise/offer');
   };
 
-  const handleAssignApplicant = async (applicantId) => {
+  const handleAssignClick = (applicantId, applicantName) => {
+    setConfirmDialog({
+      open: true,
+      applicantId,
+      applicantName
+    });
+  };
+
+  const handleConfirmAssign = async () => {
+    const { applicantId } = confirmDialog;
+    
     try {
       if (!token) {
         alert('認証が必要です。ログインしてください。');
         return;
       }
+      
       // API呼び出し
       const response = await fetch(`${API_BASE_URL}/api/v1/users/offer/assign`, {
         method: 'POST',
@@ -161,6 +182,7 @@ const ApplicantsList = () => {
         },
         body: JSON.stringify({ user_id: applicantId, offer_id }),
       });
+      
       if (response.ok) {
         // 状態を更新
         setApplicants(prev =>
@@ -178,7 +200,13 @@ const ApplicantsList = () => {
     } catch (err) {
       console.error('Error assigning applicant:', err);
       alert('アサインに失敗しました');
+    } finally {
+      setConfirmDialog({ open: false, applicantId: null, applicantName: '' });
     }
+  };
+
+  const handleCancelAssign = () => {
+    setConfirmDialog({ open: false, applicantId: null, applicantName: '' });
   };
 
   const getStatusColor = (status) => {
@@ -328,7 +356,7 @@ const ApplicantsList = () => {
                         variant="contained"
                         color="primary"
                         startIcon={<AssignmentIcon />}
-                        onClick={() => handleAssignApplicant(applicant.user_id)}
+                        onClick={() => handleAssignClick(applicant.user_id, applicant.name)}
                         size="small"
                       >
                         アサイン
@@ -342,6 +370,39 @@ const ApplicantsList = () => {
           </List>
         )}
       </Paper>
+
+      {/* アサイン確認ダイアログ */}
+      <Dialog
+        open={confirmDialog.open}
+        onClose={handleCancelAssign}
+        aria-labelledby="assign-dialog-title"
+        aria-describedby="assign-dialog-description"
+      >
+        <DialogTitle id="assign-dialog-title">
+          応募者のアサイン確認
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="assign-dialog-description">
+            <strong>{confirmDialog.applicantName}</strong> さんを
+            <strong>「{offerData?.title}」</strong> のポジションにアサインしますか？
+            <br /><br />
+            この操作は取り消すことができません。
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCancelAssign} color="inherit">
+            キャンセル
+          </Button>
+          <Button 
+            onClick={handleConfirmAssign} 
+            color="primary" 
+            variant="contained"
+            autoFocus
+          >
+            アサインする
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 };

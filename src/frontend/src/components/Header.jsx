@@ -6,7 +6,8 @@ import {
     Button,
     IconButton,
     Box,
-    Stack
+    Stack,
+    Badge
 } from '@mui/material';
 import {
     Assignment,
@@ -19,18 +20,20 @@ import '../css/header.css';
 
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useNotifications } from '../contexts/NotificationContext';
 import ProtectedRoute from './ProtectedRoute';
 
 
 const Header = () => {
 
     const { user, logout, isAuthenticated, Loading } = useAuth();
+    const { unreadCount } = useNotifications();
     const navigate = useNavigate();
 
     const handleLogout = () => {
         logout();
         navigate('/');
-    };    return (
+    };return (
         <ProtectedRoute requireUser={true}>
         <AppBar
             position="static"
@@ -76,12 +79,27 @@ const Header = () => {
                                 className="header-icon-button"
                             >
                                 <Assignment />
-                            </IconButton>
-                            <IconButton
+                            </IconButton>                            <IconButton
                                 color="inherit"
                                 className="header-icon-button"
+                                component={Link}
+                                to="/user/notifications"
                             >
-                                <Notifications />
+                                <Badge 
+                                    badgeContent={unreadCount} 
+                                    color="error"
+                                    sx={{
+                                        '& .MuiBadge-badge': {
+                                            fontSize: '0.75rem',
+                                            height: '18px',
+                                            minWidth: '18px',
+                                            backgroundColor: '#ff4444',
+                                            color: 'white'
+                                        }
+                                    }}
+                                >
+                                    <Notifications />
+                                </Badge>
                             </IconButton>
                             <IconButton
                                 color="inherit"

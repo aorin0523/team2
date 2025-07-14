@@ -4,6 +4,7 @@ import { Box, Stack } from "@mui/material";
 import Header from "./components/Header";
 import Side from "./components/Side";
 import { AuthProvider } from "./contexts/AuthContext";
+import { NotificationProvider } from "./contexts/NotificationContext";
 import Home from "./pages/Home";
 import UCD from "./pages/UserCaseDetails";
 
@@ -17,17 +18,18 @@ import Offer from "./pages/Offer";
 import CreateOffer from "./pages/CreateOffer";
 import Profile from "./pages/Profile";
 import UserProfile from "./pages/UserProfile";
+import UserNotifications from "./pages/UserNotifications";
 import List from "./pages/Project_List";
 import UserOfferDetail from "./pages/UserOfferDetail";
 import UserOfferApply from "./pages/UserOfferApply";
 import ApplicantsList from "./pages/ApplicantsList";
 // import "./App.css";
 
-function App() {
-  return (
+function App() {  return (
     <>
       <AuthProvider>
-        <BrowserRouter>
+        <NotificationProvider>
+          <BrowserRouter>
           <Routes>
             {" "}            <Route index element={<Home />} />
             <Route path="signin" element={<SignIn />} />
@@ -40,13 +42,14 @@ function App() {
             />{" "}            <Route path="/user/*" element={<Header sx={{ margin: 0 }} />}>
               <Route path="list" element={<List />} />
               <Route path="profile" element={<UserProfile />} />
+              <Route path="notifications" element={<UserNotifications />} />
               <Route path="details" element={<UCD />} />
               <Route path="offer/:offer_id" element={<UserOfferDetail />} />
               <Route
                 path="offer/:offer_id/apply"
                 element={<UserOfferApply />}
               />
-            </Route>            <Route path="/enterprise/*" element={<Side />}>
+            </Route><Route path="/enterprise/*" element={<Side />}>
               <Route index element={<KigyoHome />} />
               <Route path="profile" element={<Profile />} />
               <Route path="offer" element={<Offer />} />
@@ -56,9 +59,9 @@ function App() {
                 element={<ApplicantsList />}
               />
               <Route path="offer/create" element={<CreateOffer />} />
-            </Route>
-          </Routes>
+            </Route>          </Routes>
         </BrowserRouter>
+        </NotificationProvider>
       </AuthProvider>
     </>
   );

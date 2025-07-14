@@ -87,6 +87,20 @@ CREATE TABLE `OfferSkills` (
 	PRIMARY KEY(`offer_id`, `skill_id`)
 );
 
+CREATE TABLE `Notifications` (
+	`id` CHAR(36) NOT NULL UNIQUE,
+	`user_id` CHAR(36) NOT NULL,
+	`type` VARCHAR(50) NOT NULL,
+	`title` VARCHAR(255) NOT NULL,
+	`message` TEXT NOT NULL,
+	`offer_id` CHAR(36) NULL,
+	`enterprise_name` VARCHAR(255) NULL,
+	`is_read` BOOLEAN DEFAULT FALSE,
+	`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	`updated_at` TIMESTAMP,
+	PRIMARY KEY(`id`)
+);
+
 ALTER TABLE `Users`
 ADD FOREIGN KEY(`enterprise_id`) REFERENCES `Enterprises`(`id`)
 ON UPDATE CASCADE ON DELETE CASCADE;
@@ -117,6 +131,12 @@ ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE `Offers`
 ADD FOREIGN KEY(`rank`) REFERENCES `Ranks`(`id`)
 ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE `Notifications`
+ADD FOREIGN KEY(`user_id`) REFERENCES `Users`(`id`)
+ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE `Notifications`
+ADD FOREIGN KEY(`offer_id`) REFERENCES `Offers`(`id`)
+ON UPDATE CASCADE ON DELETE SET NULL;
 
 
 
@@ -275,3 +295,10 @@ INSERT INTO Offers (id, enterprise_id, title, content, `rank`, salary, capacity,
   'サイバー攻撃対応とフォレンジック',
   5, '750万円〜1100万円', 1,
   '2026-01-31 23:59:59');
+
+-- Notifications テーブルへのサンプルデータ挿入
+INSERT INTO Notifications (id, user_id, type, title, message, offer_id, enterprise_name, is_read, created_at) VALUES
+('n0000001-0001-0001-0001-000000000001', '00000000-0000-0000-0000-000000000000', 'assignment', 'バックエンドエンジニア', 'あなたがこのプロジェクトにアサインされました', 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'Tech Corp', FALSE, '2025-07-15 10:30:00'),
+('n0000001-0001-0001-0001-000000000002', '00000000-0000-0000-0000-000000000000', 'assignment', 'フロントエンドエンジニア', 'あなたがこのプロジェクトにアサインされました', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 'Tech Corp', TRUE, '2025-07-14 15:45:00'),
+('n0000001-0001-0001-0001-000000000003', '00000000-0000-0000-0000-000000000000', 'assignment', 'データアナリスト', 'あなたがこのプロジェクトにアサインされました', 'cccccccc-cccc-cccc-cccc-cccccccccccc', 'Finance Inc', TRUE, '2025-07-13 09:15:00'),
+('n0000001-0001-0001-0001-000000000004', '00000000-0000-0000-0000-000000000000', 'application_update', 'ゲームプログラマ', '応募状況が更新されました', 'dddddddd-dddd-dddd-dddd-dddddddddddd', 'Entertainment LLC', FALSE, '2025-07-12 16:20:00');
