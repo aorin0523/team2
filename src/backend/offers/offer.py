@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request, FastAPI, File, UploadFile, Depends
+from fastapi import APIRouter, Request, FastAPI, File, UploadFile, Depends, HTTPException, HTTPException
 from fastapi.responses import StreamingResponse
 from modules.db.offers import Offers
 from auth.token import get_current_enterprise_user, User
@@ -31,6 +31,17 @@ async def read_all_offers():
     ユーザ情報を全件取得するエンドポイント
     """
     return Offers().read_all_offers()
+
+@router.get("/skills")
+async def get_all_skills():
+    """
+    全スキル一覧を取得するエンドポイント
+    """
+    result = Offers().get_all_skills()
+    if result["status"] == "ok":
+        return {"status": "success", "skills": result["skills"]}
+    else:
+        raise HTTPException(status_code=500, detail=result["error"])
 
 
 # 企業ユーザー専用エンドポイント - /{offer_id}より前に配置
@@ -75,30 +86,23 @@ async def update_offer(offer_id: str):
     return Offers().delete_offer(offer_id)
 
 @router.post("/my")
-async def create_my_offer(data: dict, current_user: User = Depends(get_current_enterprise_user)):
+async def create_my_offer(data: offerCreate, current_user: User = Depends(get_current_enterprise_user)):
     """
-    ログイン中の企業ユーザーがオファーを作成
+    ログイン中の企業ユーザーが新しいオファーを作成
     """
-    # enterprise_idを自動的に設定
-    offer_data = offerCreate(
-        enterprise_id=current_user.enterprise_id,
-        title=data["title"],
-        content=data["content"],
-        rank=data["rank"],
-        skills=data.get("skills", []),
-        deadline=data.get("deadline"),
-        salary=data.get("salary"),
-        capacity=data.get("capacity")
+    # 現在のユーザーのenterprise_idを使用してオファーを作成
+    result = Offers().create_offer(
+        enterprise_id=current_user.enterprise_id, 
+        title=data.title, 
+        content=data.content, 
+        rank=data.rank, 
+        skills=data.skills,
+        salary=data.salary,
+        capacity=data.capacity,
+        deadline=data.deadline
     )
     
-    offers_db = Offers()
-    return offers_db.create_offer(
-        enterprise_id=offer_data.enterprise_id,
-        title=offer_data.title,
-        content=offer_data.content,
-        rank=offer_data.rank,
-        skills=offer_data.skills,
-        deadline=offer_data.deadline,
-        salary=offer_data.salary,
-        capacity=offer_data.capacity
-    )
+    if result["status"] == "ok":
+        return {"status": "success", "offer_id": result["offer_id"]}
+    else:
+        raise HTTPException(status_code=500, detail=result["error"])

@@ -26,6 +26,7 @@ export const API_ENDPOINTS = {
   OFFERS_MY_CREATE: `${API_BASE_URL}/api/v1/offers/my`,
   OFFERS_DETAIL: (id) => `${API_BASE_URL}/api/v1/offers/${id}`,
   OFFERS_DELETE: (id) => `${API_BASE_URL}/api/v1/offers/${id}`,
+  OFFERS_SKILLS: `${API_BASE_URL}/api/v1/offers/skills`,
   
   // ユーザー
   AUTH_ME: `${API_BASE_URL}/api/v1/auth/me`,

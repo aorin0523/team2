@@ -25,10 +25,7 @@ header {
   width: 90%;
 }
 
-.card1, .card2, .card3,
-.card4, .card5, .card6,
-.card7,.card8,.card9,
-.card10,.card11,.card12 {
+.cards {
   background-color: #fff;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
@@ -40,10 +37,7 @@ header {
   width: 330px;
 }
 
-.card1:hover, .card2:hover, .card3:hover,
-.card4:hover, .card5:hover, .card6:hover,
-.card7:hover, .card8:hover, .card9:hover,
-.card10:hover, .card11:hover, .card12:hover {
+.cards:hover {
   transform: scale(1.03);
 }
 
@@ -64,7 +58,6 @@ header {
   font-size: 14px;
   color: #666;
   line-height: 1.5;
-  height: 105px;
 }
 
 /* ページ遷移 */
