@@ -173,3 +173,23 @@ class UserOffers(BaseDB):
                 
         except Exception as e:
             return {"status": "ng", "error": str(e)}
+
+    def get_offer_applications_count(self, offer_id: str):
+        """
+        特定のオファーの応募者数を取得
+        """
+        try:
+            with self.engine.connect() as conn:
+                stmt = select([
+                    self.user_offers.c.offer_id,
+                    self.user_offers.c.user_id
+                ]).where(
+                    (self.user_offers.c.offer_id == offer_id) &
+                    (self.user_offers.c.wish == True)
+                )
+                
+                result = conn.execute(stmt).mappings().all()
+                return {"status": "ok", "count": len(result)}
+                
+        except Exception as e:
+            return {"status": "ng", "error": str(e)}

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import {
   Box,
   Container,
@@ -13,7 +13,9 @@ import {
   LinearProgress,
   Avatar,
   Paper,
-  IconButton
+  IconButton,
+  CircularProgress,
+  Alert
 } from '@mui/material';
 import {
   ArrowBack,
@@ -26,28 +28,178 @@ import {
   LocationOn,
   AttachMoney
 } from '@mui/icons-material';
+import { useAuth } from '../contexts/AuthContext';
+import { API_ENDPOINTS } from '../config/api';
 
 function Offerdetail() {
   const navigate = useNavigate();
-  const [status, setStatus] = useState('recruiting');
+  const { offer_id } = useParams();
+  const { token, user } = useAuth();
   
-  // サンプルオファーデータ
-  const offerData = {
-    id: 1,
-    title: "フロントエンドエンジニア募集",
-    company: "株式会社テックイノベーション",
-    description: "React.jsを使用したWebアプリケーション開発に携わっていただきます。",
-    requirements: "React.js, TypeScript, HTML/CSS",
-    salary: "月給 300,000円〜500,000円",
-    location: "東京都渋谷区",
-    employmentType: "正社員",
-    deadline: "2024年8月31日",
-    applications: 12,
-    capacity: 20,
-    status: "募集中"
-  };
+  const [offerData, setOfferData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [applicationsData, setApplicationsData] = useState({
+    applications: 0,
+    capacity: 0
+  });
 
-  const progressPercentage = (offerData.applications / offerData.capacity) * 100;
+  // オファーデータを取得
+  useEffect(() => {
+    const fetchOfferData = async () => {
+      try {
+        setLoading(true);
+        
+        if (!token) {
+          setError('認証が必要です。ログインしてください。');
+          return;
+        }
+
+        if (!user?.enterprise_id) {
+          setError('企業アカウントが必要です。');
+          return;
+        }
+
+        console.log('Fetching offer data for ID:', offer_id);
+        
+        const response = await fetch(API_ENDPOINTS.OFFERS_DETAIL(offer_id), {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+
+        console.log('API Response status:', response.status);
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error('API Error:', errorData);
+          throw new Error(errorData.detail || 'オファーの取得に失敗しました');
+        }
+
+        const data = await response.json();
+        console.log('Fetched offer data:', data);
+        
+        // バックエンドのデータ構造をフロントエンド用に変換
+        const transformedData = {
+          id: data.offer_id || offer_id,
+          title: data.offer_title,
+          company: data.enterprise_name,
+          description: data.offer_content,
+          requirements: data.skills ? data.skills.join(', ') : '',
+          salary: data.salary || '応相談',
+          location: '勤務地情報なし',
+          employmentType: '雇用形態情報なし',
+          deadline: data.deadline ? new Date(data.deadline).toLocaleDateString('ja-JP') : '未設定',
+          applications: 0, // 応募者数は別途取得が必要
+          capacity: data.capacity || 1,
+          status: "募集中",
+          rank: data.rank
+        };
+        
+        setOfferData(transformedData);
+        
+        // 応募者数を取得
+        try {
+          const applicationsResponse = await fetch(API_ENDPOINTS.OFFER_APPLICATIONS_COUNT(offer_id), {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          });
+
+          if (applicationsResponse.ok) {
+            const applicationsData = await applicationsResponse.json();
+            console.log('Applications count data:', applicationsData);
+            
+            setApplicationsData({
+              applications: applicationsData.count || 0,
+              capacity: transformedData.capacity
+            });
+          } else {
+            console.warn('Failed to fetch applications count');
+            setApplicationsData({
+              applications: 0,
+              capacity: transformedData.capacity
+            });
+          }
+        } catch (applicationsErr) {
+          console.warn('Error fetching applications count:', applicationsErr);
+          setApplicationsData({
+            applications: 0,
+            capacity: transformedData.capacity
+          });
+        }
+        
+      } catch (err) {
+        console.error('Fetch error:', err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (offer_id && token && user) {
+      fetchOfferData();
+    }
+  }, [offer_id, token, user]);
+
+  const progressPercentage = applicationsData.capacity > 0 
+    ? (applicationsData.applications / applicationsData.capacity) * 100 
+    : 0;
+
+  // ローディング状態
+  if (loading) {
+    return (
+      <Box sx={{ 
+        display: 'flex', 
+        flexDirection: 'column',
+        alignItems: 'center', 
+        justifyContent: 'center', 
+        minHeight: '100vh',
+        gap: 2
+      }}>
+        <CircularProgress size={60} />
+        <Typography variant="h6" color="textSecondary">
+          オファー詳細を読み込み中...
+        </Typography>
+      </Box>
+    );
+  }
+
+  // エラー状態
+  if (error) {
+    return (
+      <Box sx={{ p: 3 }}>
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {error}
+        </Alert>
+        <Button 
+          variant="contained" 
+          onClick={() => navigate('/enterprise/offer')}
+        >
+          オファー一覧に戻る
+        </Button>
+      </Box>
+    );
+  }
+
+  // データが存在しない場合
+  if (!offerData) {
+    return (
+      <Box sx={{ p: 3 }}>
+        <Alert severity="warning" sx={{ mb: 2 }}>
+          オファーが見つかりません
+        </Alert>
+        <Button 
+          variant="contained" 
+          onClick={() => navigate('/enterprise/offer')}
+        >
+          オファー一覧に戻る
+        </Button>
+      </Box>
+    );
+  }
 
   return (
     <Box 

@@ -1,7 +1,8 @@
-from fastapi import APIRouter, Request, FastAPI, File, UploadFile, HTTPException
+from fastapi import APIRouter, Request, FastAPI, File, UploadFile, HTTPException, Depends
 from fastapi.responses import StreamingResponse
 from modules.db.users import Users
 from modules.db.user_offers import UserOffers
+from auth.token import get_current_enterprise_user, User
 
 router = APIRouter()
 
@@ -157,5 +158,19 @@ async def get_user_favorites(user_id: str):
     try:
         favorites = UserOffers().get_user_favorites(user_id)
         return {"status": "success", "favorites": favorites}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/offer/{offer_id}/applications/count")
+async def get_offer_applications_count(offer_id: str, current_user: User = Depends(get_current_enterprise_user)):
+    """
+    特定のオファーの応募者数を取得するエンドポイント（企業ユーザー専用）
+    """
+    try:
+        result = UserOffers().get_offer_applications_count(offer_id)
+        if result["status"] == "ok":
+            return {"status": "success", "count": result["count"]}
+        else:
+            raise HTTPException(status_code=500, detail=result["error"])
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
