@@ -7,6 +7,10 @@
     font-family: 'Roboto', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 }
 
+ul.user-menu {
+    display: block;
+}
+
 .sidebar-drawer .MuiDrawer-paper {
     width: 240px;
     box-sizing: border-box;

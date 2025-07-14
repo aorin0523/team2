@@ -22,30 +22,35 @@ export const AuthProvider = ({ children }) => {
     setToken(null);
     setUser(null);
   }, []);
-
   // ユーザー情報を取得する関数
   const fetchUserInfo = useCallback(async () => {
     if (!token) {
+      console.log('AuthContext: No token available for fetchUserInfo');
       setLoading(false);
       return;
     }
 
     try {
+      console.log('AuthContext: Fetching user info with token:', token?.substring(0, 20) + '...');
       const response = await fetch('http://localhost:8000/api/v1/auth/me', {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
       });
 
+      console.log('AuthContext: User info response status:', response.status);
+
       if (response.ok) {
         const userData = await response.json();
+        console.log('AuthContext: User data received:', userData);
         setUser(userData);
       } else {
+        console.error('AuthContext: Invalid token, response status:', response.status);
         // トークンが無効な場合はクリア
         logout();
       }
     } catch (error) {
-      console.error('Failed to fetch user info:', error);
+      console.error('AuthContext: Failed to fetch user info:', error);
       logout();
     } finally {
       setLoading(false);

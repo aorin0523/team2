@@ -33,6 +33,16 @@ async def read_all_offers():
     return Offers().read_all_offers()
 
 
+# 企業ユーザー専用エンドポイント - /{offer_id}より前に配置
+@router.get("/my")
+async def get_my_offers(current_user: User = Depends(get_current_enterprise_user)):
+    """
+    ログイン中の企業ユーザーが作成したオファー一覧を取得
+    """
+    offers_db = Offers()
+    return offers_db.get_offers_by_enterprise(current_user.enterprise_id)
+
+
 @router.get("/{offer_id}")
 async def read_offer(offer_id: str):
     print("offer")
@@ -63,15 +73,6 @@ async def update_offer(offer_id: str):
     オファーを更新するエンドポイント
     """
     return Offers().delete_offer(offer_id)
-
-# 企業ユーザー専用エンドポイント
-@router.get("/my")
-async def get_my_offers(current_user: User = Depends(get_current_enterprise_user)):
-    """
-    ログイン中の企業ユーザーが作成したオファー一覧を取得
-    """
-    offers_db = Offers()
-    return offers_db.get_offers_by_enterprise(current_user.enterprise_id)
 
 @router.post("/my")
 async def create_my_offer(data: dict, current_user: User = Depends(get_current_enterprise_user)):

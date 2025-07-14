@@ -262,6 +262,7 @@ const Side = () => {
 
         {/* ユーザーメニュー */}
         <Menu
+          className="user-menu"
           anchorEl={anchorEl}
           open={Boolean(anchorEl)}
           onClose={handleMenuClose}
@@ -272,6 +273,9 @@ const Side = () => {
           transformOrigin={{
             vertical: 'bottom',
             horizontal: 'right',
+          }}
+          sx={{
+            display: 'block'
           }}
         >
           <MenuItem onClick={handleProfile}>
