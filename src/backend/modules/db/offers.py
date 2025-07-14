@@ -105,8 +105,7 @@ class Offers(BaseDB):
                     offer_dict[offer_id]["skills"].append(row["skill_name"])
 
             return list(offer_dict.values())[0]
-    
-    def create_offer(self, enterprise_id, title, content, rank, skills, deadline, salary=None, capacity=None):
+    def create_offer(self, enterprise_id, title, content, rank, skills, salary=None, capacity=None, deadline=None):
         """
         オファーを追加する
         """
@@ -252,3 +251,20 @@ class Offers(BaseDB):
                     offer_dict[offer_id]["skills"].append(row["skill_name"])
 
             return list(offer_dict.values())
+    
+    def get_all_skills(self):
+        """
+        全スキル一覧を取得
+        """
+        try:
+            with self.engine.connect() as conn:
+                stmt = select(
+                    self.skills.c.id.label("skill_id"),
+                    self.skills.c.name.label("skill_name")
+                ).order_by(self.skills.c.name)
+                
+                result = conn.execute(stmt).mappings().all()
+                return {"status": "ok", "skills": list(result)}
+                
+        except Exception as e:
+            return {"status": "ng", "error": str(e)}

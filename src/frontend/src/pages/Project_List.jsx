@@ -313,7 +313,7 @@ function Project_List() {
             }}
             onClick={() => handleOfferClick(job.offer_id)}
           >
-            <div className={`card${job.id}`}>
+            <div className={`cards`}>
               <h2>{job.title}</h2>
               <img 
                 src={job.image} 

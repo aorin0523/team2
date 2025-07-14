@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Container,
@@ -18,7 +18,10 @@ import {
   IconButton,
   Card,
   CardMedia,
-  CircularProgress
+  CircularProgress,
+  OutlinedInput,
+  Checkbox,
+  ListItemText
 } from '@mui/material';
 import {
   Business,
@@ -45,8 +48,13 @@ function CreateOffer() {
     rank: 1,
     salary: '',
     capacity: 1,
-    deadline: ''
+    deadline: '',
+    skills: []  // スキル配列を追加
   });
+
+  // スキル関連のstate
+  const [availableSkills, setAvailableSkills] = useState([]);
+  const [skillsLoading, setSkillsLoading] = useState(true);
 
   // 画像アップロード関連のstate
   const [uploadedImage, setUploadedImage] = useState(null);
@@ -56,6 +64,31 @@ function CreateOffer() {
 
   // バリデーションエラー
   const [validationErrors, setValidationErrors] = useState({});
+
+  // スキル一覧を取得
+  useEffect(() => {
+    const fetchSkills = async () => {
+      try {
+        setSkillsLoading(true);
+        const response = await fetch(API_ENDPOINTS.OFFERS_SKILLS);
+        
+        if (response.ok) {
+          const data = await response.json();
+          setAvailableSkills(data.skills || []);
+        } else {
+          console.error('Failed to fetch skills');
+          setAvailableSkills([]);
+        }
+      } catch (err) {
+        console.error('Error fetching skills:', err);
+        setAvailableSkills([]);
+      } finally {
+        setSkillsLoading(false);
+      }
+    };
+
+    fetchSkills();
+  }, []);
 
   // ランクの表示名マッピング
   const rankOptions = [
@@ -232,7 +265,7 @@ function CreateOffer() {
         title: formData.title.trim(),
         content: formData.content.trim(),
         rank: formData.rank,
-        skills: [], // 空のスキルリストを明示的に追加
+        skills: formData.skills, // 選択されたスキルIDの配列
         salary: formData.salary.trim() || null,
         capacity: formData.capacity || null,
         deadline: formData.deadline || null
@@ -573,6 +606,65 @@ function CreateOffer() {
                           }
                         }}
                       />
+                    </Grid>
+
+                    {/* 必要スキル */}
+                    <Grid item xs={12} md={6}>
+                      <FormControl fullWidth error={!!validationErrors.skills}>
+                        <InputLabel sx={{ fontWeight: 'bold' }}>必要スキル</InputLabel>
+                        <Select
+                          multiple
+                          value={formData.skills}
+                          onChange={(e) => handleInputChange('skills', e.target.value)}
+                          input={<OutlinedInput label="必要スキル" />}
+                          renderValue={(selected) => (
+                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                              {selected.map((skillId) => {
+                                const skill = availableSkills.find(s => s.skill_id === skillId);
+                                return (
+                                  <Chip
+                                    key={skillId}
+                                    label={skill?.skill_name || skillId}
+                                    size="small"
+                                    color="primary"
+                                    variant="outlined"
+                                  />
+                                );
+                              })}
+                            </Box>
+                          )}
+                          sx={{ 
+                            borderRadius: 2,
+                            background: 'white'
+                          }}
+                          disabled={skillsLoading}
+                        >
+                          {skillsLoading ? (
+                            <MenuItem disabled>
+                              <CircularProgress size={20} sx={{ mr: 1 }} />
+                              スキルを読み込み中...
+                            </MenuItem>
+                          ) : (
+                            availableSkills.map((skill) => (
+                              <MenuItem key={skill.skill_id} value={skill.skill_id}>
+                                <Checkbox 
+                                  checked={formData.skills.indexOf(skill.skill_id) > -1}
+                                  sx={{ p: 0.5 }}
+                                />
+                                <ListItemText 
+                                  primary={skill.skill_name}
+                                  sx={{ ml: 1 }}
+                                />
+                              </MenuItem>
+                            ))
+                          )}
+                        </Select>
+                        {validationErrors.skills && (
+                          <Typography variant="caption" color="error" sx={{ mt: 1, ml: 2 }}>
+                            {validationErrors.skills}
+                          </Typography>
+                        )}
+                      </FormControl>
                     </Grid>
                   </Grid>
                 </Box>
