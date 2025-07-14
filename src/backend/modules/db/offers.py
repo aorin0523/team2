@@ -22,6 +22,7 @@ class Offers(BaseDB):
                 self.enterprises.c.name.label("enterprise_name"),
                 self.offers.c.title.label("offer_title"),
                 self.offers.c.content.label("offer_content"),
+                self.offers.c.deadline.label("deadline"),
                 self.offers.c.salary.label("salary"),
                 self.offers.c.capacity.label("capacity"),
                 self.ranks.c.name.label("rank"),
@@ -37,12 +38,12 @@ class Offers(BaseDB):
             
             for row in result:
                 offer_id = row["offer_id"]
-                if offer_id not in offer_dict:
-                    offer_dict[offer_id] = {
+                if offer_id not in offer_dict:                    offer_dict[offer_id] = {
                         "offer_id": offer_id,
                         "enterprise_name": row["enterprise_name"],
                         "offer_title": row["offer_title"],
                         "offer_content": row["offer_content"],
+                        "deadline": row["deadline"],
                         "salary": row["salary"],
                         "capacity": row["capacity"],
                         "rank": row["rank"],
@@ -73,10 +74,12 @@ class Offers(BaseDB):
                 self.enterprises.c.name.label("enterprise_name"),
                 self.offers.c.title.label("offer_title"),
                 self.offers.c.content.label("offer_content"),
+                self.offers.c.deadline.label("deadline"),
                 self.offers.c.salary.label("salary"),
                 self.offers.c.capacity.label("capacity"),
                 self.ranks.c.name.label("rank"),
-                self.skills.c.name.label("skill_name")            ).select_from(j4).where(self.offers.c.id == id)
+                self.skills.c.name.label("skill_name")
+            ).select_from(j4).where(self.offers.c.id == id)
 
             result = conn.execute(stmt).mappings().all()
 
@@ -87,16 +90,17 @@ class Offers(BaseDB):
 
             for row in result:
                 offer_id = row["offer_id"]
-                if offer_id not in offer_dict:
-                    offer_dict[offer_id] = {
+                if offer_id not in offer_dict:                    offer_dict[offer_id] = {
                         "enterprise_name": row["enterprise_name"],
                         "offer_title": row["offer_title"],
                         "offer_content": row["offer_content"],
+                        "deadline": row["deadline"],
                         "salary": row["salary"],
                         "capacity": row["capacity"],
                         "rank": row["rank"],
                         "skills": []
-                    }                # skill追加
+                    }
+                # skill追加
                 if row["skill_name"] and row["skill_name"] not in offer_dict[offer_id]["skills"]:
                     offer_dict[offer_id]["skills"].append(row["skill_name"])
 

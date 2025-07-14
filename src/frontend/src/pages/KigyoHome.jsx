@@ -80,7 +80,7 @@ function App() {
                 }
               }}
             >
-              <CardContent sx={{ p: 4, textAlign: 'center', height: '100%', display: 'flex', flexDirection: 'column' }}>
+              <CardContent sx={{ p: 4, textAlign: 'center', height: '50%', display: 'flex', flexDirection: 'column' }}>
                 <Box sx={{ mb: 3 }}>
                   <Box 
                     sx={{                      width: 120,
@@ -157,7 +157,7 @@ function App() {
                 }
               }}
             >
-              <CardContent sx={{ p: 4, textAlign: 'center', height: '100%', display: 'flex', flexDirection: 'column' }}>
+              <CardContent sx={{ p: 4, textAlign: 'center', height: '50%', display: 'flex', flexDirection: 'column' }}>
                 <Box sx={{ mb: 3 }}>
                   <Box 
                     sx={{ 
