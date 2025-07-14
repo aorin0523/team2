@@ -26,6 +26,11 @@ class UserUpdate(BaseModel):
     password: str = None
     rank: int = None
 
+# プロフィール編集用のモデル（ランクとスキルのみ変更可能）
+class UserProfileUpdate(BaseModel):
+    rank: int
+    skills: list[str]  # スキル名のリスト
+
 class UserOfferApply(BaseModel):
     user_id: str
     offer_id: str
@@ -88,6 +93,62 @@ async def update_user(user_id: str, data: UserUpdate):
         password=data.password,
         rank=data.rank
     )
+
+@router.put("/{user_id}/profile")
+async def update_user_profile(user_id: str, data: UserProfileUpdate):
+    """
+    ユーザープロフィール（ランクとスキル）を更新するエンドポイント
+    """
+    try:
+        print(f"DEBUG: Updating profile for user_id: {user_id}")
+        print(f"DEBUG: Data received: rank={data.rank}, skills={data.skills}")
+        
+        result = Users().update_user_profile(
+            user_id=user_id,
+            rank=data.rank,
+            skills=data.skills
+        )
+        
+        print(f"DEBUG: Result from Users().update_user_profile: {result}")
+        
+        if result["status"] == "ok":
+            return {"status": "success", "message": "プロフィールを更新しました"}
+        else:
+            print(f"ERROR: Database operation failed: {result}")
+            raise HTTPException(status_code=400, detail=result["error"])
+    except Exception as e:
+        print(f"ERROR: Exception in update_user_profile: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/{user_id}/profile")
+async def get_user_profile(user_id: str):
+    """
+    ユーザープロフィール（基本情報 + スキル）を取得するエンドポイント
+    """
+    try:
+        result = Users().get_user_profile(user_id)
+        if result["status"] == "ok":
+            return {"status": "success", "profile": result["profile"]}
+        else:
+            raise HTTPException(status_code=404, detail=result["error"])
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/skills/all")
+async def get_all_skills():
+    """
+    全スキル一覧を取得するエンドポイント
+    """
+    try:
+        result = Users().get_all_skills()
+        if result["status"] == "ok":
+            return {"status": "success", "skills": result["skills"]}
+        else:
+            raise HTTPException(status_code=500, detail=result["error"])
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @router.delete("/{user_id}")
 async def delete_user(user_id: str):

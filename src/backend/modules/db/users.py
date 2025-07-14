@@ -226,3 +226,119 @@ class Users(BaseDB):
                 return {"status": "ok"}
         except Exception as e:
             return {"status": "ng", "error": str(e)}
+
+    def get_user_profile(self, user_id):
+        """
+        ユーザープロフィール（基本情報 + スキル）を取得
+        """
+        try:
+            with self.engine.connect() as conn:
+                # ユーザー基本情報を取得
+                user_stmt = select(
+                    self.users.c.id,
+                    self.users.c.name,
+                    self.users.c.email,
+                    self.users.c.rank
+                ).where(self.users.c.id == user_id)
+                
+                user_result = conn.execute(user_stmt).mappings().first()
+                if not user_result:
+                    return {"status": "ng", "error": "ユーザーが見つかりません"}
+                
+                user_data = dict(user_result)
+                
+                # ユーザーのスキルを取得
+                skills_stmt = select(
+                    self.skills.c.name
+                ).select_from(
+                    self.user_skills.join(
+                        self.skills,
+                        self.user_skills.c.skill_id == self.skills.c.id
+                    )
+                ).where(self.user_skills.c.user_id == user_id)
+                
+                skills_result = conn.execute(skills_stmt).mappings().all()
+                user_skills = [dict(skill)["name"] for skill in skills_result]
+                
+                user_data["skills"] = user_skills
+                
+                return {"status": "ok", "profile": user_data}
+        except Exception as e:
+            return {"status": "ng", "error": str(e)}
+
+    def update_user_profile(self, user_id, rank, skills):
+        """
+        ユーザープロフィール（ランクとスキル）を更新
+        """
+        try:
+            with self.engine.connect() as conn:
+                # トランザクション開始
+                trans = conn.begin()
+                
+                try:
+                    # 1. ランクを更新
+                    rank_update = self.users.update().where(
+                        self.users.c.id == user_id
+                    ).values(rank=rank)
+                    conn.execute(rank_update)
+                    
+                    # 2. 既存のユーザースキルを削除
+                    delete_skills = self.user_skills.delete().where(
+                        self.user_skills.c.user_id == user_id
+                    )
+                    conn.execute(delete_skills)
+                    
+                    # 3. 新しいスキルを追加
+                    if skills:
+                        # スキル名からスキルIDを取得
+                        skill_ids_stmt = select(
+                            self.skills.c.id,
+                            self.skills.c.name
+                        ).where(self.skills.c.name.in_(skills))
+                        
+                        skill_ids_result = conn.execute(skill_ids_stmt).mappings().all()
+                        skill_ids_dict = {skill["name"]: skill["id"] for skill in skill_ids_result}
+                        
+                        # 存在しないスキルをチェック
+                        missing_skills = set(skills) - set(skill_ids_dict.keys())
+                        if missing_skills:
+                            trans.rollback()
+                            return {"status": "ng", "error": f"存在しないスキル: {', '.join(missing_skills)}"}
+                        
+                        # UserSkillsテーブルに挿入
+                        user_skills_data = [
+                            {"user_id": user_id, "skill_id": skill_ids_dict[skill_name]}
+                            for skill_name in skills
+                        ]
+                        
+                        insert_skills = self.user_skills.insert()
+                        conn.execute(insert_skills, user_skills_data)
+                    
+                    # トランザクションをコミット
+                    trans.commit()
+                    return {"status": "ok"}
+                    
+                except Exception as e:
+                    trans.rollback()
+                    raise e
+                    
+        except Exception as e:
+            return {"status": "ng", "error": str(e)}
+
+    def get_all_skills(self):
+        """
+        全スキル一覧を取得
+        """
+        try:
+            with self.engine.connect() as conn:
+                stmt = select(
+                    self.skills.c.id,
+                    self.skills.c.name
+                ).order_by(self.skills.c.name)
+                
+                result = conn.execute(stmt).mappings().all()
+                skills = [dict(skill) for skill in result]
+                
+                return {"status": "ok", "skills": skills}
+        except Exception as e:
+            return {"status": "ng", "error": str(e)}
