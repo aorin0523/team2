@@ -66,13 +66,13 @@ const SignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
 
     setLoading(true);
-    
+
     try {
       const userData = {
         name: formData.name,
@@ -90,189 +90,283 @@ const SignUp = () => {
   };
 
   return (
-    <Container component="main" maxWidth="md">
-      <Box
-        sx={{
-          marginTop: 6,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
-        <Paper 
-          elevation={6} 
-          sx={{ 
-            padding: 5, 
-            width: '100%',
-            borderRadius: 3,
-            background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+    <Box
+      sx={{
+        minHeight: '100vh',
+        backgroundColor: '#f8f9fa',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        paddingTop: '60px',
+        paddingBottom: '60px'
+      }}
+    >
+      {/* paizaロゴ */}
+      <Box sx={{ marginBottom: '40px' }}>
+        <Typography
+          sx={{
+            fontSize: '32px',
+            fontWeight: 'bold',
+            color: '#333',
+            fontFamily: 'Arial, sans-serif'
           }}
         >
-          <Typography component="h1" variant="h4" align="center" gutterBottom sx={{ color: '#1976d2', fontWeight: 'bold' }}>
-            一般ユーザー登録
-          </Typography>
-          
-          <Typography variant="body1" align="center" color="text.secondary" sx={{ mb: 4 }}>
-            アカウントを作成して、あなたにぴったりの求人を見つけましょう
-          </Typography>
-          
-          {errors.submit && (
-            <Alert severity="error" sx={{ mb: 3, borderRadius: 2 }}>
-              {errors.submit}
-            </Alert>
-          )}
+          paiza
+        </Typography>
+      </Box>
 
-          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
-            <Box
+      {/* メインフォーム */}
+      <Box
+        sx={{
+          width: '400px',
+          backgroundColor: 'white',
+          border: '2px solid #00a0dc',
+          borderRadius: '8px',
+          padding: '40px',
+          boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
+        }}
+      >
+        <Typography
+          sx={{
+            fontSize: '18px',
+            fontWeight: 'bold',
+            textAlign: 'center',
+            marginBottom: '30px',
+            color: '#333'
+          }}
+        >
+          新規ユーザー登録
+        </Typography>
+
+        {errors.submit && (
+          <Alert severity="error" sx={{ mb: 3 }}>
+            {errors.submit}
+          </Alert>
+        )}
+
+        <Box component="form" onSubmit={handleSubmit}>
+          <Box sx={{ marginBottom: '20px' }}>
+            <Typography
               sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 3,
-                backgroundColor: 'white',
-                p: 4,
-                borderRadius: 3,
-                boxShadow: '0 2px 12px rgba(0,0,0,0.08)',
+                fontSize: '14px',
+                color: '#333',
+                marginBottom: '8px',
+                fontWeight: '500'
               }}
             >
-              <TextField
-                required
-                fullWidth
-                id="name"
-                label="👤 氏名"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                error={!!errors.name}
-                helperText={errors.name}
-                autoComplete="name"
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    borderRadius: 2,
-                    backgroundColor: '#f8f9fa',
-                  },
-                }}
-              />
-              
-              <TextField
-                required
-                fullWidth
-                id="email"
-                label="📧 メールアドレス"
-                name="email"
-                type="email"
-                value={formData.email}
-                onChange={handleChange}
-                error={!!errors.email}
-                helperText={errors.email}
-                autoComplete="email"
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    borderRadius: 2,
-                    backgroundColor: '#f8f9fa',
-                  },
-                }}
-              />
-
-              <TextField
-                required
-                fullWidth
-                name="password"
-                label="🔒 パスワード"
-                type="password"
-                id="password"
-                value={formData.password}
-                onChange={handleChange}
-                error={!!errors.password}
-                helperText={errors.password}
-                autoComplete="new-password"
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    borderRadius: 2,
-                    backgroundColor: '#f8f9fa',
-                  },
-                }}
-              />
-
-              <TextField
-                required
-                fullWidth
-                name="confirmPassword"
-                label="🔒 パスワード確認"
-                type="password"
-                id="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                error={!!errors.confirmPassword}
-                helperText={errors.confirmPassword}
-                autoComplete="new-password"
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    borderRadius: 2,
-                    backgroundColor: '#f8f9fa',
-                  },
-                }}
-              />
-            </Box>
-
-            <Button
-              type="submit"
+              氏名
+            </Typography>
+            <TextField
+              required
               fullWidth
-              variant="contained"
-              disabled={loading}
-              sx={{ 
-                mt: 4, 
-                mb: 2,
-                py: 1.5,
-                fontSize: '1.1rem',
-                fontWeight: 'bold',
-                borderRadius: 3,
-                background: 'linear-gradient(45deg, #424242 30%, #757575 90%)',
-                boxShadow: '0 3px 15px rgba(66, 66, 66, 0.3)',
-                '&:hover': {
-                  background: 'linear-gradient(45deg, #212121 30%, #424242 90%)',
-                  boxShadow: '0 5px 20px rgba(66, 66, 66, 0.4)',
+              id="name"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              error={!!errors.name}
+              helperText={errors.name}
+              placeholder="paiza太郎"
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  fontSize: '14px',
+                  '& fieldset': {
+                    borderColor: '#ddd',
+                  },
+                  '&:hover fieldset': {
+                    borderColor: '#00a0dc',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#00a0dc',
+                  }
                 },
-                '&:disabled': {
-                  background: '#e0e0e0',
-                  color: '#9e9e9e',
+                '& .MuiInputBase-input': {
+                  padding: '12px 14px'
                 }
               }}
-            >
-              {loading ? '登録中...' : '🎯 アカウント作成'}
-            </Button>
-            
-            <Box sx={{ textAlign: 'center', mt: 3 }}>
-              <Typography variant="body2" sx={{ mb: 1 }}>
-                すでにアカウントをお持ちの方は{' '}
-                <Link 
-                  to="/signin" 
-                  style={{ 
-                    textDecoration: 'none', 
-                    color: '#1976d2',
-                    fontWeight: 'bold'
-                  }}
-                >
-                  こちらからログイン
-                </Link>
-              </Typography>
-              
-              <Typography variant="body2" color="text.secondary">
-                企業ユーザーの方は{' '}
-                <Link 
-                  to="/enterprise/signup" 
-                  style={{ 
-                    textDecoration: 'none', 
-                    color: '#666'
-                  }}
-                >
-                  企業ユーザー登録
-                </Link>
-              </Typography>
-            </Box>
+            />
           </Box>
-        </Paper>
+
+          <Box sx={{ marginBottom: '20px' }}>
+            <Typography
+              sx={{
+                fontSize: '14px',
+                color: '#333',
+                marginBottom: '8px',
+                fontWeight: '500'
+              }}
+            >
+              メールアドレス
+            </Typography>
+            <TextField
+              required
+              fullWidth
+              id="email"
+              name="email"
+              type="email"
+              value={formData.email}
+              onChange={handleChange}
+              error={!!errors.email}
+              helperText={errors.email}
+              placeholder="例）user@example.com"
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  fontSize: '14px',
+                  '& fieldset': {
+                    borderColor: '#ddd',
+                  },
+                  '&:hover fieldset': {
+                    borderColor: '#00a0dc',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#00a0dc',
+                  }
+                },
+                '& .MuiInputBase-input': {
+                  padding: '12px 14px'
+                }
+              }}
+            />
+          </Box>
+
+          <Box sx={{ marginBottom: '20px' }}>
+            <Typography
+              sx={{
+                fontSize: '14px',
+                color: '#333',
+                marginBottom: '8px',
+                fontWeight: '500'
+              }}
+            >
+              パスワード
+            </Typography>
+            <TextField
+              required
+              fullWidth
+              name="password"
+              type="password"
+              id="password"
+              value={formData.password}
+              onChange={handleChange}
+              error={!!errors.password}
+              helperText={errors.password}
+              placeholder="例）英数字記号含む8文字以上"
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  fontSize: '14px',
+                  '& fieldset': {
+                    borderColor: '#ddd',
+                  },
+                  '&:hover fieldset': {
+                    borderColor: '#00a0dc',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#00a0dc',
+                  }
+                },
+                '& .MuiInputBase-input': {
+                  padding: '12px 14px'
+                }
+              }}
+            />
+          </Box>
+
+          <Box sx={{ marginBottom: '30px' }}>
+            <Typography
+              sx={{
+                fontSize: '14px',
+                color: '#333',
+                marginBottom: '8px',
+                fontWeight: '500'
+              }}
+            >
+              パスワード確認
+            </Typography>
+            <TextField
+              required
+              fullWidth
+              name="confirmPassword"
+              type="password"
+              id="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              error={!!errors.confirmPassword}
+              helperText={errors.confirmPassword}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  fontSize: '14px',
+                  '& fieldset': {
+                    borderColor: '#ddd',
+                  },
+                  '&:hover fieldset': {
+                    borderColor: '#00a0dc',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#00a0dc',
+                  }
+                },
+                '& .MuiInputBase-input': {
+                  padding: '12px 14px'
+                }
+              }}
+            />
+          </Box>
+
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            disabled={loading}
+            sx={{
+              backgroundColor: '#00a0dc',
+              color: 'white',
+              fontSize: '16px',
+              fontWeight: 'bold',
+              padding: '12px',
+              borderRadius: '4px',
+              textTransform: 'none',
+              '&:hover': {
+                backgroundColor: '#0088c7'
+              },
+              '&:disabled': {
+                backgroundColor: '#ccc',
+                color: '#666'
+              }
+            }}
+          >
+            {loading ? '登録中...' : 'アカウント作成'}
+          </Button>
+
+          <Box sx={{ textAlign: 'center', marginTop: '20px' }}>
+            <Typography variant="body2" sx={{ color: '#666', fontSize: '14px' }}>
+              すでにアカウントをお持ちの方は{' '}
+              <Link
+                to="/signin"
+                style={{
+                  textDecoration: 'none',
+                  color: '#00a0dc',
+                  fontWeight: 'bold'
+                }}
+              >
+                こちらからログイン
+              </Link>
+            </Typography>
+
+            <Typography variant="body2" sx={{ color: '#666', fontSize: '14px', marginTop: '8px' }}>
+              企業ユーザーの方は{' '}
+              <Link
+                to="/enterprise/signup"
+                style={{
+                  textDecoration: 'none',
+                  color: '#666'
+                }}
+              >
+                企業ユーザー登録
+              </Link>
+            </Typography>
+          </Box>
+        </Box>
       </Box>
-    </Container>
+    </Box>
   );
 };
 
