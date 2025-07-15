@@ -31,6 +31,7 @@ export const API_ENDPOINTS = {
     if (favoritesOnly) params.append('favorites_only', 'true');
     return `${API_BASE_URL}/api/v1/offers/all?${params.toString()}`;
   },
+  OFFERS_SKILL_MATCHED: (userId) => `${API_BASE_URL}/api/v1/offers/skill-matched?user_id=${userId}`,
   OFFERS_MY_LIST: `${API_BASE_URL}/api/v1/offers/my`,
   OFFERS_MY_CREATE: `${API_BASE_URL}/api/v1/offers/my`,
   OFFERS_DETAIL: (id) => `${API_BASE_URL}/api/v1/offers/${id}`,

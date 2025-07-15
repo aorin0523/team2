@@ -412,3 +412,94 @@ class Offers(BaseDB):
                 "has_next": page < total_pages,
                 "has_prev": page > 1
             }
+    
+    def get_skill_matched_offers(self, user_id: str):
+        """
+        ユーザーのスキルにマッチするオファーを取得
+        """
+        try:
+            with self.engine.connect() as conn:
+                # Step 1: ユーザーのスキルIDを取得
+                user_skills_stmt = select(
+                    self.user_skills.c.skill_id
+                ).where(self.user_skills.c.user_id == user_id)
+                
+                user_skills_result = conn.execute(user_skills_stmt).mappings().all()
+                
+                if not user_skills_result:
+                    # ユーザーにスキルが設定されていない場合は空の結果を返す
+                    return {"status": "ok", "offers": []}
+                
+                user_skill_ids = [row["skill_id"] for row in user_skills_result]
+                
+                # Step 2: マッチするオファーIDを取得
+                matching_offers_stmt = select(
+                    self.offer_skills.c.offer_id
+                ).where(self.offer_skills.c.skill_id.in_(user_skill_ids)).distinct()
+                
+                matching_offers_result = conn.execute(matching_offers_stmt).mappings().all()
+                
+                if not matching_offers_result:
+                    # マッチするオファーがない場合
+                    return {"status": "ok", "offers": []}
+                
+                matching_offer_ids = [row["offer_id"] for row in matching_offers_result]
+                
+                # Step 3: マッチしたオファーの詳細情報を取得
+                j1 = outerjoin(self.offers, self.enterprises, self.offers.c.enterprise_id == self.enterprises.c.id)
+                j2 = outerjoin(j1, self.ranks, self.offers.c.rank == self.ranks.c.id)
+                
+                offers_stmt = select(
+                    self.offers.c.id.label("offer_id"),
+                    self.enterprises.c.name.label("enterprise_name"),
+                    self.offers.c.title.label("offer_title"),
+                    self.offers.c.content.label("offer_content"),
+                    self.offers.c.deadline.label("deadline"),
+                    self.offers.c.salary.label("salary"),
+                    self.offers.c.capacity.label("capacity"),
+                    self.ranks.c.name.label("rank")
+                ).select_from(j2).where(self.offers.c.id.in_(matching_offer_ids))
+                
+                offers_result = conn.execute(offers_stmt).mappings().all()
+                
+                # Step 4: 各オファーのスキル情報を取得
+                skills_stmt = select(
+                    self.offer_skills.c.offer_id,
+                    self.skills.c.name.label("skill_name")
+                ).select_from(
+                    self.offer_skills.join(
+                        self.skills, self.offer_skills.c.skill_id == self.skills.c.id
+                    )
+                ).where(self.offer_skills.c.offer_id.in_(matching_offer_ids))
+                
+                skills_result = conn.execute(skills_stmt).mappings().all()
+                
+                # スキル情報をオファーIDごとにグループ化
+                skills_by_offer = {}
+                for skill_row in skills_result:
+                    offer_id = skill_row["offer_id"]
+                    if offer_id not in skills_by_offer:
+                        skills_by_offer[offer_id] = []
+                    skills_by_offer[offer_id].append(skill_row["skill_name"])
+                
+                # Step 5: 結果を整理
+                offers_list = []
+                for row in offers_result:
+                    offer_id = row["offer_id"]
+                    offer_data = {
+                        "offer_id": offer_id,
+                        "enterprise_name": row["enterprise_name"],
+                        "offer_title": row["offer_title"],
+                        "offer_content": row["offer_content"],
+                        "deadline": row["deadline"],
+                        "salary": row["salary"],
+                        "capacity": row["capacity"],
+                        "rank": row["rank"],
+                        "skills": skills_by_offer.get(offer_id, [])
+                    }
+                    offers_list.append(offer_data)
+                
+                return {"status": "ok", "offers": offers_list}
+                
+        except Exception as e:
+            return {"status": "ng", "error": str(e)}

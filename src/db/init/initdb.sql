@@ -303,3 +303,35 @@ INSERT INTO Notifications (id, user_id, type, title, message, offer_id, enterpri
 ('n0000001-0001-0001-0001-000000000002', '00000000-0000-0000-0000-000000000000', 'assignment', 'フロントエンドエンジニア', 'あなたがこのプロジェクトにアサインされました', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 'Tech Corp', TRUE, '2025-07-14 15:45:00'),
 ('n0000001-0001-0001-0001-000000000003', '00000000-0000-0000-0000-000000000000', 'assignment', 'データアナリスト', 'あなたがこのプロジェクトにアサインされました', 'cccccccc-cccc-cccc-cccc-cccccccccccc', 'Finance Inc', TRUE, '2025-07-13 09:15:00'),
 ('n0000001-0001-0001-0001-000000000004', '00000000-0000-0000-0000-000000000000', 'application_update', 'ゲームプログラマ', '応募状況が更新されました', 'dddddddd-dddd-dddd-dddd-dddddddddddd', 'Entertainment LLC', FALSE, '2025-07-12 16:20:00');
+
+-- UserSkills テーブルへのサンプルデータ挿入（テストユーザーのスキル）
+INSERT INTO UserSkills (user_id, skill_id) VALUES
+('00000000-0000-0000-0000-000000000000', 1), -- JavaScript
+('00000000-0000-0000-0000-000000000000', 2), -- Python
+('00000000-0000-0000-0000-000000000000', 9); -- TypeScript
+
+-- OfferSkills テーブルへのサンプルデータ挿入（オファーに必要なスキル）
+INSERT INTO OfferSkills (offer_id, skill_id) VALUES
+-- バックエンドエンジニア (Python, JavaScript)
+('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 2), -- Python
+('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 1), -- JavaScript
+-- フロントエンドエンジニア (JavaScript, TypeScript)
+('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 1), -- JavaScript
+('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 9), -- TypeScript
+-- データアナリスト (Python)
+('cccccccc-cccc-cccc-cccc-cccccccccccc', 2), -- Python
+-- ゲームプログラマ (C#, JavaScript)
+('dddddddd-dddd-dddd-dddd-dddddddddddd', 4), -- C#
+('dddddddd-dddd-dddd-dddd-dddddddddddd', 1), -- JavaScript
+-- DevOpsエンジニア (Python, Go)
+('eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee', 2), -- Python
+('eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee', 10), -- Go
+-- モバイルアプリエンジニア (Swift, Kotlin)
+('ffffffff-ffff-ffff-ffff-ffffffffffff', 7), -- Swift
+('ffffffff-ffff-ffff-ffff-ffffffffffff', 8), -- Kotlin
+-- データサイエンティスト (Python, R)
+('gggggggg-gggg-gggg-gggg-gggggggggggg', 2), -- Python
+-- フルスタックエンジニア (JavaScript, Python, TypeScript)
+('hhhhhhhh-hhhh-hhhh-hhhh-hhhhhhhhhhhh', 1), -- JavaScript
+('hhhhhhhh-hhhh-hhhh-hhhh-hhhhhhhhhhhh', 2), -- Python
+('hhhhhhhh-hhhh-hhhh-hhhh-hhhhhhhhhhhh', 9); -- TypeScript

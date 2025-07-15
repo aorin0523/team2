@@ -58,6 +58,23 @@ async def get_my_offers(current_user: User = Depends(get_current_enterprise_user
     offers_db = Offers()
     return offers_db.get_offers_by_enterprise(current_user.enterprise_id)
 
+@router.get("/skill-matched")
+async def get_skill_matched_offers(user_id: str):
+    """
+    ユーザーのスキルにマッチするオファーのみを取得するエンドポイント
+    """
+    try:
+        result = Offers().get_skill_matched_offers(user_id=user_id)
+        
+        if result["status"] == "ok":
+            return {
+                "status": "success",
+                "offers": result["offers"]
+            }
+        else:
+            raise HTTPException(status_code=500, detail=result["error"])
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/{offer_id}")
 async def read_offer(offer_id: str):
@@ -129,7 +146,6 @@ async def create_my_offer(data: offerCreate, current_user: User = Depends(get_cu
         else:
             print(f"Database error: {result['error']}")
             raise HTTPException(status_code=500, detail=result["error"])
-            
     except HTTPException:
         # HTTPExceptionは再投げ
         raise

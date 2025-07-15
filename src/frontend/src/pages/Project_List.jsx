@@ -36,6 +36,7 @@ function Project_List() {
   // 検索結果のstate（ランクと気になるオファーフィルター）
   const [jobType, setJobType] = useState("");
   const [favoritesOnly, setFavoritesOnly] = useState(false);
+  const [skillMatchedOnly, setSkillMatchedOnly] = useState(false);
 
   // APIからオファーデータを取得
   useEffect(() => {
@@ -43,14 +44,20 @@ function Project_List() {
       try {
         setLoading(true);
         
-        // ページング対応のAPIエンドポイントを使用
-        const url = API_ENDPOINTS.OFFERS_ALL_PAGINATED(
-          currentPage, 
-          itemsPerPage, 
-          jobType || null,
-          user?.id || null,
-          favoritesOnly
-        );
+        let url;
+        // スキルマッチングが有効な場合は専用のAPIを使用
+        if (skillMatchedOnly && user?.id) {
+          url = API_ENDPOINTS.OFFERS_SKILL_MATCHED(user.id);
+        } else {
+          // ページング対応のAPIエンドポイントを使用
+          url = API_ENDPOINTS.OFFERS_ALL_PAGINATED(
+            currentPage, 
+            itemsPerPage, 
+            jobType || null,
+            user?.id || null,
+            favoritesOnly
+          );
+        }
         const response = await fetch(url);
         
         if (!response.ok) {
@@ -59,8 +66,23 @@ function Project_List() {
         
         const data = await response.json();
         
+        // スキルマッチングAPIとページング付きAPIでデータ構造が異なる場合に対応
+        let offersData, totalPages = 1, totalCount = 0;
+        
+        if (skillMatchedOnly) {
+          // スキルマッチングAPIの場合
+          offersData = data.offers || [];
+          totalPages = 1; // スキルマッチングは全件取得のためページング無し
+          totalCount = offersData.length;
+        } else {
+          // 通常のページング付きAPIの場合
+          offersData = data.offers || [];
+          totalPages = data.total_pages || 1;
+          totalCount = data.total_count || 0;
+        }
+        
         // バックエンドのデータ構造をフロントエンド用に変換
-        const transformedOffers = data.offers.map((offer, index) => ({
+        const transformedOffers = offersData.map((offer, index) => ({
           id: (currentPage - 1) * itemsPerPage + index + 1,
           offer_id: offer.offer_id,
           title: offer.offer_title,
@@ -74,8 +96,8 @@ function Project_List() {
         }));
         
         setOffers(transformedOffers);
-        setTotalPages(data.total_pages);
-        setTotalCount(data.total_count);
+        setTotalPages(totalPages);
+        setTotalCount(totalCount);
       } catch (err) {
         setError(err.message);
         console.error('オファー取得エラー:', err);
@@ -85,7 +107,7 @@ function Project_List() {
     };
 
     fetchOffers();
-  }, [currentPage, jobType, favoritesOnly, user]); // currentPage、jobType、favoritesOnly、userに依存
+  }, [currentPage, jobType, favoritesOnly, skillMatchedOnly, user]); // currentPage、jobType、favoritesOnly、skillMatchedOnly、userに依存
 
   // ローディング状態
   if (loading) {
@@ -276,6 +298,35 @@ function Project_List() {
                   border: `1px solid ${blue[200]}`,
                   "&:hover": {
                     backgroundColor: blue[100],
+                  },
+                  margin: 0,
+                }}
+              />
+            )}
+
+            {/* スキルマッチングフィルター */}
+            {user && (
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={skillMatchedOnly}
+                    onChange={(e) => setSkillMatchedOnly(e.target.checked)}
+                    sx={{
+                      color: lightBlue[600],
+                      "&.Mui-checked": {
+                        color: lightBlue[700],
+                      },
+                    }}
+                  />
+                }
+                label="自分のスキルにマッチする求人のみ表示"
+                sx={{
+                  backgroundColor: lightBlue[50],
+                  borderRadius: 2,
+                  padding: 2,
+                  border: `1px solid ${lightBlue[200]}`,
+                  "&:hover": {
+                    backgroundColor: lightBlue[100],
                   },
                   margin: 0,
                 }}

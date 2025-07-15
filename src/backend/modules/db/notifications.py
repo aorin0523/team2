@@ -201,7 +201,7 @@ class Notifications(BaseDB):
             user_id=user_id,
             notification_type="assignment",
             title=offer_title,
-            message="あなたがこのプロジェクトにアサインされました",
+            message="あなたがこのプロジェクトにアサインされました\n担当者からの連絡をお待ち下さい",
             offer_id=offer_id,
             enterprise_name=enterprise_name
         )
