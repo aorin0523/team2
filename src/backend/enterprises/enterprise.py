@@ -7,6 +7,10 @@ from modules.db.enterprises import Enterprises
 class DescriptionUpdate(BaseModel):
     description: str
 
+class EnterpriseCreate(BaseModel):
+    name: str
+    description: str = ""
+
 
 router = APIRouter()
 
@@ -39,3 +43,27 @@ async def edit_enterprise_description(enterprise_id: str, item: DescriptionUpdat
         raise HTTPException(status_code=404, detail="Enterprise not found or no change made")
     
     return {"message": "Description updated successfully"}
+
+@router.post("/")
+async def create_enterprise(enterprise_data: EnterpriseCreate):
+    """
+    新しい企業を作成するエンドポイント
+    """
+    try:
+        db_enterprises = Enterprises()
+        result = db_enterprises.create_enterprise(
+            name=enterprise_data.name,
+            description=enterprise_data.description
+        )
+        
+        if result["status"] == "ok":
+            return {
+                "status": "success",
+                "enterprise_id": result["enterprise_id"],
+                "message": "企業が正常に作成されました"
+            }
+        else:
+            raise HTTPException(status_code=400, detail=result["error"])
+            
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

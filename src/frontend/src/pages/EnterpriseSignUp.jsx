@@ -1,15 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import {
   TextField,
   Button,
   Typography,
   Box,
-  Alert,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem
+  Alert
 } from '@mui/material';
 import { useAuth } from '../contexts/AuthContext';
 import { API_ENDPOINTS } from '../config/api';
@@ -21,28 +17,10 @@ const EnterpriseSignUp = () => {
     email: '',
     password: '',
     confirmPassword: '',
-    enterprise_id: ''
-  });
-  const [enterprises, setEnterprises] = useState([]);
-  const [errors, setErrors] = useState({});
+    enterprise_name: '',
+    enterprise_description: ''
+  });  const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-
-  // 企業一覧を取得
-  useEffect(() => {
-    const fetchEnterprises = async () => {
-      try {
-        const response = await fetch(`${API_ENDPOINTS.ENTERPRISES_PROFILE.replace('/profile', '')}/`);
-        if (response.ok) {
-          const data = await response.json();
-          setEnterprises(data);
-        }
-      } catch (error) {
-        console.error('Failed to fetch enterprises:', error);
-      }
-    };
-
-    fetchEnterprises();
-  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -57,7 +35,6 @@ const EnterpriseSignUp = () => {
       }));
     }
   };
-
   const validateForm = () => {
     const newErrors = {};
 
@@ -71,6 +48,10 @@ const EnterpriseSignUp = () => {
       newErrors.email = '有効なメールアドレスを入力してください';
     }
 
+    if (!formData.enterprise_name.trim()) {
+      newErrors.enterprise_name = '企業名は必須です';
+    }
+
     if (!formData.password) {
       newErrors.password = 'パスワードは必須です';
     } else if (formData.password.length < 8) {
@@ -81,14 +62,9 @@ const EnterpriseSignUp = () => {
       newErrors.confirmPassword = 'パスワードが一致しません';
     }
 
-    if (!formData.enterprise_id) {
-      newErrors.enterprise_id = '企業を選択してください';
-    }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -98,11 +74,33 @@ const EnterpriseSignUp = () => {
 
     setLoading(true);
 
-    try {      const userData = {
+    try {
+      // 1. まず企業を作成
+      const enterpriseResponse = await fetch(API_ENDPOINTS.ENTERPRISES_CREATE, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.enterprise_name,
+          description: formData.enterprise_description
+        }),
+      });
+
+      if (!enterpriseResponse.ok) {
+        const errorData = await enterpriseResponse.json();
+        throw new Error(errorData.detail || '企業の作成に失敗しました');
+      }
+
+      const enterpriseData = await enterpriseResponse.json();
+      const enterpriseId = enterpriseData.enterprise_id;
+
+      // 2. 企業ユーザーを作成
+      const userData = {
         name: formData.name,
         email: formData.email,
         password: formData.password,
-        enterprise_id: formData.enterprise_id
+        enterprise_id: enterpriseId
       };
 
       await registerEnterprise(userData);
@@ -252,6 +250,45 @@ const EnterpriseSignUp = () => {
                 }
               }}
             />
+          </Box>          <Box sx={{ marginBottom: '20px' }}>
+            <Typography
+              sx={{
+                fontSize: '14px',
+                color: '#333',
+                marginBottom: '8px',
+                fontWeight: '500'
+              }}
+            >
+              企業名
+            </Typography>
+            <TextField
+              required
+              fullWidth
+              id="enterprise_name"
+              name="enterprise_name"
+              value={formData.enterprise_name}
+              onChange={handleChange}
+              error={!!errors.enterprise_name}
+              helperText={errors.enterprise_name}
+              placeholder="企業名"
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  fontSize: '14px',
+                  '& fieldset': {
+                    borderColor: '#ddd',
+                  },
+                  '&:hover fieldset': {
+                    borderColor: '#ff9800',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#ff9800',
+                  }
+                },
+                '& .MuiInputBase-input': {
+                  padding: '12px 14px'
+                }
+              }}
+            />
           </Box>
 
           <Box sx={{ marginBottom: '20px' }}>
@@ -263,45 +300,35 @@ const EnterpriseSignUp = () => {
                 fontWeight: '500'
               }}
             >
-              企業を選択
+              企業説明（任意）
             </Typography>
-            <FormControl fullWidth error={!!errors.enterprise_id}>
-              <Select
-                id="enterprise_id"
-                name="enterprise_id"
-                value={formData.enterprise_id}
-                onChange={handleChange}
-                displayEmpty
-                sx={{
+            <TextField
+              fullWidth
+              id="enterprise_description"
+              name="enterprise_description"
+              multiline
+              rows={3}
+              value={formData.enterprise_description}
+              onChange={handleChange}
+              placeholder="企業の説明や事業内容を入力してください"
+              sx={{
+                '& .MuiOutlinedInput-root': {
                   fontSize: '14px',
-                  '& .MuiOutlinedInput-notchedOutline': {
+                  '& fieldset': {
                     borderColor: '#ddd',
                   },
-                  '&:hover .MuiOutlinedInput-notchedOutline': {
+                  '&:hover fieldset': {
                     borderColor: '#ff9800',
                   },
-                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                  '&.Mui-focused fieldset': {
                     borderColor: '#ff9800',
-                  },
-                  '& .MuiSelect-select': {
-                    padding: '12px 14px'
                   }
-                }}
-              >
-                <MenuItem value="" disabled>
-                  <em style={{ color: '#999' }}>企業を選択してください</em>
-                </MenuItem>
-                {enterprises.map((enterprise) => (
-                  <MenuItem key={enterprise.id} value={enterprise.id}>
-                    {enterprise.name}
-                  </MenuItem>
-                ))}
-              </Select>
-              {errors.enterprise_id && (
-                <Typography variant="caption" color="error" sx={{ mt: 0.5, ml: 1.5 }}>
-                  {errors.enterprise_id}
-                </Typography>
-              )}            </FormControl>
+                },
+                '& .MuiInputBase-input': {
+                  padding: '12px 14px'
+                }
+              }}
+            />
           </Box>
 
           <Box sx={{ marginBottom: '20px' }}>

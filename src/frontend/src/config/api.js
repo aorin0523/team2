@@ -57,6 +57,8 @@ export const API_ENDPOINTS = {
   OFFER_APPLICANTS: (offerId) => `${API_BASE_URL}/api/v1/users/offer/${offerId}/applicants`,
   
   // 企業
+  ENTERPRISES_ALL: `${API_BASE_URL}/api/v1/enterprises/`,
+  ENTERPRISES_CREATE: `${API_BASE_URL}/api/v1/enterprises/`,
   ENTERPRISES_PROFILE: `${API_BASE_URL}/api/v1/enterprises/profile`,
   
   // MinIO
