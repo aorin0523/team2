@@ -517,7 +517,7 @@ function CreateOffer() {
                     募集条件設定
                   </Typography>
                   
-                  <Grid container spacing={3}>
+                  <Grid container spacing={3} sx={{ display: 'flex', flexFlow: 'column' }}>
                     {/* ランク */}
                     <Grid item xs={12} md={6}>
                       <FormControl fullWidth error={!!validationErrors.rank}>
@@ -558,7 +558,7 @@ function CreateOffer() {
                     </Grid>
 
                     {/* 募集人数 */}
-                    <Grid item xs={12} md={6}>
+                    <Grid item xs={12} md={6} sx={{ width: '100%' }}>
                       <TextField
                         fullWidth
                         type="number"
@@ -624,6 +624,7 @@ function CreateOffer() {
                         }}
                       />
                     </Grid>
+
 
                     {/* 必要スキル */}
                     <Grid item xs={12} md={6}>
