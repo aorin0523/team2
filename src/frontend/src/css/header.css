@@ -1,0 +1,101 @@
+/* AppBar スタイル */
+.header-appbar {
+    background: linear-gradient(90deg, #1e88e5 0%, #1976d2 100%);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 100vw;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    left: 0;
+    right: 0;
+    position: sticky;
+    top: 0;
+    z-index: 1100;
+    font-family: 'Roboto', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Toolbar スタイル */
+.header-toolbar {
+    justify-content: space-between;
+    padding-left: 24px;
+    padding-right: 24px;
+    min-height: 80px;
+}
+
+/* ロゴ スタイル */
+.header-logo {
+    font-weight: bold;
+    color: white;
+    font-size: 2rem;
+}
+
+/* ナビゲーションボックス */
+.header-nav-box {
+    display: none;
+    gap: 16px;
+    margin-left: 32px;
+    margin-right: auto;
+}
+
+/* ナビゲーションボタン */
+.header-nav-button {
+    font-size: 1.1rem;
+    font-weight: 500;
+    padding: 12px 20px;
+    color: white;
+    text-transform: none;
+}
+
+.header-nav-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* アイコンエリア */
+.header-icons-stack {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+}
+
+/* アイコンボタン */
+.header-icon-button {
+    color: white;
+    padding: 12px;
+    font-size: 1.3rem;
+}
+
+.header-icon-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* プロフィールボタン */
+.header-profile-button {
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    padding: 12px;
+    font-size: 1.3rem;
+}
+
+.header-profile-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: white;
+}
+
+/* レスポンシブデザイン */
+@media (min-width: 900px) {
+    .header-logo {
+        font-size: 2.5rem;
+    }
+
+    .header-nav-box {
+        display: flex;
+    }
+}
+
+@media (min-width: 1200px) {
+    .header-toolbar {
+        padding-left: 32px;
+        padding-right: 32px;
+    }
+}

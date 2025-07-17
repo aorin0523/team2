@@ -1,0 +1,114 @@
+/* サイドバーのメインコンテナ */
+.sidebar-drawer {
+    width: 240px;
+    flex-shrink: 0;
+    height: 100vh;
+    overflow: hidden;
+    font-family: 'Roboto', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+}
+
+ul.user-menu {
+    display: block;
+}
+
+.sidebar-drawer .MuiDrawer-paper {
+    width: 240px;
+    box-sizing: border-box;
+    background-color: white;
+    border-right: 1px solid #81D4FA;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+}
+
+/* ロゴエリア */
+.sidebar-logo {
+    padding: 16px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-left: 12px;
+}
+
+.logo-avatar {
+    background-color: #00bcd4 !important;
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 14px !important;
+    font-weight: bold !important;
+}
+
+.logo-text {
+    margin-left: 8px !important;
+    font-weight: bold !important;
+}
+
+/* ナビゲーションメニュー */
+.nav-list {
+    display: block;
+    padding-top: 16px !important;
+    /* flex-grow: 1; */
+    overflow: hidden;
+}
+
+.nav-item {
+    padding: 8px 16px !important;
+    margin: 4px 8px !important;
+    border-radius: 8px !important;
+    transition: background-color 0.2s !important;
+}
+
+.nav-item:hover {
+    background-color: #f5f5f5 !important;
+}
+
+.nav-item.active {
+    background-color: #e3f2fd !important;
+}
+
+.nav-item-icon {
+    min-width: 40px !important;
+}
+
+.nav-item-emoji {
+    font-size: 18px !important;
+}
+
+.nav-item-text {
+    font-size: 14px !important;
+    color: #333 !important;
+}
+
+.nav-item.active .nav-item-text {
+    color: #1976d2 !important;
+}
+
+/* ユーザー情報 */
+.sidebar-user {
+    position: absolute;
+    bottom: 20px;
+    left: 16px;
+    right: 16px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sidebar-user-name {
+    margin-bottom: 8px !important;
+    font-weight: bold !important;
+}
+
+.sidebar-logout-btn {
+    color: #666 !important;
+    font-size: 12px !important;
+    text-transform: none !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

@@ -2,3 +2,40 @@
 .idea/
 *venv/
 __pycache__/
+
+# バックアップファイル
+*_backup*
+*_old*
+*_copy*
+*_temp*
+*_new*
+*_New*
+*_enhanced*
+*_fixed*
+*.bak
+*.tmp
+*~
+
+# ログファイル
+*.log
+
+# OS生成ファイル
+.DS_Store
+Thumbs.db
+
+# エディタ固有ファイル
+.vscode/
+*.swp
+*.swo
+
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Python
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/

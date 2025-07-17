@@ -25,9 +25,9 @@ services:
       - ./.env
     depends_on:
       - db
-
   db:
-    image: mysql:8.0
+    build:
+      context: ./db
     container_name: mysql
     ports:
       - "3306:3306"
@@ -38,7 +38,7 @@ services:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     volumes:
       - ./db/data:/var/lib/mysql
-      - ./db/config:/etc/mysql/conf.d/my.cnf
+      - ./db/config:/etc/mysql/conf.d/
       - ./db/init:/docker-entrypoint-initdb.d
 
   minio:

@@ -1,0 +1,100 @@
+/* ヘッダー */
+header {
+  display: flex;
+  height: 80px;
+  width: 100%;
+  margin: 0;
+  background-color: #1976d2;
+} 
+
+.link {
+  display: flex;
+  align-items: center;
+  gap: 16px; 
+}
+
+
+/* 案件一覧 */
+.card {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3列 */
+  gap: 20px; /* カード間の余白 */
+  padding: 20px;
+  margin: 0 auto;
+  max-width: 1200px;
+  width: 90%;
+}
+
+.cards {
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  padding: 16px;
+  text-align: center;
+  transition: transform 0.3s ease;
+  height: 450px;
+  width: 330px;
+}
+
+.cards:hover {
+  transform: scale(1.03);
+}
+
+.card img {
+  width: 100%;
+  height: 210px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.card h2 {
+  font-size: 16px;
+  margin: 8px 0;
+  color: #333;
+}
+
+.card .detail {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.5;
+}
+
+/* ページ遷移 */
+ul li {
+    list-style: none;
+}
+
+.pagination-ui {
+    display: flex;
+    align-items: center;
+    margin-left: 460px;
+}
+
+.pagination-ui button {
+  background-color: transparent; 
+  border: none;                  
+  color: black;                 
+  box-shadow: none;              
+  outline: none;                
+  padding: 8px 12px;           
+  border-radius: 8px;            
+  cursor: pointer;
+}
+
+.pagination-ui button:hover {
+  background-color: white;
+  border-radius: 8px; 
+}
+
+
+body {
+  background-color: white;
+} 
+
+button.active {
+  background-color: #1976d2;
+  color: white;
+  font-weight: bold;
+}
+
