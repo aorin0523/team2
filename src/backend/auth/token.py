@@ -27,6 +27,7 @@ class User(BaseModel):
     id: str
     name: str
     email: str
+    enterprise_id: Union[str, None] = None
 
 
 class UserInDB(User):
@@ -48,7 +49,8 @@ def get_user_by_email(email: str):
             id=user["id"],
             name=user["name"],
             email=user["email"],
-            password=user["password"]
+            password=user["password"],
+            enterprise_id=user.get("enterprise_id")
         )
     return None
 
@@ -62,7 +64,8 @@ def authenticate_user(email: str, password: str):
             id=user["id"],
             name=user["name"], 
             email=user["email"],
-            password=user["password"]
+            password=user["password"],
+            enterprise_id=user.get("enterprise_id")
         )
     return False
 
@@ -87,6 +90,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         email = payload.get("sub")
+        enterprise_id = payload.get("enterprise_id")
         if email is None:
             raise credentials_exception
         token_data = TokenData(email=email)
@@ -95,7 +99,12 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
     user = get_user_by_email(email=token_data.email)
     if user is None:
         raise credentials_exception
-    return User(id=user.id, name=user.name, email=user.email)
+    return User(
+        id=user.id, 
+        name=user.name, 
+        email=user.email,
+        enterprise_id=user.enterprise_id
+    )
 
 
 async def get_current_active_user(current_user: User = Depends(get_current_user)):
@@ -124,9 +133,20 @@ async def login_for_access_token(
         )
     
     print(f"Authentication successful for user: {user.email}")
+    print(f"Enterprise ID: {user.enterprise_id}")
+    
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    
+    # JWTにenterprise_idを含める
+    token_data = {"sub": user.email}
+    if user.enterprise_id:
+        token_data["enterprise_id"] = user.enterprise_id
+        token_data["is_enterprise"] = True
+    else:
+        token_data["is_enterprise"] = False
+    
     access_token = create_access_token(
-        data={"sub": user.email}, expires_delta=access_token_expires
+        data=token_data, expires_delta=access_token_expires
     )
     print (f"JWT: {access_token}")
     return Token(access_token=access_token, token_type="bearer")
@@ -137,6 +157,51 @@ async def read_users_me(current_user: User = Depends(get_current_active_user)):
     return current_user
 
 
+@router.get("/me")
+async def get_me(current_user: User = Depends(get_current_active_user)):
+    """現在のユーザー情報を取得（enterprise_id含む）"""
+    return {
+        "id": current_user.id,
+        "name": current_user.name,
+        "email": current_user.email,
+        "enterprise_id": current_user.enterprise_id,
+        "is_enterprise": current_user.enterprise_id is not None
+    }
+
+
 @router.get("/users/me/items/")
 async def read_own_items(current_user: User = Depends(get_current_active_user)):
     return [{"item_id": "Foo", "owner": current_user.email}]
+
+
+# 企業ユーザー専用の認証依存関数
+async def get_current_enterprise_user(current_user: User = Depends(get_current_active_user)):
+    """企業ユーザーのみアクセス可能な依存関数"""
+    if not current_user.enterprise_id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Enterprise access required"
+        )
+    return current_user
+
+# 一般ユーザー専用の認証依存関数
+async def get_current_regular_user(current_user: User = Depends(get_current_active_user)):
+    """一般ユーザーのみアクセス可能な依存関数"""
+    if current_user.enterprise_id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Regular user access required"
+        )
+    return current_user
+
+
+@router.get("/enterprise/me")
+async def get_enterprise_me(current_user: User = Depends(get_current_enterprise_user)):
+    """企業ユーザー専用：現在のユーザー情報を取得"""
+    return {
+        "id": current_user.id,
+        "name": current_user.name,
+        "email": current_user.email,
+        "enterprise_id": current_user.enterprise_id,
+        "is_enterprise": True
+    }

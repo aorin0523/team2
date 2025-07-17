@@ -59,3 +59,32 @@ def download_file(file_name: str, bucket_name: str = "storage"):
         return {"status": "ok", "content": content, "content_type": content_type}
     except S3Error as exc:
         return {"status": "error", "message": str(exc)}
+
+def copy_file(source_bucket: str, source_file: str, dest_bucket: str, dest_file: str):
+    """
+    # MinIO内でファイルをコピーする関数
+
+    :param source_bucket: コピー元のバケット名
+    :param source_file: コピー元のファイル名
+    :param dest_bucket: コピー先のバケット名
+    :param dest_file: コピー先のファイル名
+
+    :return: コピー結果のステータス
+    """
+    try:
+        # ソースファイルをダウンロード
+        download_result = download_file(source_file, source_bucket)
+        if download_result["status"] != "ok":
+            return download_result
+        
+        # 宛先バケットにアップロード
+        upload_result = upload_file(
+            bucket_name=dest_bucket,
+            file_name=dest_file,
+            file_content_type=download_result["content_type"],
+            file_content=download_result["content"]
+        )
+        
+        return upload_result
+    except S3Error as exc:
+        return {"status": "error", "message": str(exc)}

@@ -22,30 +22,35 @@ export const AuthProvider = ({ children }) => {
     setToken(null);
     setUser(null);
   }, []);
-
   // ユーザー情報を取得する関数
   const fetchUserInfo = useCallback(async () => {
     if (!token) {
+      console.log('AuthContext: No token available for fetchUserInfo');
       setLoading(false);
       return;
     }
 
     try {
+      console.log('AuthContext: Fetching user info with token:', token?.substring(0, 20) + '...');
       const response = await fetch('http://localhost:8000/api/v1/auth/me', {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
       });
 
+      console.log('AuthContext: User info response status:', response.status);
+
       if (response.ok) {
         const userData = await response.json();
+        console.log('AuthContext: User data received:', userData);
         setUser(userData);
       } else {
+        console.error('AuthContext: Invalid token, response status:', response.status);
         // トークンが無効な場合はクリア
         logout();
       }
     } catch (error) {
-      console.error('Failed to fetch user info:', error);
+      console.error('AuthContext: Failed to fetch user info:', error);
       logout();
     } finally {
       setLoading(false);
@@ -72,6 +77,29 @@ export const AuthProvider = ({ children }) => {
     if (!response.ok) {
       const errorData = await response.json();
       throw new Error(errorData.detail || '登録に失敗しました');
+    }
+
+    const data = await response.json();
+    
+    // 登録後自動的にログイン
+    login(data.access_token, data.token_type);
+    
+    return data;
+  }, [login]);
+
+  // 企業ユーザー登録関数
+  const registerEnterprise = useCallback(async (userData) => {
+    const response = await fetch('http://localhost:8000/api/v1/auth/register/enterprise', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userData),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || '企業ユーザー登録に失敗しました');
     }
 
     const data = await response.json();
@@ -110,7 +138,6 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     fetchUserInfo();
   }, [fetchUserInfo]);
-
   const value = {
     user,
     token,
@@ -119,7 +146,10 @@ export const AuthProvider = ({ children }) => {
     logout,
     register,
     signIn,
+    registerEnterprise,
     isAuthenticated: !!user,
+    isEnterpriseUser: !!user?.enterprise_id,
+    isRegularUser: !!user && !user?.enterprise_id,
   };
 
   return (

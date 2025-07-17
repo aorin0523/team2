@@ -19,7 +19,7 @@
 }
 
 ul{
-    display: flex;
+    /* display: flex; */
     margin: 0;
     padding: 0;
     align-items: center;
@@ -64,8 +64,8 @@ body {
 }
 
 img{
-    border-radius: 50%;
-    width: 150px;
-    height: 150px;
+    border-radius: 8px;
+    width: 320px;
+    height: 180px;
     object-fit: cover;
 }

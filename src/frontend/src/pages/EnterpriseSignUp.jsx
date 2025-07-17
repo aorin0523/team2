@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import {
-  Container,
-  Paper,
   TextField,
   Button,
   Typography,
@@ -10,17 +8,18 @@ import {
   Alert
 } from '@mui/material';
 import { useAuth } from '../contexts/AuthContext';
+import { API_ENDPOINTS } from '../config/api';
 
-const SignUp = () => {
+const EnterpriseSignUp = () => {
   const navigate = useNavigate();
-  const { register } = useAuth();
-  const [formData, setFormData] = useState({
+  const { registerEnterprise } = useAuth();  const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
-    confirmPassword: ''
-  });
-  const [errors, setErrors] = useState({});
+    confirmPassword: '',
+    enterprise_name: '',
+    enterprise_description: ''
+  });  const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -36,7 +35,6 @@ const SignUp = () => {
       }));
     }
   };
-
   const validateForm = () => {
     const newErrors = {};
 
@@ -48,6 +46,10 @@ const SignUp = () => {
       newErrors.email = 'メールアドレスは必須です';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = '有効なメールアドレスを入力してください';
+    }
+
+    if (!formData.enterprise_name.trim()) {
+      newErrors.enterprise_name = '企業名は必須です';
     }
 
     if (!formData.password) {
@@ -63,7 +65,6 @@ const SignUp = () => {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -74,16 +75,38 @@ const SignUp = () => {
     setLoading(true);
 
     try {
+      // 1. まず企業を作成
+      const enterpriseResponse = await fetch(API_ENDPOINTS.ENTERPRISES_CREATE, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.enterprise_name,
+          description: formData.enterprise_description
+        }),
+      });
+
+      if (!enterpriseResponse.ok) {
+        const errorData = await enterpriseResponse.json();
+        throw new Error(errorData.detail || '企業の作成に失敗しました');
+      }
+
+      const enterpriseData = await enterpriseResponse.json();
+      const enterpriseId = enterpriseData.enterprise_id;
+
+      // 2. 企業ユーザーを作成
       const userData = {
         name: formData.name,
         email: formData.email,
-        password: formData.password
+        password: formData.password,
+        enterprise_id: enterpriseId
       };
 
-      await register(userData);
-      navigate('/');
+      await registerEnterprise(userData);
+      navigate('/enterprise');
     } catch (error) {
-      setErrors({ submit: error.message || '登録に失敗しました' });
+      setErrors({ submit: error.message || '企業ユーザー登録に失敗しました' });
     } finally {
       setLoading(false);
     }
@@ -97,12 +120,12 @@ const SignUp = () => {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        paddingTop: '60px',
+        paddingTop: '20px',
         paddingBottom: '60px'
       }}
     >
       {/* paizaロゴ */}
-      <Box sx={{ mb: 6 }}>
+      <Box sx={{ mb: 4 }}>
         <Typography
           variant="h3"
           sx={{
@@ -121,7 +144,7 @@ const SignUp = () => {
         sx={{
           width: '400px',
           backgroundColor: 'white',
-          border: '2px solid #00a0dc',
+          border: '2px solid #ff9800',
           borderRadius: '8px',
           padding: '40px',
           boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
@@ -136,7 +159,7 @@ const SignUp = () => {
             color: '#333'
           }}
         >
-          新規ユーザー登録
+          企業ユーザー登録
         </Typography>
 
         {errors.submit && (
@@ -166,7 +189,7 @@ const SignUp = () => {
               onChange={handleChange}
               error={!!errors.name}
               helperText={errors.name}
-              placeholder="paiza太郎"
+              placeholder="氏名"
               sx={{
                 '& .MuiOutlinedInput-root': {
                   fontSize: '14px',
@@ -174,10 +197,10 @@ const SignUp = () => {
                     borderColor: '#ddd',
                   },
                   '&:hover fieldset': {
-                    borderColor: '#00a0dc',
+                    borderColor: '#ff9800',
                   },
                   '&.Mui-focused fieldset': {
-                    borderColor: '#00a0dc',
+                    borderColor: '#ff9800',
                   }
                 },
                 '& .MuiInputBase-input': {
@@ -208,7 +231,7 @@ const SignUp = () => {
               onChange={handleChange}
               error={!!errors.email}
               helperText={errors.email}
-              placeholder="例）user@example.com"
+              placeholder="メールアドレス"
               sx={{
                 '& .MuiOutlinedInput-root': {
                   fontSize: '14px',
@@ -216,10 +239,89 @@ const SignUp = () => {
                     borderColor: '#ddd',
                   },
                   '&:hover fieldset': {
-                    borderColor: '#00a0dc',
+                    borderColor: '#ff9800',
                   },
                   '&.Mui-focused fieldset': {
-                    borderColor: '#00a0dc',
+                    borderColor: '#ff9800',
+                  }
+                },
+                '& .MuiInputBase-input': {
+                  padding: '12px 14px'
+                }
+              }}
+            />
+          </Box>          <Box sx={{ marginBottom: '20px' }}>
+            <Typography
+              sx={{
+                fontSize: '14px',
+                color: '#333',
+                marginBottom: '8px',
+                fontWeight: '500'
+              }}
+            >
+              企業名
+            </Typography>
+            <TextField
+              required
+              fullWidth
+              id="enterprise_name"
+              name="enterprise_name"
+              value={formData.enterprise_name}
+              onChange={handleChange}
+              error={!!errors.enterprise_name}
+              helperText={errors.enterprise_name}
+              placeholder="企業名"
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  fontSize: '14px',
+                  '& fieldset': {
+                    borderColor: '#ddd',
+                  },
+                  '&:hover fieldset': {
+                    borderColor: '#ff9800',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#ff9800',
+                  }
+                },
+                '& .MuiInputBase-input': {
+                  padding: '12px 14px'
+                }
+              }}
+            />
+          </Box>
+
+          <Box sx={{ marginBottom: '20px' }}>
+            <Typography
+              sx={{
+                fontSize: '14px',
+                color: '#333',
+                marginBottom: '8px',
+                fontWeight: '500'
+              }}
+            >
+              企業説明（任意）
+            </Typography>
+            <TextField
+              fullWidth
+              id="enterprise_description"
+              name="enterprise_description"
+              multiline
+              rows={3}
+              value={formData.enterprise_description}
+              onChange={handleChange}
+              placeholder="企業の説明や事業内容を入力してください"
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  fontSize: '14px',
+                  '& fieldset': {
+                    borderColor: '#ddd',
+                  },
+                  '&:hover fieldset': {
+                    borderColor: '#ff9800',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#ff9800',
                   }
                 },
                 '& .MuiInputBase-input': {
@@ -250,7 +352,7 @@ const SignUp = () => {
               onChange={handleChange}
               error={!!errors.password}
               helperText={errors.password}
-              placeholder="例）英数字記号含む8文字以上"
+              placeholder="パスワード"
               sx={{
                 '& .MuiOutlinedInput-root': {
                   fontSize: '14px',
@@ -258,10 +360,10 @@ const SignUp = () => {
                     borderColor: '#ddd',
                   },
                   '&:hover fieldset': {
-                    borderColor: '#00a0dc',
+                    borderColor: '#ff9800',
                   },
                   '&.Mui-focused fieldset': {
-                    borderColor: '#00a0dc',
+                    borderColor: '#ff9800',
                   }
                 },
                 '& .MuiInputBase-input': {
@@ -292,6 +394,7 @@ const SignUp = () => {
               onChange={handleChange}
               error={!!errors.confirmPassword}
               helperText={errors.confirmPassword}
+              placeholder="パスワード確認"
               sx={{
                 '& .MuiOutlinedInput-root': {
                   fontSize: '14px',
@@ -299,10 +402,10 @@ const SignUp = () => {
                     borderColor: '#ddd',
                   },
                   '&:hover fieldset': {
-                    borderColor: '#00a0dc',
+                    borderColor: '#ff9800',
                   },
                   '&.Mui-focused fieldset': {
-                    borderColor: '#00a0dc',
+                    borderColor: '#ff9800',
                   }
                 },
                 '& .MuiInputBase-input': {
@@ -318,15 +421,16 @@ const SignUp = () => {
             variant="contained"
             disabled={loading}
             sx={{
-              backgroundColor: '#00a0dc',
+              backgroundColor: '#ff9800',
               color: 'white',
               fontSize: '16px',
               fontWeight: 'bold',
               padding: '12px',
               borderRadius: '4px',
               textTransform: 'none',
+              marginBottom: '20px',
               '&:hover': {
-                backgroundColor: '#0088c7'
+                backgroundColor: '#f57c00'
               },
               '&:disabled': {
                 backgroundColor: '#ccc',
@@ -337,31 +441,44 @@ const SignUp = () => {
             {loading ? '登録中...' : 'アカウント作成'}
           </Button>
 
-          <Box sx={{ textAlign: 'center', marginTop: '20px' }}>
-            <Typography variant="body2" sx={{ color: '#666', fontSize: '14px' }}>
+          <Box sx={{ textAlign: 'center' }}>
+            <Typography
+              variant="body2"
+              sx={{
+                color: '#666',
+                fontSize: '14px',
+                marginBottom: '8px'
+              }}
+            >
               すでにアカウントをお持ちの方は{' '}
               <Link
-                to="/signin"
+                to="/enterprise/signin"
                 style={{
                   textDecoration: 'none',
-                  color: '#00a0dc',
+                  color: '#ff9800',
                   fontWeight: 'bold'
                 }}
               >
-                こちらからログイン
+                企業ログイン
               </Link>
             </Typography>
 
-            <Typography variant="body2" sx={{ color: '#666', fontSize: '14px', marginTop: '8px' }}>
-              企業ユーザーの方は{' '}
+            <Typography
+              variant="body2"
+              sx={{
+                color: '#666',
+                fontSize: '14px'
+              }}
+            >
+              一般ユーザーの方は{' '}
               <Link
-                to="/enterprise/signup"
+                to="/signup"
                 style={{
                   textDecoration: 'none',
                   color: '#666'
                 }}
               >
-                企業ユーザー登録
+                一般ユーザー登録
               </Link>
             </Typography>
           </Box>
@@ -371,4 +488,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default EnterpriseSignUp;

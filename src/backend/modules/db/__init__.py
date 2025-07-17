@@ -5,12 +5,11 @@ class BaseDB:
     """
     BDの初期化を行うクラス
     """
-
+    
     def __init__(self):
         self.engine = create_engine(
-            f"mysql+pymysql://{os.getenv("MYSQL_USER")}:{os.getenv("MYSQL_PASSWORD")}@{os.getenv("DB_CONTAINER_ADDRESS")}/{os.getenv("MYSQL_DATABASE")}",
+            f"mysql+pymysql://{os.getenv('MYSQL_USER')}:{os.getenv('MYSQL_PASSWORD')}@{os.getenv('DB_CONTAINER_ADDRESS')}/{os.getenv('MYSQL_DATABASE')}"
         )
-
         self.metadata = MetaData()
         self.metadata.reflect(bind=self.engine)
 
@@ -22,3 +21,4 @@ class BaseDB:
         self.user_skills = self.metadata.tables["UserSkills"]
         self.user_offers = self.metadata.tables["UserOffers"]
         self.offer_skills = self.metadata.tables["OfferSkills"]
+        self.notifications = self.metadata.tables["Notifications"]

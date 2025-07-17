@@ -11,8 +11,9 @@ import {
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
+import { API_ENDPOINTS } from '../config/api';
 
-const SignIn = () => {
+const EnterpriseSignIn = () => {
   const navigate = useNavigate();
   const { signIn } = useAuth();
   const [formData, setFormData] = useState({
@@ -46,7 +47,28 @@ const SignIn = () => {
 
     try {
       await signIn(formData.email, formData.password);
-      navigate('/');
+
+      // ログイン後にユーザー情報を取得して企業アカウントかチェック
+      const userInfoResponse = await fetch(API_ENDPOINTS.AUTH_ME, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+        },
+      });
+
+      if (userInfoResponse.ok) {
+        const userInfo = await userInfoResponse.json();
+        console.log(userInfo);
+        if (userInfo.enterprise_id) {
+          // 企業ユーザーの場合は企業ダッシュボードにリダイレクト
+          navigate('/enterprise');
+        } else {
+          // 一般ユーザーの場合はエラーメッセージを表示
+          setError('このページは企業アカウント専用です。一般ユーザーの方は通常のログインページをご利用ください。');
+          return;
+        }
+      } else {
+        setError('ユーザー情報の取得に失敗しました');
+      }
     } catch (error) {
       setError(error.message || 'ログインに失敗しました');
     } finally {
@@ -88,7 +110,7 @@ const SignIn = () => {
         sx={{
           width: '400px',
           backgroundColor: 'white',
-          border: '2px solid #00a0dc',
+          border: '2px solid #ff9800',
           borderRadius: '8px',
           padding: '40px',
           boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
@@ -103,7 +125,7 @@ const SignIn = () => {
             color: '#333'
           }}
         >
-          ログイン
+          企業ログイン
         </Typography>
 
         {error && (
@@ -142,10 +164,10 @@ const SignIn = () => {
                   borderColor: '#ddd',
                 },
                 '&:hover fieldset': {
-                  borderColor: '#00a0dc',
+                  borderColor: '#ff9800',
                 },
                 '&.Mui-focused fieldset': {
-                  borderColor: '#00a0dc',
+                  borderColor: '#ff9800',
                 }
               },
               '& .MuiInputBase-input': {
@@ -196,10 +218,10 @@ const SignIn = () => {
                   borderColor: '#ddd',
                 },
                 '&:hover fieldset': {
-                  borderColor: '#00a0dc',
+                  borderColor: '#ff9800',
                 },
                 '&.Mui-focused fieldset': {
-                  borderColor: '#00a0dc',
+                  borderColor: '#ff9800',
                 }
               },
               '& .MuiInputBase-input': {
@@ -214,7 +236,7 @@ const SignIn = () => {
             variant="contained"
             disabled={loading}
             sx={{
-              backgroundColor: '#00a0dc',
+              backgroundColor: '#ff9800',
               color: 'white',
               fontSize: '16px',
               fontWeight: 'bold',
@@ -223,7 +245,7 @@ const SignIn = () => {
               textTransform: 'none',
               marginBottom: '20px',
               '&:hover': {
-                backgroundColor: '#0088c7'
+                backgroundColor: '#f57c00'
               },
               '&:disabled': {
                 backgroundColor: '#ccc',
@@ -243,16 +265,16 @@ const SignIn = () => {
                 marginBottom: '8px'
               }}
             >
-              アカウントをお持ちでない方は{' '}
+              企業アカウントをお持ちでない方は{' '}
               <Link
-                to="/signup"
+                to="/enterprise/signup"
                 style={{
                   textDecoration: 'none',
-                  color: '#00a0dc',
+                  color: '#ff9800',
                   fontWeight: 'bold'
                 }}
               >
-                こちらから登録
+                企業登録はこちら
               </Link>
             </Typography>
 
@@ -263,16 +285,17 @@ const SignIn = () => {
                 fontSize: '14px'
               }}
             >
-              企業アカウントをお持ちの方は{' '}
+              一般ユーザーの方は{' '}
               <Link
-                to="/enterprise/signin"
+                to="/signin"
                 style={{
                   textDecoration: 'none',
                   color: '#666'
                 }}
               >
-                企業ログイン
+                通常のログインページ
               </Link>
+              をご利用ください
             </Typography>
           </Box>
         </Box>
@@ -281,4 +304,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default EnterpriseSignIn;

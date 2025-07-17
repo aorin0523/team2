@@ -1,154 +1,272 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Container,
   Typography,
   Box,
   Button,
-  AppBar,
-  Toolbar,
-  Grid,
-  Card,
-  CardContent
-} from '@mui/material';
-import { useAuth } from '../contexts/AuthContext';
+  Paper,
+} from "@mui/material";
+import { useAuth } from "../contexts/AuthContext";
 
 function Home() {
-  const { user, logout, isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, loading, user } = useAuth();
   const navigate = useNavigate();
-
-  const handleLogout = () => {
-    logout();
-    navigate('/');
-  };
 
   if (loading) {
     return (
-      <Container>
-        <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
-          <Typography>読み込み中...</Typography>
-        </Box>
-      </Container>
+      <Box
+        sx={{
+          minHeight: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "#f5f5f5",
+        }}
+      >
+        <Typography variant="h6" sx={{ color: "#333" }}>
+          読み込み中...
+        </Typography>
+      </Box>
     );
   }
 
+  if (isAuthenticated) {
+    if (user.enterprise_id == null) {
+      navigate("/user/list");
+    } else {
+      navigate("/enterprise");
+    }
+  }
+
   return (
-    <>
-      <AppBar position="static">
-        <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            スキル・求人マッチングシステム
-          </Typography>
-          {isAuthenticated ? (
-            <Box>
-              <Typography variant="body2" component="span" sx={{ mr: 2 }}>
-                ようこそ、{user?.name}さん
-              </Typography>
-              <Button color="inherit" onClick={handleLogout}>
-                ログアウト
-              </Button>
-            </Box>
-          ) : (
-            <Box>
-              <Button color="inherit" component={Link} to="/signin" sx={{ mr: 1 }}>
-                ログイン
-              </Button>
-              <Button color="inherit" component={Link} to="/signup">
-                登録
-              </Button>
-            </Box>
-          )}
-        </Toolbar>
-      </AppBar>
+    <Box
+      sx={{
+        height: "100vh",
+        backgroundColor: "#f5f5f5",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        overflow: "hidden",
+        px: 2,
+      }}
+    >
+      {/* Paizaロゴ */}
+      <Box sx={{ mb: 2 }}>
+        <Typography
+          variant="h3"
+          sx={{
+            fontWeight: "bold",
+            color: "#00a0a0",
+            fontFamily: "Arial, sans-serif",
+          }}
+        >
+          paiza
+        </Typography>
+      </Box>
 
-      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-        <Box textAlign="center" mb={4}>
-          <Typography variant="h2" component="h1" gutterBottom>
-            スキル・求人マッチング
-          </Typography>
-          <Typography variant="h5" component="h2" gutterBottom color="text.secondary">
-            あなたのスキルを活かせる仕事を見つけよう
-          </Typography>
-        </Box>
+      {/* メインタイトル */}
+      <Typography
+        variant="h3"
+        sx={{
+          fontWeight: "bold",
+          color: "#333",
+          mb: 1,
+          textAlign: "center",
+        }}
+      >
+        キャリアアップサポート
+      </Typography>
 
-        {isAuthenticated ? (
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={4}>
-              <Card>
-                <CardContent>
-                  <Typography variant="h5" component="h3" gutterBottom>
-                    求人を探す
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary" mb={2}>
-                    あなたのスキルにマッチした求人を検索
-                  </Typography>
-                  <Button variant="contained" component={Link} to="/offer">
-                    求人一覧
-                  </Button>
-                </CardContent>
-              </Card>
-            </Grid>
-            
-            <Grid item xs={12} md={4}>
-              <Card>
-                <CardContent>
-                  <Typography variant="h5" component="h3" gutterBottom>
-                    プロフィール
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary" mb={2}>
-                    あなたの情報とスキルを管理
-                  </Typography>
-                  <Button variant="contained">
-                    プロフィール編集
-                  </Button>
-                </CardContent>
-              </Card>
-            </Grid>
+      {/* サブタイトル */}
+      <Typography
+        variant="h6"
+        sx={{
+          color: "#666",
+          mb: 4,
+          textAlign: "center",
+        }}
+      >
+        スキルを活かせる理想の仕事を見つけよう
+      </Typography>
 
-            <Grid item xs={12} md={4}>
-              <Card>
-                <CardContent>
-                  <Typography variant="h5" component="h3" gutterBottom>
-                    企業向け
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary" mb={2}>
-                    人材を探している企業の方はこちら
-                  </Typography>
-                  <Button variant="contained" component={Link} to="/enterprise">
-                    企業ページ
-                  </Button>
-                </CardContent>
-              </Card>
-            </Grid>
-          </Grid>
-        ) : (
-          <Box textAlign="center">
-            <Typography variant="body1" mb={3}>
-              アカウントを作成して、あなたにぴったりの求人を見つけましょう
+      {/* メインコンテンツエリア */}
+      <Container maxWidth="lg">
+        <Box
+          sx={{
+            display: "flex",
+            gap: 6,
+            justifyContent: "center",
+            flexWrap: { xs: "wrap", md: "nowrap" },
+          }}
+        >
+          {/* ユーザー側カード */}
+          <Paper
+            elevation={0}
+            sx={{
+              flex: 1,
+              minWidth: "380px",
+              maxWidth: "450px",
+              p: 5,
+              border: "2px solid #4A90E2",
+              borderRadius: 2,
+              backgroundColor: "white",
+              textAlign: "center",
+            }}
+          >
+            <Typography
+              variant="h5"
+              sx={{
+                fontWeight: "bold",
+                color: "#333",
+                mb: 3,
+              }}
+            >
+              ユーザー側
             </Typography>
-            <Box>
-              <Button 
-                variant="contained" 
-                size="large" 
-                component={Link} 
+
+            <Typography
+              variant="body1"
+              sx={{
+                color: "#666",
+                mb: 4,
+                lineHeight: 1.6,
+              }}
+            >
+              スキルを活かせる仕事を見つけよう
+            </Typography>
+
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              <Button
+                variant="outlined"
+                size="large"
+                component={Link}
                 to="/signup"
-                sx={{ mr: 2 }}
+                fullWidth
+                sx={{
+                  borderColor: "#4A90E2",
+                  color: "#4A90E2",
+                  borderRadius: 1,
+                  py: 1.5,
+                  fontWeight: "normal",
+                  "&:hover": {
+                    borderColor: "#4A90E2",
+                    backgroundColor: "#4A90E2",
+                    color: "white",
+                  },
+                }}
               >
-                今すぐ登録
+                新規登録
               </Button>
-              <Button 
-                variant="outlined" 
-                size="large" 
-                component={Link} 
+              <Button
+                variant="outlined"
+                size="large"
+                component={Link}
                 to="/signin"
+                fullWidth
+                sx={{
+                  borderColor: "#4A90E2",
+                  color: "#4A90E2",
+                  borderRadius: 1,
+                  py: 1.5,
+                  fontWeight: "normal",
+                  "&:hover": {
+                    borderColor: "#4A90E2",
+                    backgroundColor: "#4A90E2",
+                    color: "white",
+                  },
+                }}
               >
                 ログイン
               </Button>
             </Box>
-          </Box>
-        )}
+          </Paper>
+
+          {/* 企業側カード */}
+          <Paper
+            elevation={0}
+            sx={{
+              flex: 1,
+              minWidth: "380px",
+              maxWidth: "450px",
+              p: 5,
+              border: "2px solid #FF9500",
+              borderRadius: 2,
+              backgroundColor: "white",
+              textAlign: "center",
+            }}
+          >
+            <Typography
+              variant="h5"
+              sx={{
+                fontWeight: "bold",
+                color: "#333",
+                mb: 3,
+              }}
+            >
+              企業側
+            </Typography>
+
+            <Typography
+              variant="body1"
+              sx={{
+                color: "#666",
+                mb: 4,
+                lineHeight: 1.6,
+              }}
+            >
+              優秀な人材を見つけて、チームを強化
+            </Typography>
+
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              <Button
+                variant="outlined"
+                size="large"
+                component={Link}
+                to="/enterprise/signup"
+                fullWidth
+                sx={{
+                  borderColor: "#FF9500",
+                  color: "#FF9500",
+                  borderRadius: 1,
+                  py: 1.5,
+                  fontWeight: "normal",
+                  "&:hover": {
+                    borderColor: "#FF9500",
+                    backgroundColor: "#FF9500",
+                    color: "white",
+                  },
+                }}
+              >
+                新規登録
+              </Button>
+              <Button
+                variant="outlined"
+                size="large"
+                component={Link}
+                to="/enterprise/signin"
+                fullWidth
+                sx={{
+                  borderColor: "#FF9500",
+                  color: "#FF9500",
+                  borderRadius: 1,
+                  py: 1.5,
+                  fontWeight: "normal",
+                  "&:hover": {
+                    borderColor: "#FF9500",
+                    backgroundColor: "#FF9500",
+                    color: "white",
+                  },
+                }}
+              >
+                ログイン
+              </Button>
+            </Box>
+          </Paper>
+        </Box>
       </Container>
-    </>
+    </Box>
   );
 }
 

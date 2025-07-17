@@ -36,3 +36,33 @@ class Enterprises(BaseDB):
             )
             result = conn.execute(query)
             return {"updated_rows": result.rowcount}
+
+    def create_enterprise(self, name: str, description: str = ""):
+        """
+        新しい企業を作成する
+        """
+        import uuid
+        
+        # 企業名の重複チェック
+        with self.engine.connect() as conn:
+            existing_check = conn.execute(
+                self.enterprises.select().where(self.enterprises.c.name == name)
+            ).mappings().first()
+            
+            if existing_check:
+                return {"status": "ng", "error": "この企業名は既に登録されています"}
+        
+        enterprise_id = str(uuid.uuid4())
+        
+        try:
+            with self.engine.begin() as conn:
+                query = self.enterprises.insert().values(
+                    id=enterprise_id,
+                    name=name,
+                    description=description
+                )
+                conn.execute(query)
+                return {"status": "ok", "enterprise_id": enterprise_id}
+                
+        except Exception as e:
+            return {"status": "ng", "error": str(e)}

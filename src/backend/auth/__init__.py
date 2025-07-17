@@ -2,7 +2,6 @@ from fastapi import APIRouter
 from auth import token, auth_db
 
 router = APIRouter(
-    prefix="/auth",
     tags=["auth"],
 )
 

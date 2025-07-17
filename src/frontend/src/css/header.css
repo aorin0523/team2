@@ -2,7 +2,7 @@
 .header-appbar {
     background: linear-gradient(90deg, #1e88e5 0%, #1976d2 100%);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    width: 100%;
+    width: 100vw;
     max-width: none;
     margin: 0;
     padding: 0;
